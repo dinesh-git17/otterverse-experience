@@ -1,0 +1,103 @@
+# Pre-commit hook configuration
+# Governance: CLAUDE.md §9.5
+#
+# Install:
+#   pre-commit install
+#   pre-commit install --hook-type commit-msg
+#
+# Run manually:
+#   pre-commit run --all-files
+
+default_stages: [pre-commit]
+
+repos:
+  # === Protocol Zero (§1) — MUST execute first ===
+  - repo: local
+    hooks:
+      - id: protocol-zero
+        name: "PZ-001 Protocol Zero"
+        entry: scripts/protocol-zero.sh
+        language: script
+        pass_filenames: false
+        always_run: true
+
+  # === File Hygiene ===
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=5120"]
+
+  # === Governance Audit (§9.5) ===
+  - repo: local
+    hooks:
+      - id: governance-audit
+        name: "Governance Audit (FU/DA/DP/SL/CB)"
+        entry: python3 .claude/skills/pre-commit-auditor/scripts/audit.py --staged
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  # === Shell Linting ===
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        args: [--severity=warning]
+
+  # === Python Formatting + Linting ===
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.1
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        exclude: ^\.claude/skills/
+      - id: ruff-format
+        exclude: ^\.claude/skills/
+
+  # === Markdown Linting ===
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.47.0
+    hooks:
+      - id: markdownlint
+
+  # === Swift Formatting (requires: brew install swiftformat) ===
+  - repo: local
+    hooks:
+      - id: swiftformat
+        name: SwiftFormat
+        entry: swiftformat
+        language: system
+        types: [swift]
+
+  # === Swift Linting (requires: brew install swiftlint) ===
+  - repo: local
+    hooks:
+      - id: swiftlint
+        name: SwiftLint
+        entry: swiftlint lint --strict --quiet
+        language: system
+        types: [swift]
+
+  # === Commit Message Validation (§9.3) ===
+  - repo: local
+    hooks:
+      - id: protocol-zero-commit-msg
+        name: "PZ-001 Commit Message"
+        entry: scripts/protocol-zero.sh --commit-msg-file
+        language: script
+        stages: [commit-msg]
+        always_run: true
+
+      - id: conventional-commits
+        name: "CC-001 Conventional Commits"
+        entry: scripts/validate-commit-msg.sh
+        language: script
+        stages: [commit-msg]
+        always_run: true

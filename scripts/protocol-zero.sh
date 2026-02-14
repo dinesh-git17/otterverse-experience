@@ -203,6 +203,9 @@ readonly -a EXCLUDE_FILES=(
     ".gitignore"
     ".markdownlint.json"
     ".markdownlintignore"
+    "settings.local.json"
+    ".pre-commit-config.yaml"
+    "validate-commit-msg.sh"
 )
 
 #===============================================================================
