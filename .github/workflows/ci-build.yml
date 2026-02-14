@@ -1,0 +1,141 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.swift'
+      - '**/*.xcodeproj/**'
+      - '**/*.xcworkspace/**'
+      - '**/*.xcdatamodeld/**'
+      - '**/*.storyboard'
+      - '**/*.xib'
+      - '**/*.plist'
+      - '**/*.xcassets/**'
+      - '**/*.ahap'
+      - 'Audio/**'
+      - 'Haptics/**'
+      - 'Fonts/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - '**/*.swift'
+      - '**/*.xcodeproj/**'
+      - '**/*.xcworkspace/**'
+      - '**/*.xcdatamodeld/**'
+      - '**/*.storyboard'
+      - '**/*.xib'
+      - '**/*.plist'
+      - '**/*.xcassets/**'
+      - '**/*.ahap'
+      - 'Audio/**'
+      - 'Haptics/**'
+      - 'Fonts/**'
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  detect-project:
+    name: Detect Xcode Project
+    runs-on: ubuntu-latest
+    outputs:
+      has_project: ${{ steps.check.outputs.has_project }}
+      project_path: ${{ steps.check.outputs.project_path }}
+      scheme: ${{ steps.check.outputs.scheme }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Locate Xcode project
+        id: check
+        run: |
+          XCODEPROJ=$(find . -maxdepth 2 -name '*.xcodeproj' -not -path './.git/*' | head -1)
+          if [ -n "$XCODEPROJ" ]; then
+            echo "has_project=true" >> "$GITHUB_OUTPUT"
+            echo "project_path=${XCODEPROJ}" >> "$GITHUB_OUTPUT"
+            SCHEME=$(basename "$XCODEPROJ" .xcodeproj)
+            echo "scheme=${SCHEME}" >> "$GITHUB_OUTPUT"
+            echo "Xcode project found: ${XCODEPROJ} (scheme: ${SCHEME})"
+          else
+            echo "has_project=false" >> "$GITHUB_OUTPUT"
+            echo "No Xcode project found. Build and test jobs will be skipped."
+          fi
+
+  build:
+    name: Xcode Build
+    needs: detect-project
+    if: needs.detect-project.outputs.has_project == 'true'
+    runs-on: macos-15
+    env:
+      SCHEME: ${{ needs.detect-project.outputs.scheme }}
+      PROJECT: ${{ needs.detect-project.outputs.project_path }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+
+      - name: Resolve dependencies
+        run: xcodebuild -resolvePackageDependencies -project "$PROJECT" -scheme "$SCHEME"
+
+      - name: Build for iOS Simulator
+        run: |
+          xcodebuild build \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            | xcpretty --color || exit ${PIPESTATUS[0]}
+
+  test:
+    name: Unit Tests
+    needs: [detect-project, build]
+    if: needs.detect-project.outputs.has_project == 'true'
+    runs-on: macos-15
+    env:
+      SCHEME: ${{ needs.detect-project.outputs.scheme }}
+      PROJECT: ${{ needs.detect-project.outputs.project_path }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
+
+      - name: Run unit tests
+        run: |
+          xcodebuild test \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest' \
+            -configuration Debug \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            | xcpretty --color --report junit --output test-results.xml || exit ${PIPESTATUS[0]}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            test-results.xml
+            TestResults.xcresult
+          retention-days: 7
+
+  skip-notice:
+    name: Build & Test (Skipped)
+    needs: detect-project
+    if: needs.detect-project.outputs.has_project == 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: No Xcode project
+        run: |
+          echo "::notice::No .xcodeproj found. Build and test checks are inactive until PH-01 (Xcode Project Scaffold) is complete."
+          echo "This workflow will activate automatically when Swift source files and the Xcode project are committed."

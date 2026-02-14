@@ -1,0 +1,247 @@
+name: Governance & Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: governance-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  protocol-zero:
+    name: Protocol Zero (PZ-001)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Protocol Zero scanner
+        run: |
+          chmod +x scripts/protocol-zero.sh
+          ./scripts/protocol-zero.sh --no-color
+        env:
+          NO_COLOR: "1"
+
+  audit:
+    name: Pre-Commit Auditor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run governance auditor
+        run: python3 .claude/skills/pre-commit-auditor/scripts/audit.py --all
+
+  secret-scan:
+    name: Secret Leakage (SL-001)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Scan for plaintext Discord webhook URLs
+        run: |
+          VIOLATIONS=0
+
+          if grep -rn --include='*.swift' --include='*.md' --include='*.json' \
+              --include='*.yml' --include='*.yaml' --include='*.plist' \
+              --include='*.txt' --include='*.py' --include='*.sh' \
+              'https://discord\.com/api/webhooks/' . \
+              --exclude-dir=.git \
+              --exclude='Design-Doc.md' \
+              --exclude='CLAUDE.md' \
+              --exclude='SKILL.md' \
+              --exclude='security-patterns.md' \
+              --exclude='remediation.md'; then
+            echo "::error::Plaintext Discord webhook URL detected in source files"
+            VIOLATIONS=1
+          fi
+
+          if grep -rn --include='*.swift' --include='*.md' --include='*.json' \
+              --include='*.yml' --include='*.yaml' --include='*.plist' \
+              --include='*.txt' --include='*.py' --include='*.sh' \
+              'https://discordapp\.com/api/webhooks/' . \
+              --exclude-dir=.git \
+              --exclude='Design-Doc.md' \
+              --exclude='CLAUDE.md' \
+              --exclude='SKILL.md' \
+              --exclude='security-patterns.md' \
+              --exclude='remediation.md'; then
+            echo "::error::Plaintext Discord webhook URL (legacy format) detected"
+            VIOLATIONS=1
+          fi
+
+          SENSITIVE_FILES=$(find . -name '*.env' -o -name '*.secret' -o -name 'Secrets.plaintext' \
+              -o -name '*.p12' -o -name '*.pem' -o -name '*.mobileprovision' \
+              | grep -v '.git/' || true)
+          if [ -n "$SENSITIVE_FILES" ]; then
+            echo "::error::Sensitive files detected in repository:"
+            echo "$SENSITIVE_FILES"
+            VIOLATIONS=1
+          fi
+
+          if [ "$VIOLATIONS" -eq 1 ]; then
+            exit 1
+          fi
+          echo "No secret leakage detected."
+
+  structure:
+    name: Repository Structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify required governance files
+        run: |
+          MISSING=0
+          for f in CLAUDE.md Design-Doc.md .gitignore; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Required file missing: $f"
+              MISSING=1
+            fi
+          done
+          if [ "$MISSING" -eq 1 ]; then exit 1; fi
+          echo "All required governance files present."
+
+      - name: Verify skill infrastructure
+        run: |
+          ERRORS=0
+          EXPECTED_SKILLS=(
+            "skill-creator"
+            "epic-writer"
+            "chapter-scaffold"
+            "corehaptics-engine"
+            "spritekit-lifecycle"
+            "pre-commit-auditor"
+            "avfoundation-audio"
+            "xctest-scaffold"
+            "swiftui-visual-fidelity"
+            "webhook-security"
+          )
+
+          for skill in "${EXPECTED_SKILLS[@]}"; do
+            SKILL_DIR=".claude/skills/${skill}"
+            if [ ! -d "$SKILL_DIR" ]; then
+              echo "::error::Missing skill directory: ${SKILL_DIR}"
+              ERRORS=1
+              continue
+            fi
+            if [ ! -f "${SKILL_DIR}/SKILL.md" ]; then
+              echo "::error::Missing SKILL.md in ${SKILL_DIR}"
+              ERRORS=1
+            fi
+          done
+
+          if [ "$ERRORS" -eq 1 ]; then exit 1; fi
+          echo "All 10 skills validated."
+
+      - name: Verify Agent Context System
+        run: |
+          ERRORS=0
+          ACS_FILES=(
+            ".claude/context/MANIFEST.md"
+            ".claude/context/progress/completed.md"
+            ".claude/context/progress/active.md"
+            ".claude/context/registry/skills.md"
+            ".claude/context/registry/components.md"
+            ".claude/context/registry/constraints.md"
+          )
+
+          for f in "${ACS_FILES[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Missing ACS file: $f"
+              ERRORS=1
+            fi
+          done
+
+          if [ "$ERRORS" -eq 1 ]; then exit 1; fi
+          echo "Agent Context System structure verified."
+
+  swift-governance:
+    name: Swift Governance Patterns
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for Swift source files
+        id: swift-check
+        run: |
+          if compgen -G "**/*.swift" > /dev/null 2>&1 || find . -name '*.swift' -not -path './.git/*' | head -1 | grep -q .; then
+            echo "has_swift=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_swift=false" >> "$GITHUB_OUTPUT"
+            echo "No Swift files found. Skipping Swift governance checks."
+          fi
+
+      - name: Detect force unwraps (FU-001)
+        if: steps.swift-check.outputs.has_swift == 'true'
+        run: |
+          VIOLATIONS=$(grep -rn --include='*.swift' '[^!]=!' . --exclude-dir=.git \
+            | grep -v '// APPLE-API-REQUIRED' \
+            | grep -v 'IBOutlet' \
+            | grep -v '!=' \
+            | grep -v 'import ' \
+            | grep -v '#if' \
+            | grep -v '/// ' || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "::error::Force unwrap violations detected (CLAUDE.md §4.7):"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "No force unwrap violations."
+
+      - name: Detect deprecated APIs (DP-001)
+        if: steps.swift-check.outputs.has_swift == 'true'
+        run: |
+          PATTERNS=(
+            'ObservableObject'
+            '@Published'
+            '@StateObject'
+            '@EnvironmentObject'
+            'DispatchQueue\.'
+            'performSelector'
+            'PreviewProvider'
+            'UIApplicationDelegate'
+          )
+          VIOLATIONS=0
+          for pattern in "${PATTERNS[@]}"; do
+            MATCHES=$(grep -rn --include='*.swift' "$pattern" . --exclude-dir=.git || true)
+            if [ -n "$MATCHES" ]; then
+              echo "::error::Deprecated API detected — ${pattern} (CLAUDE.md §3.1, §4.1–4.2):"
+              echo "$MATCHES"
+              VIOLATIONS=1
+            fi
+          done
+          if [ "$VIOLATIONS" -eq 1 ]; then exit 1; fi
+          echo "No deprecated API usage."
+
+      - name: Detect Combine usage (CB-001)
+        if: steps.swift-check.outputs.has_swift == 'true'
+        run: |
+          MATCHES=$(grep -rn --include='*.swift' 'import Combine' . --exclude-dir=.git || true)
+          if [ -n "$MATCHES" ]; then
+            echo "::error::Combine import detected (CLAUDE.md §3.1):"
+            echo "$MATCHES"
+            exit 1
+          fi
+          echo "No Combine usage."
+
+      - name: Detect print statements (DA-001)
+        if: steps.swift-check.outputs.has_swift == 'true'
+        run: |
+          MATCHES=$(grep -rn --include='*.swift' '^\s*print(' . --exclude-dir=.git \
+            | grep -v '#if DEBUG' \
+            | grep -v '// DEBUG-ONLY' || true)
+          if [ -n "$MATCHES" ]; then
+            echo "::error::print() statements detected (CLAUDE.md §4.7):"
+            echo "$MATCHES"
+            exit 1
+          fi
+          echo "No debug print statements."

@@ -1,0 +1,76 @@
+# === macOS ===
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# === Xcode ===
+## Build artifacts
+build/
+DerivedData/
+*.xcarchive
+
+## User-specific project settings
+*.xcuserdata
+*.xcscmblueprint
+*.xccheckout
+
+## Workspace settings (no shared workspace required)
+*.xcworkspace/xcuserdata/
+xcuserdata/
+
+## Index and workspace state
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# === Swift / SPM ===
+.build/
+.swiftpm/
+Package.resolved
+*.o
+*.swp
+
+# === Compiled assets (build outputs) ===
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.car
+*.atlasc
+
+# === Secrets (Design-Doc §9.4, CLAUDE.md §5) ===
+*.env
+*.secret
+Secrets.plaintext
+*.pem
+*.p12
+*.mobileprovision
+*.provisionprofile
+
+# === Debug and temporary artifacts ===
+*.log
+*.tmp
+*.bak
+*.orig
+*.swn
+*.swo
+
+# === Editor configs ===
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# === Python caches ===
+.mypy_cache/
+__pycache__/
+*.pyc
+
+# === Agent local config ===
+.claude/settings.local.json
+
+# === Test artifacts ===
+*.xcresult
+.testresults/
+coverage/

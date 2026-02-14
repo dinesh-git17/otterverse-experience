@@ -1,0 +1,187 @@
+name: PR Summary
+
+on:
+  workflow_run:
+    workflows:
+      - "Governance & Security"
+      - "Code Quality"
+      - "Build & Test"
+    types: [completed]
+
+permissions:
+  pull-requests: write
+  actions: read
+
+jobs:
+  summary:
+    name: Merge Readiness Report
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch workflow results
+        id: results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr_number = context.payload.workflow_run.pull_requests?.[0]?.number;
+            if (!pr_number) {
+              core.info('No PR associated with this workflow run. Skipping summary.');
+              core.setOutput('skip', 'true');
+              return;
+            }
+            core.setOutput('skip', 'false');
+            core.setOutput('pr_number', pr_number);
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const head_sha = context.payload.workflow_run.head_sha;
+
+            const targetWorkflows = [
+              'Governance & Security',
+              'Code Quality',
+              'Build & Test'
+            ];
+
+            const results = [];
+            for (const name of targetWorkflows) {
+              try {
+                const runs = await github.rest.actions.listWorkflowRuns({
+                  owner, repo,
+                  workflow_id: name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-') + '.yml',
+                  head_sha: head_sha,
+                  per_page: 1
+                });
+                if (runs.data.workflow_runs.length > 0) {
+                  const run = runs.data.workflow_runs[0];
+                  const duration = run.updated_at && run.created_at
+                    ? Math.round((new Date(run.updated_at) - new Date(run.created_at)) / 1000)
+                    : null;
+                  results.push({
+                    name,
+                    status: run.status,
+                    conclusion: run.conclusion,
+                    duration,
+                    url: run.html_url
+                  });
+                } else {
+                  results.push({ name, status: 'not_found', conclusion: null, duration: null, url: null });
+                }
+              } catch (e) {
+                results.push({ name, status: 'error', conclusion: null, duration: null, url: null });
+              }
+            }
+
+            core.setOutput('results', JSON.stringify(results));
+
+      - name: Post PR summary comment
+        if: steps.results.outputs.skip != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const results = JSON.parse('${{ steps.results.outputs.results }}');
+            const pr_number = parseInt('${{ steps.results.outputs.pr_number }}');
+
+            function statusIcon(conclusion, status) {
+              if (status === 'not_found') return '\u23F3';
+              if (status === 'in_progress' || status === 'queued') return '\u23F3';
+              if (conclusion === 'success') return '\u2705';
+              if (conclusion === 'failure') return '\u274C';
+              if (conclusion === 'cancelled') return '\u23F9\uFE0F';
+              if (conclusion === 'skipped') return '\u23ED\uFE0F';
+              return '\u2753';
+            }
+
+            function statusLabel(conclusion, status) {
+              if (status === 'not_found') return 'Pending';
+              if (status === 'in_progress' || status === 'queued') return 'Running';
+              if (conclusion === 'success') return 'Passed';
+              if (conclusion === 'failure') return 'Failed';
+              if (conclusion === 'cancelled') return 'Cancelled';
+              if (conclusion === 'skipped') return 'Skipped';
+              return 'Unknown';
+            }
+
+            function formatDuration(seconds) {
+              if (!seconds) return '-';
+              if (seconds < 60) return `${seconds}s`;
+              const m = Math.floor(seconds / 60);
+              const s = seconds % 60;
+              return `${m}m ${s}s`;
+            }
+
+            const blocking = results.filter(r =>
+              r.name !== 'Build & Test' || r.status !== 'not_found'
+            );
+            const allPassed = blocking.every(r =>
+              r.conclusion === 'success' || r.conclusion === 'skipped'
+            );
+            const anyFailed = results.some(r => r.conclusion === 'failure');
+            const anyPending = results.some(r =>
+              r.status === 'in_progress' || r.status === 'queued' || r.status === 'not_found'
+            );
+
+            let verdict, verdictIcon;
+            if (anyFailed) {
+              verdict = 'Not Mergeable';
+              verdictIcon = '\u274C';
+            } else if (anyPending) {
+              verdict = 'Checks In Progress';
+              verdictIcon = '\u23F3';
+            } else if (allPassed) {
+              verdict = 'Mergeable';
+              verdictIcon = '\u2705';
+            } else {
+              verdict = 'Review Required';
+              verdictIcon = '\u26A0\uFE0F';
+            }
+
+            const rows = results.map(r => {
+              const icon = statusIcon(r.conclusion, r.status);
+              const label = statusLabel(r.conclusion, r.status);
+              const duration = formatDuration(r.duration);
+              const nameLink = r.url ? `[${r.name}](${r.url})` : r.name;
+              return `| ${icon} | ${nameLink} | ${label} | ${duration} |`;
+            }).join('\n');
+
+            const body = [
+              '## CI Merge Readiness Report',
+              '',
+              `**Verdict:** ${verdictIcon} **${verdict}**`,
+              '',
+              '| | Workflow | Status | Duration |',
+              '|---|---|---|---|',
+              rows,
+              '',
+              '---',
+              `*Updated: ${new Date().toISOString().replace('T', ' ').substring(0, 19)} UTC*`,
+              `*Commit: \`${context.payload.workflow_run.head_sha.substring(0, 8)}\`*`
+            ].join('\n');
+
+            const marker = '<!-- ci-merge-readiness-report -->';
+            const commentBody = `${marker}\n${body}`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr_number
+            });
+
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: commentBody
+              });
+              core.info(`Updated existing summary comment (ID: ${existing.id})`);
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr_number,
+                body: commentBody
+              });
+              core.info('Created new summary comment.');
+            }

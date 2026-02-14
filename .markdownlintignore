@@ -1,0 +1,6 @@
+node_modules/
+DerivedData/
+.build/
+*.xcuserdata/
+CHANGELOG.md
+LICENSE.md

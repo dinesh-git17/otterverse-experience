@@ -1,0 +1,1715 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Starlight Sync — Engineering Documentation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+    />
+    <style>
+      /* ═══════════════════════════════════════════
+       Design Tokens
+       ═══════════════════════════════════════════ */
+      :root {
+        --bg-root: #0a0a0b;
+        --bg-surface: #111113;
+        --bg-elevated: #18181b;
+        --bg-hover: #1f1f23;
+        --bg-active: #26262b;
+
+        --border-subtle: #1e1e23;
+        --border-default: #27272d;
+        --border-strong: #333339;
+
+        --text-primary: #ededef;
+        --text-secondary: #a0a0ab;
+        --text-tertiary: #6b6b76;
+        --text-quaternary: #4a4a54;
+
+        --accent-primary: #c4704a;
+        --accent-secondary: #d4865f;
+        --accent-muted: rgba(196, 112, 74, 0.12);
+        --accent-border: rgba(196, 112, 74, 0.24);
+
+        --status-green: #3fb68b;
+        --status-yellow: #e5a93e;
+        --status-red: #e5534b;
+        --status-blue: #539bf5;
+
+        --sidebar-width: 280px;
+        --header-height: 56px;
+        --content-max: 960px;
+
+        --radius-sm: 6px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+
+        --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        --font-mono: "SF Mono", "Fira Code", "Cascadia Code",
+          "JetBrains Mono", Consolas, monospace;
+
+        --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        --duration-fast: 120ms;
+        --duration-normal: 200ms;
+        --duration-slow: 320ms;
+      }
+
+      /* ═══════════════════════════════════════════
+       Reset & Base
+       ═══════════════════════════════════════════ */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: 15px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background: var(--bg-root);
+        color: var(--text-primary);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      a {
+        color: var(--accent-secondary);
+        text-decoration: none;
+        transition: color var(--duration-fast) var(--ease-out);
+      }
+
+      a:hover {
+        color: var(--text-primary);
+      }
+
+      a:focus-visible {
+        outline: 2px solid var(--accent-primary);
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
+
+      ::selection {
+        background: rgba(196, 112, 74, 0.3);
+        color: var(--text-primary);
+      }
+
+      /* ═══════════════════════════════════════════
+       Layout Shell
+       ═══════════════════════════════════════════ */
+      .layout {
+        display: grid;
+        grid-template-columns: var(--sidebar-width) 1fr;
+        grid-template-rows: var(--header-height) 1fr;
+        grid-template-areas:
+          "header header"
+          "sidebar main";
+        min-height: 100vh;
+      }
+
+      /* ═══════════════════════════════════════════
+       Header
+       ═══════════════════════════════════════════ */
+      .header {
+        grid-area: header;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        background: rgba(10, 10, 11, 0.85);
+        backdrop-filter: blur(12px) saturate(1.2);
+        -webkit-backdrop-filter: blur(12px) saturate(1.2);
+        border-bottom: 1px solid var(--border-subtle);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .header-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+      }
+
+      .header-logo-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        background: linear-gradient(135deg, var(--accent-primary), #e8956b);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: #0a0a0b;
+        letter-spacing: -0.5px;
+      }
+
+      .header-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.2px;
+      }
+
+      .header-separator {
+        width: 1px;
+        height: 18px;
+        background: var(--border-default);
+      }
+
+      .header-subtitle {
+        font-size: 13px;
+        color: var(--text-tertiary);
+        font-weight: 400;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .header-badge {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--status-green);
+        background: rgba(63, 182, 139, 0.1);
+        border: 1px solid rgba(63, 182, 139, 0.2);
+        padding: 3px 10px;
+        border-radius: 100px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+      }
+
+      /* ═══════════════════════════════════════════
+       Sidebar
+       ═══════════════════════════════════════════ */
+      .sidebar {
+        grid-area: sidebar;
+        width: var(--sidebar-width);
+        background: var(--bg-surface);
+        border-right: 1px solid var(--border-subtle);
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: sticky;
+        top: var(--header-height);
+        height: calc(100vh - var(--header-height));
+        padding: 12px 0;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border-default) transparent;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background: var(--border-default);
+        border-radius: 10px;
+      }
+
+      .sidebar-section {
+        padding: 0 12px;
+        margin-bottom: 4px;
+      }
+
+      .sidebar-section-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-quaternary);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        padding: 8px 12px 6px;
+      }
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        color: var(--text-secondary);
+        transition: all var(--duration-fast) var(--ease-out);
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      .sidebar-link:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+      }
+
+      .sidebar-link.active {
+        background: var(--accent-muted);
+        color: var(--accent-secondary);
+      }
+
+      .sidebar-link-icon {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        opacity: 0.5;
+      }
+
+      .sidebar-divider {
+        height: 1px;
+        background: var(--border-subtle);
+        margin: 8px 12px;
+      }
+
+      /* Phase Groups */
+      .phase-group {
+        margin-bottom: 2px;
+      }
+
+      .phase-group-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all var(--duration-fast) var(--ease-out);
+        user-select: none;
+      }
+
+      .phase-group-header:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+      }
+
+      .phase-group-header.active {
+        color: var(--accent-secondary);
+      }
+
+      .phase-group-chevron {
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        transition: transform var(--duration-normal) var(--ease-out);
+        opacity: 0.4;
+      }
+
+      .phase-group.expanded .phase-group-chevron {
+        transform: rotate(90deg);
+      }
+
+      .phase-group-id {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-quaternary);
+        font-family: var(--font-mono);
+        flex-shrink: 0;
+        min-width: 38px;
+      }
+
+      .phase-group-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .phase-group-badge {
+        font-size: 10px;
+        font-weight: 500;
+        padding: 1px 6px;
+        border-radius: 10px;
+        background: var(--bg-elevated);
+        color: var(--text-quaternary);
+        margin-left: auto;
+        flex-shrink: 0;
+      }
+
+      .phase-group-items {
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height var(--duration-slow) var(--ease-out);
+      }
+
+      .phase-group.expanded .phase-group-items {
+        max-height: 500px;
+      }
+
+      .phase-group-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 12px 5px 36px;
+        font-size: 12.5px;
+        color: var(--text-tertiary);
+        border-radius: var(--radius-sm);
+        transition: all var(--duration-fast) var(--ease-out);
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .phase-group-item:hover {
+        background: var(--bg-hover);
+        color: var(--text-secondary);
+      }
+
+      .phase-group-item.active {
+        background: var(--accent-muted);
+        color: var(--accent-secondary);
+      }
+
+      .phase-group-item-dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--text-quaternary);
+        flex-shrink: 0;
+      }
+
+      /* ═══════════════════════════════════════════
+       Main Content
+       ═══════════════════════════════════════════ */
+      .main {
+        grid-area: main;
+        padding: 48px 56px 80px;
+        overflow-y: auto;
+      }
+
+      .main-inner {
+        max-width: var(--content-max);
+        margin: 0 auto;
+      }
+
+      /* ═══════════════════════════════════════════
+       Hero / Landing
+       ═══════════════════════════════════════════ */
+      .hero {
+        margin-bottom: 64px;
+      }
+
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--accent-primary);
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 16px;
+      }
+
+      .hero-eyebrow-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent-primary);
+        animation: pulse-dot 2.4s ease-in-out infinite;
+      }
+
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 0.4;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.3);
+        }
+      }
+
+      .hero h1 {
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.8px;
+        color: var(--text-primary);
+        margin-bottom: 16px;
+      }
+
+      .hero h1 .accent {
+        background: linear-gradient(135deg, var(--accent-primary), #e8956b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero-description {
+        font-size: 16px;
+        line-height: 1.7;
+        color: var(--text-secondary);
+        max-width: 640px;
+        margin-bottom: 32px;
+      }
+
+      .hero-links {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .hero-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: var(--radius-md);
+        font-size: 13px;
+        font-weight: 500;
+        transition: all var(--duration-normal) var(--ease-out);
+      }
+
+      .hero-link-primary {
+        background: var(--accent-primary);
+        color: #0a0a0b;
+      }
+
+      .hero-link-primary:hover {
+        background: var(--accent-secondary);
+        color: #0a0a0b;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(196, 112, 74, 0.25);
+      }
+
+      .hero-link-secondary {
+        background: var(--bg-elevated);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-default);
+      }
+
+      .hero-link-secondary:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+        border-color: var(--border-strong);
+      }
+
+      .hero-link svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      /* ═══════════════════════════════════════════
+       Section Headers
+       ═══════════════════════════════════════════ */
+      .section {
+        margin-bottom: 56px;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .section-header h2 {
+        font-size: 22px;
+        font-weight: 650;
+        letter-spacing: -0.4px;
+        color: var(--text-primary);
+      }
+
+      .section-header-line {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--border-default),
+          transparent
+        );
+      }
+
+      .section-description {
+        font-size: 14px;
+        color: var(--text-tertiary);
+        margin-bottom: 24px;
+        max-width: 600px;
+      }
+
+      /* ═══════════════════════════════════════════
+       Architecture Overview Cards
+       ═══════════════════════════════════════════ */
+      .arch-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 56px;
+      }
+
+      .arch-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: 24px;
+        transition: all var(--duration-normal) var(--ease-out);
+      }
+
+      .arch-card:hover {
+        border-color: var(--border-default);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .arch-card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 14px;
+        font-size: 16px;
+      }
+
+      .arch-card-icon.orange {
+        background: rgba(196, 112, 74, 0.12);
+        color: var(--accent-secondary);
+      }
+
+      .arch-card-icon.blue {
+        background: rgba(83, 155, 245, 0.12);
+        color: var(--status-blue);
+      }
+
+      .arch-card-icon.green {
+        background: rgba(63, 182, 139, 0.12);
+        color: var(--status-green);
+      }
+
+      .arch-card h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+        letter-spacing: -0.2px;
+      }
+
+      .arch-card p {
+        font-size: 13px;
+        color: var(--text-tertiary);
+        line-height: 1.55;
+      }
+
+      /* ═══════════════════════════════════════════
+       Phase Table
+       ═══════════════════════════════════════════ */
+      .phase-table-wrapper {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+      }
+
+      .phase-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+
+      .phase-table thead {
+        background: var(--bg-elevated);
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .phase-table th {
+        text-align: left;
+        padding: 12px 16px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-quaternary);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        white-space: nowrap;
+      }
+
+      .phase-table td {
+        padding: 14px 16px;
+        color: var(--text-secondary);
+        border-bottom: 1px solid var(--border-subtle);
+        vertical-align: top;
+      }
+
+      .phase-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .phase-table tbody tr {
+        transition: background var(--duration-fast) var(--ease-out);
+      }
+
+      .phase-table tbody tr:hover {
+        background: var(--bg-hover);
+      }
+
+      .phase-id {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent-secondary);
+        white-space: nowrap;
+      }
+
+      .phase-name {
+        font-weight: 500;
+        color: var(--text-primary);
+        white-space: nowrap;
+      }
+
+      .phase-desc {
+        color: var(--text-secondary);
+        line-height: 1.5;
+        max-width: 420px;
+      }
+
+      .phase-risk {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        font-weight: 500;
+        padding: 2px 8px;
+        border-radius: 100px;
+        white-space: nowrap;
+      }
+
+      .phase-risk.low {
+        color: var(--status-green);
+        background: rgba(63, 182, 139, 0.1);
+      }
+
+      .phase-risk.medium {
+        color: var(--status-yellow);
+        background: rgba(229, 169, 62, 0.1);
+      }
+
+      .phase-risk.high {
+        color: var(--status-red);
+        background: rgba(229, 83, 75, 0.1);
+      }
+
+      .phase-complexity {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        width: 28px;
+        height: 22px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-elevated);
+        border-radius: 4px;
+        border: 1px solid var(--border-subtle);
+      }
+
+      .phase-deps {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-quaternary);
+        white-space: nowrap;
+      }
+
+      /* ═══════════════════════════════════════════
+       Critical Path
+       ═══════════════════════════════════════════ */
+      .critical-path {
+        margin-top: 32px;
+        padding: 24px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+      }
+
+      .critical-path h3 {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+        letter-spacing: -0.1px;
+      }
+
+      .critical-path-flow {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+
+      .critical-path-node {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: var(--radius-sm);
+        background: var(--accent-muted);
+        color: var(--accent-secondary);
+        border: 1px solid var(--accent-border);
+        white-space: nowrap;
+      }
+
+      .critical-path-arrow {
+        color: var(--text-quaternary);
+        font-size: 12px;
+        flex-shrink: 0;
+      }
+
+      /* ═══════════════════════════════════════════
+       Dependency Graph
+       ═══════════════════════════════════════════ */
+      .dep-graph {
+        margin-top: 20px;
+      }
+
+      .dep-graph-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-tertiary);
+        margin-bottom: 10px;
+      }
+
+      .dep-tracks {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .dep-track {
+        padding: 14px 16px;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+      }
+
+      .dep-track-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 4px;
+      }
+
+      .dep-track-phases {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-quaternary);
+      }
+
+      .dep-track-merge {
+        font-size: 11px;
+        color: var(--text-quaternary);
+        margin-top: 4px;
+      }
+
+      /* ═══════════════════════════════════════════
+       Loading & Error States
+       ═══════════════════════════════════════════ */
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+      }
+
+      .loading-spinner {
+        width: 24px;
+        height: 24px;
+        border: 2px solid var(--border-default);
+        border-top-color: var(--accent-primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .error-state {
+        text-align: center;
+        padding: 64px 24px;
+      }
+
+      .error-state-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+      }
+
+      .error-state-message {
+        font-size: 14px;
+        color: var(--text-tertiary);
+      }
+
+      /* ═══════════════════════════════════════════
+       Markdown Rendered Content
+       ═══════════════════════════════════════════ */
+      .markdown-body {
+        font-size: 15px;
+        line-height: 1.7;
+        animation: fadeIn 0.2s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .markdown-body h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin: 0 0 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-subtle);
+        letter-spacing: -0.4px;
+        color: var(--text-primary);
+      }
+
+      .markdown-body h2 {
+        font-size: 20px;
+        font-weight: 650;
+        margin: 36px 0 16px;
+        letter-spacing: -0.3px;
+        color: var(--text-primary);
+      }
+
+      .markdown-body h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 28px 0 12px;
+        color: var(--text-primary);
+      }
+
+      .markdown-body h4 {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--text-primary);
+      }
+
+      .markdown-body p {
+        margin: 0 0 16px;
+        color: var(--text-secondary);
+      }
+
+      .markdown-body ul,
+      .markdown-body ol {
+        margin: 0 0 16px;
+        padding-left: 24px;
+        color: var(--text-secondary);
+      }
+
+      .markdown-body li {
+        margin: 4px 0;
+      }
+
+      .markdown-body li > ul,
+      .markdown-body li > ol {
+        margin: 4px 0 0;
+      }
+
+      .markdown-body code {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        background: var(--bg-elevated);
+        padding: 2px 6px;
+        border-radius: var(--radius-sm);
+        color: var(--accent-secondary);
+      }
+
+      .markdown-body pre {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        overflow-x: auto;
+        margin: 0 0 16px;
+      }
+
+      .markdown-body pre code {
+        background: none;
+        padding: 0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: var(--text-primary);
+      }
+
+      .markdown-body table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 0 16px;
+        font-size: 13px;
+      }
+
+      .markdown-body th,
+      .markdown-body td {
+        border: 1px solid var(--border-subtle);
+        padding: 10px 12px;
+        text-align: left;
+        color: var(--text-secondary);
+      }
+
+      .markdown-body th {
+        background: var(--bg-elevated);
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .markdown-body tr:hover td {
+        background: var(--bg-hover);
+      }
+
+      .markdown-body blockquote {
+        border-left: 3px solid var(--accent-primary);
+        margin: 0 0 16px;
+        padding: 8px 16px;
+        background: var(--bg-surface);
+        color: var(--text-secondary);
+      }
+
+      .markdown-body hr {
+        border: none;
+        border-top: 1px solid var(--border-subtle);
+        margin: 24px 0;
+      }
+
+      .markdown-body a {
+        color: var(--accent-secondary);
+        text-decoration: none;
+      }
+
+      .markdown-body a:hover {
+        text-decoration: underline;
+        color: var(--text-primary);
+      }
+
+      .markdown-body strong {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .markdown-body img {
+        max-width: 100%;
+        border-radius: var(--radius-md);
+      }
+
+      .markdown-body input[type="checkbox"] {
+        margin-right: 8px;
+      }
+
+      /* ═══════════════════════════════════════════
+       Footer
+       ═══════════════════════════════════════════ */
+      .footer {
+        margin-top: 64px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .footer-text {
+        font-size: 12px;
+        color: var(--text-quaternary);
+      }
+
+      .footer-meta {
+        font-size: 11px;
+        font-family: var(--font-mono);
+        color: var(--text-quaternary);
+      }
+
+      /* ═══════════════════════════════════════════
+       Reduced Motion
+       ═══════════════════════════════════════════ */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* ═══════════════════════════════════════════
+       Responsive
+       ═══════════════════════════════════════════ */
+      @media (max-width: 1200px) {
+        .arch-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 960px) {
+        .layout {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "header"
+            "main";
+        }
+
+        .sidebar {
+          display: none;
+        }
+
+        .main {
+          padding: 32px 24px 64px;
+        }
+
+        .arch-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .phase-table-wrapper {
+          overflow-x: auto;
+        }
+
+        .dep-tracks {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <!-- ═══════════ Header ═══════════ -->
+      <header class="header">
+        <div class="header-left">
+          <a href="#" class="header-logo">
+            <div class="header-logo-mark">SS</div>
+            <span class="header-title">Starlight Sync</span>
+          </a>
+          <div class="header-separator"></div>
+          <span class="header-subtitle" id="headerBreadcrumb"
+            >Engineering Documentation</span
+          >
+        </div>
+        <div class="header-right">
+          <span class="header-badge">iOS 19+</span>
+        </div>
+      </header>
+
+      <!-- ═══════════ Sidebar ═══════════ -->
+      <nav
+        class="sidebar"
+        id="sidebar"
+        role="navigation"
+        aria-label="Documentation navigation"
+      >
+        <div class="sidebar-section">
+          <div class="sidebar-section-label">Overview</div>
+          <a href="#" class="sidebar-link active" data-path="">
+            <svg
+              class="sidebar-link-icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M2 6l6-4 6 4v7a1 1 0 01-1 1H3a1 1 0 01-1-1V6z" />
+              <path d="M6 14V8h4v6" />
+            </svg>
+            Introduction
+          </a>
+          <a href="#PHASES.md" class="sidebar-link" data-path="PHASES.md">
+            <svg
+              class="sidebar-link-icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"
+              />
+              <path d="M6 5h4M6 8h4M6 11h2" />
+            </svg>
+            Phase Plan
+          </a>
+          <a
+            href="#AGENT_CONTEXT_SYSTEM.md"
+            class="sidebar-link"
+            data-path="AGENT_CONTEXT_SYSTEM.md"
+          >
+            <svg
+              class="sidebar-link-icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="8" cy="8" r="3" />
+              <path
+                d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"
+              />
+            </svg>
+            Agent Context System
+          </a>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-section-label">Phases</div>
+          <div id="phase-nav"></div>
+        </div>
+      </nav>
+
+      <!-- ═══════════ Main Content ═══════════ -->
+      <main class="main">
+        <div class="main-inner" id="content"></div>
+      </main>
+    </div>
+
+    <script>
+      const App = {
+        phases: [],
+        docCache: new Map(),
+        currentPath: null,
+        baseUrl: "",
+        repoInfo: null,
+
+        PHASE_NAMES: {
+          "PH-01": "Xcode Project Scaffold",
+          "PH-02": "FlowCoordinator State Machine",
+          "PH-03": "AudioManager Singleton",
+          "PH-04": "HapticManager Singleton",
+          "PH-05": "Asset Pre-load Pipeline",
+          "PH-06": "GameConstants & Models",
+          "PH-07": "Ch 1 — The Handshake",
+          "PH-08": "Ch 2 — The Packet Run",
+          "PH-09": "Ch 3 — The Cipher",
+          "PH-10": "Ch 4 — The Firewall",
+          "PH-11": "Ch 5 — The Blueprint",
+          "PH-12": "WebhookService",
+          "PH-13": "Ch 6 — Event Horizon",
+          "PH-14": "Cross-Chapter Transitions",
+          "PH-15": "Unit Test Suite",
+          "PH-16": "On-Device QA & Tuning",
+          "PH-17": "TestFlight Distribution",
+        },
+
+        async init() {
+          this.detectEnvironment();
+          this.buildPhaseList();
+          await this.discoverEpics();
+          this.renderNav();
+          this.setupEventListeners();
+          this.handleRoute();
+        },
+
+        detectEnvironment() {
+          const hostname = window.location.hostname;
+          if (hostname.endsWith(".github.io")) {
+            const parts = window.location.pathname
+              .split("/")
+              .filter(Boolean);
+            if (parts.length > 0) {
+              this.repoInfo = {
+                owner: hostname.replace(".github.io", ""),
+                repo: parts[0],
+              };
+              this.baseUrl = `/${parts[0]}/docs`;
+            }
+          } else if (hostname && hostname !== "localhost" && hostname !== "127.0.0.1") {
+            const pathParts = window.location.pathname.split("/");
+            const docsIndex = pathParts.indexOf("docs");
+            if (docsIndex !== -1) {
+              this.baseUrl = pathParts.slice(0, docsIndex + 1).join("/");
+            } else {
+              this.baseUrl = pathParts.slice(0, -1).join("/") || ".";
+            }
+          } else {
+            const pathParts = window.location.pathname.split("/");
+            const docsIndex = pathParts.indexOf("docs");
+            if (docsIndex !== -1) {
+              this.baseUrl = pathParts.slice(0, docsIndex + 1).join("/");
+            } else {
+              this.baseUrl = pathParts.slice(0, -1).join("/") || ".";
+            }
+          }
+        },
+
+        buildPhaseList() {
+          this.phases = Object.entries(this.PHASE_NAMES).map(
+            ([id, name]) => ({
+              id,
+              name,
+              epics: [],
+            }),
+          );
+        },
+
+        setupEventListeners() {
+          window.addEventListener("hashchange", () => this.handleRoute());
+        },
+
+        /* ═══════════════════════════════════════
+           Epic Discovery via GitHub Contents API
+           ═══════════════════════════════════════ */
+        async discoverEpics() {
+          if (this.repoInfo) {
+            await this.discoverViaGitHubAPI();
+          }
+        },
+
+        async discoverViaGitHubAPI() {
+          const { owner, repo } = this.repoInfo;
+          const tasks = this.phases.map(async (phase) => {
+            try {
+              const response = await fetch(
+                `https://api.github.com/repos/${owner}/${repo}/contents/docs/${phase.id}`,
+                {
+                  headers: {
+                    Accept: "application/vnd.github.v3+json",
+                  },
+                },
+              );
+              if (!response.ok) return;
+              const files = await response.json();
+              phase.epics = files
+                .filter((f) => f.name.endsWith(".md"))
+                .map((f) => ({
+                  id: this.extractEpicId(f.name),
+                  name: this.formatEpicName(f.name),
+                  file: f.name,
+                  path: `${phase.id}/${f.name}`,
+                }))
+                .sort((a, b) => a.id.localeCompare(b.id));
+            } catch {
+              /* phase directory may not exist */
+            }
+          });
+          await Promise.all(tasks);
+        },
+
+        extractEpicId(filename) {
+          const match = filename.match(/^([A-Z]+_\d+)/);
+          return match ? match[1] : filename;
+        },
+
+        formatEpicName(filename) {
+          const match = filename.match(/^[A-Z]+_\d+_(.+)\.md$/);
+          if (!match) return filename.replace(".md", "");
+          return match[1]
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (c) => c.toUpperCase());
+        },
+
+        /* ═══════════════════════════════════════
+           Navigation Rendering
+           ═══════════════════════════════════════ */
+        renderNav() {
+          const container = document.getElementById("phase-nav");
+          container.innerHTML = "";
+          const fragment = document.createDocumentFragment();
+
+          for (const phase of this.phases) {
+            const group = document.createElement("div");
+            group.className = "phase-group";
+            group.dataset.phase = phase.id;
+
+            const hasEpics = phase.epics.length > 0;
+
+            const header = document.createElement("div");
+            header.className = "phase-group-header";
+            header.setAttribute("role", "button");
+            header.setAttribute("tabindex", "0");
+            header.setAttribute("aria-expanded", "false");
+
+            let badgeHtml = "";
+            if (hasEpics) {
+              badgeHtml = `<span class="phase-group-badge">${phase.epics.length}</span>`;
+            }
+
+            header.innerHTML = `
+              <svg class="phase-group-chevron" viewBox="0 0 16 16" fill="none">
+                <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="phase-group-id">${phase.id}</span>
+              <span class="phase-group-name">${phase.name}</span>
+              ${badgeHtml}
+            `;
+
+            const toggle = () => {
+              const expanded = group.classList.toggle("expanded");
+              header.setAttribute(
+                "aria-expanded",
+                expanded ? "true" : "false",
+              );
+            };
+            header.addEventListener("click", toggle);
+            header.addEventListener("keydown", (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                toggle();
+              }
+            });
+
+            group.appendChild(header);
+
+            if (hasEpics) {
+              const items = document.createElement("div");
+              items.className = "phase-group-items";
+
+              for (const epic of phase.epics) {
+                const item = document.createElement("a");
+                item.className = "phase-group-item";
+                item.href = `#${epic.path}`;
+                item.dataset.path = epic.path;
+                item.innerHTML = `
+                  <span class="phase-group-item-dot"></span>
+                  ${epic.id}: ${epic.name}
+                `;
+                items.appendChild(item);
+              }
+
+              group.appendChild(items);
+              group.classList.add("expanded");
+              header.setAttribute("aria-expanded", "true");
+            }
+
+            fragment.appendChild(group);
+          }
+
+          container.appendChild(fragment);
+        },
+
+        updateActiveNav(path) {
+          document
+            .querySelectorAll(
+              ".sidebar-link, .phase-group-item",
+            )
+            .forEach((el) => {
+              el.classList.toggle(
+                "active",
+                el.dataset.path === path,
+              );
+            });
+
+          document
+            .querySelectorAll(".phase-group-header")
+            .forEach((header) => {
+              const section = header.parentElement;
+              const isActive = section.querySelector(
+                `.phase-group-item[data-path="${path}"]`,
+              );
+              header.classList.toggle("active", !!isActive);
+              if (isActive) {
+                section.classList.add("expanded");
+                header.setAttribute("aria-expanded", "true");
+              }
+            });
+        },
+
+        /* ═══════════════════════════════════════
+           Routing
+           ═══════════════════════════════════════ */
+        handleRoute() {
+          const hash = window.location.hash.slice(1);
+          const path = decodeURIComponent(hash);
+
+          if (path === this.currentPath) return;
+          this.currentPath = path;
+
+          this.updateActiveNav(path);
+
+          if (!path || path === "/") {
+            this.renderLanding();
+          } else {
+            this.loadAndRenderDoc(path);
+          }
+        },
+
+        /* ═══════════════════════════════════════
+           Document Fetching
+           ═══════════════════════════════════════ */
+        async fetchDoc(path) {
+          if (this.docCache.has(path)) {
+            return this.docCache.get(path);
+          }
+
+          let url;
+          if (this.repoInfo) {
+            const { owner, repo } = this.repoInfo;
+            url = `https://raw.githubusercontent.com/${owner}/${repo}/main/docs/${path}`;
+          } else {
+            url =
+              this.baseUrl === "."
+                ? path
+                : `${this.baseUrl}/${path}`;
+          }
+
+          const response = await fetch(url);
+          if (!response.ok)
+            throw new Error(`Failed to fetch ${path}: ${response.status}`);
+
+          const content = await response.text();
+          this.docCache.set(path, content);
+          return content;
+        },
+
+        /* ═══════════════════════════════════════
+           Document Rendering
+           ═══════════════════════════════════════ */
+        async loadAndRenderDoc(path) {
+          const content = document.getElementById("content");
+          const breadcrumb = document.getElementById("headerBreadcrumb");
+
+          content.innerHTML =
+            '<div class="loading"><div class="loading-spinner"></div></div>';
+
+          try {
+            const markdown = await this.fetchDoc(path);
+            const html = this.renderMarkdown(markdown);
+            content.innerHTML = `<article class="markdown-body">${html}</article>`;
+
+            const h1 = content.querySelector("h1");
+            breadcrumb.textContent = h1
+              ? h1.textContent
+              : path;
+
+            content.querySelectorAll("pre code").forEach((block) => {
+              hljs.highlightElement(block);
+            });
+          } catch {
+            content.innerHTML = `
+              <div class="error-state">
+                <div class="error-state-title">Document not found</div>
+                <div class="error-state-message">Could not load "${path}". The file may not exist yet.</div>
+              </div>
+            `;
+            breadcrumb.textContent = "Not Found";
+          }
+        },
+
+        renderMarkdown(text) {
+          marked.setOptions({
+            gfm: true,
+            breaks: false,
+          });
+          return marked.parse(text);
+        },
+
+        /* ═══════════════════════════════════════
+           Landing Page
+           ═══════════════════════════════════════ */
+        renderLanding() {
+          const content = document.getElementById("content");
+          document.getElementById("headerBreadcrumb").textContent =
+            "Engineering Documentation";
+
+          content.innerHTML = `
+            <section class="hero">
+              <div class="hero-eyebrow">
+                <span class="hero-eyebrow-dot"></span>
+                Project OtterVerse
+              </div>
+              <h1>
+                Engineering Handbook for<br />
+                <span class="accent">Starlight Sync</span>
+              </h1>
+              <p class="hero-description">
+                Starlight Sync is an iOS-native interactive experience built with
+                SwiftUI, SpriteKit, CoreHaptics, and AVFoundation. This documentation
+                governs the full implementation lifecycle across 17 sequential phases,
+                from Xcode scaffold through TestFlight distribution. The architecture
+                follows a strict Flow Coordinator pattern with chapter isolation,
+                singleton managers for audio and haptics, and zero third-party
+                dependencies.
+              </p>
+              <div class="hero-links">
+                <a href="#PHASES.md" class="hero-link hero-link-primary">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/>
+                    <path d="M6 5h4M6 8h4M6 11h2"/>
+                  </svg>
+                  Phase Plan
+                </a>
+                <a href="#AGENT_CONTEXT_SYSTEM.md" class="hero-link hero-link-secondary">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="8" cy="8" r="3"/>
+                    <path d="M8 1v2M8 13v2M1 8h2M13 8h2"/>
+                  </svg>
+                  Agent Context System
+                </a>
+              </div>
+            </section>
+
+            <div class="arch-grid">
+              <div class="arch-card">
+                <div class="arch-card-icon orange">
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="2" width="12" height="12" rx="2"/>
+                    <path d="M5 8h6M8 5v6"/>
+                  </svg>
+                </div>
+                <h3>Flow Coordinator</h3>
+                <p>Linear state machine governing chapter transitions, checkpoint persistence, and Auto-Assist thresholds. Single source of truth for app state.</p>
+              </div>
+              <div class="arch-card">
+                <div class="arch-card-icon blue">
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 4l6-2 6 2v5c0 3-3 5-6 6-3-1-6-3-6-6V4z"/>
+                  </svg>
+                </div>
+                <h3>Chapter Isolation</h3>
+                <p>Six self-contained chapters with independent visual identity, game mechanics, and resource ownership. No cross-chapter imports permitted.</p>
+              </div>
+              <div class="arch-card">
+                <div class="arch-card-icon green">
+                  <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="8" cy="8" r="6"/>
+                    <path d="M8 5v3l2 2"/>
+                  </svg>
+                </div>
+                <h3>Zero Dependencies</h3>
+                <p>Exclusively Apple-native frameworks. No SPM, no CocoaPods, no third-party code. Offline-capable with a single fire-and-forget webhook.</p>
+              </div>
+            </div>
+
+            <section class="section" id="phases">
+              <div class="section-header">
+                <h2>Implementation Phases</h2>
+                <div class="section-header-line"></div>
+              </div>
+              <p class="section-description">
+                17 sequential phases following a Walking Skeleton, Vertical Slice, and
+                MVP methodology. Risk-adjusted critical path with Finish-to-Start
+                dependencies.
+              </p>
+              <div class="phase-table-wrapper">
+                <table class="phase-table">
+                  <thead>
+                    <tr><th>Phase</th><th>Name</th><th>Description</th><th>Risk</th><th>Size</th><th>Deps</th></tr>
+                  </thead>
+                  <tbody>
+                    ${this.renderPhaseRows()}
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="critical-path">
+                <h3>Critical Path</h3>
+                <div class="critical-path-flow">
+                  ${["PH-01", "PH-02", "PH-06", "PH-08", "PH-10", "PH-13", "PH-14", "PH-15", "PH-16", "PH-17"]
+                    .map(
+                      (id, i, arr) =>
+                        `<span class="critical-path-node">${id}</span>${i < arr.length - 1 ? '<span class="critical-path-arrow">&rarr;</span>' : ""}`,
+                    )
+                    .join("")}
+                </div>
+                <div class="dep-graph">
+                  <div class="dep-graph-label">Parallel Execution Tracks</div>
+                  <div class="dep-tracks">
+                    <div class="dep-track">
+                      <div class="dep-track-name">Infrastructure Track</div>
+                      <div class="dep-track-phases">PH-03, PH-04, PH-05</div>
+                      <div class="dep-track-merge">Merges before PH-07</div>
+                    </div>
+                    <div class="dep-track">
+                      <div class="dep-track-name">Webhook Track</div>
+                      <div class="dep-track-phases">PH-12</div>
+                      <div class="dep-track-merge">Merges at PH-13</div>
+                    </div>
+                    <div class="dep-track">
+                      <div class="dep-track-name">Chapter Track A</div>
+                      <div class="dep-track-phases">PH-07, PH-08</div>
+                      <div class="dep-track-merge">Sequential validation</div>
+                    </div>
+                    <div class="dep-track">
+                      <div class="dep-track-name">Chapter Track B</div>
+                      <div class="dep-track-phases">PH-09, PH-11</div>
+                      <div class="dep-track-merge">Parallel with PH-08, PH-10</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <footer class="footer">
+              <span class="footer-text">Starlight Sync &middot; Project OtterVerse</span>
+              <span class="footer-meta">iOS 19+ &middot; Swift 5.9+ &middot; Zero Dependencies</span>
+            </footer>
+          `;
+        },
+
+        PHASE_TABLE_DATA: [
+          { id: "PH-01", desc: "Initialize Xcode project targeting iOS 19+ with directory structure, asset catalogs, and git repository.", risk: "low", size: "S", deps: "&mdash;" },
+          { id: "PH-02", desc: "Implement @Observable FlowCoordinator with chapter enum, linear transitions, UserDefaults persistence, and view routing skeleton.", risk: "low", size: "M", deps: "PH-01" },
+          { id: "PH-03", desc: "AVFoundation audio with .playback session, dual-player cross-fade, interruption handling, and SFX playback API.", risk: "medium", size: "L", deps: "PH-02" },
+          { id: "PH-04", desc: "CoreHaptics engine with lifecycle recovery, AHAP pattern caching, graceful degradation, and pattern playback API.", risk: "medium", size: "M", deps: "PH-02" },
+          { id: "PH-05", desc: "Launch-time orchestration for HEIC decode, texture atlas preload, audio prepare, and AHAP parse within the Chapter 1 interaction window.", risk: "medium", size: "M", deps: "PH-03, PH-04" },
+          { id: "PH-06", desc: "Named constants for all tuning values, Auto-Assist thresholds, beat map, and type-safe enums for asset identifiers.", risk: "low", size: "S", deps: "PH-02" },
+          { id: "PH-07", desc: "Long-press fingerprint interaction with capacitor charge haptics, CRT turn-on transition, and Reduce Motion fallback.", risk: "low", size: "M", deps: "PH-02, PH-06" },
+          { id: "PH-08", desc: "SpriteKit side-scroller with physics-based collision, heart collection, 120fps target, and Auto-Assist speed reduction.", risk: "high", size: "XL", deps: "PH-02, PH-06" },
+          { id: "PH-09", desc: "Cryptex puzzle with three scroll wheels, haptic clicks per tick, and Auto-Assist glow on correct segment.", risk: "medium", size: "L", deps: "PH-02, PH-06" },
+          { id: "PH-10", desc: "SpriteKit rhythm game with beat-synced particle spawning via CACurrentMediaTime and adjustable hit windows.", risk: "high", size: "XL", deps: "PH-02, PH-06, PH-03" },
+          { id: "PH-11", desc: "Drag-to-connect node graph forming a heart silhouette with 4 labeled cornerstones and idle-triggered Auto-Assist.", risk: "medium", size: "L", deps: "PH-02, PH-06" },
+          { id: "PH-12", desc: "Discord webhook with XOR-encoded URL storage, 3x exponential backoff retry, and fire-and-forget execution.", risk: "low", size: "M", deps: "PH-01" },
+          { id: "PH-13", desc: "Progressive-resistance friction slider, parallel finale orchestration (webhook, audio, confetti, art cross-fade).", risk: "high", size: "XL", deps: "PH-02, PH-06, PH-12" },
+          { id: "PH-14", desc: "Spatial transitions with matchedGeometryEffect, audio cross-fade wiring, SpriteView memory cleanup, and Reduce Motion compliance.", risk: "medium", size: "L", deps: "PH-07 — PH-13" },
+          { id: "PH-15", desc: "XCTest coverage for FlowCoordinator, cipher validation, webhook retry logic, and beat map data integrity.", risk: "low", size: "L", deps: "PH-02, PH-09, PH-12, PH-06" },
+          { id: "PH-16", desc: "Full playtest on iPhone 17 Pro validating haptics, audio sync, transitions, Auto-Assist, interruption recovery, and slider tuning.", risk: "high", size: "L", deps: "PH-14, PH-15" },
+          { id: "PH-17", desc: "Archive, upload to App Store Connect, process through TestFlight, and send invitation to the target recipient.", risk: "low", size: "S", deps: "PH-16" },
+        ],
+
+        renderPhaseRows() {
+          return this.PHASE_TABLE_DATA.map(
+            (p) => `
+            <tr>
+              <td><span class="phase-id">${p.id}</span></td>
+              <td><span class="phase-name">${this.PHASE_NAMES[p.id]}</span></td>
+              <td><span class="phase-desc">${p.desc}</span></td>
+              <td><span class="phase-risk ${p.risk}">${p.risk.charAt(0).toUpperCase() + p.risk.slice(1)}</span></td>
+              <td><span class="phase-complexity">${p.size}</span></td>
+              <td><span class="phase-deps">${p.deps}</span></td>
+            </tr>
+          `,
+          ).join("");
+        },
+      };
+
+      document.addEventListener("DOMContentLoaded", () => App.init());
+    </script>
+  </body>
+</html>

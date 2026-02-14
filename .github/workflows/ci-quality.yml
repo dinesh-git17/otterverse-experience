@@ -1,0 +1,148 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  markdown-lint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli@0.43.0
+
+      - name: Lint markdown files
+        run: |
+          markdownlint '**/*.md' \
+            --config .markdownlint.json \
+            --ignore-path .markdownlintignore \
+            --ignore .git \
+            --ignore node_modules \
+            --ignore .mypy_cache \
+            --ignore .claude/skills/*/references/*.md
+
+  shellcheck:
+    name: Shell Script Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Validate shell scripts
+        run: |
+          SCRIPTS=$(find . -name '*.sh' -not -path './.git/*' -type f)
+          if [ -z "$SCRIPTS" ]; then
+            echo "No shell scripts found."
+            exit 0
+          fi
+          echo "Validating shell scripts:"
+          echo "$SCRIPTS"
+          echo "$SCRIPTS" | xargs shellcheck --severity=warning --shell=bash
+          echo "All shell scripts passed validation."
+
+  python-syntax:
+    name: Python Syntax Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate Python syntax
+        run: |
+          PY_FILES=$(find . -name '*.py' -not -path './.git/*' -not -path './.mypy_cache/*' -type f)
+          if [ -z "$PY_FILES" ]; then
+            echo "No Python files found."
+            exit 0
+          fi
+          echo "Checking Python syntax:"
+          echo "$PY_FILES"
+          echo "$PY_FILES" | xargs python3 -m py_compile
+          echo "All Python files have valid syntax."
+
+  json-validation:
+    name: JSON & AHAP Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON files
+        run: |
+          JSON_FILES=$(find . -name '*.json' -not -path './.git/*' -not -path './.mypy_cache/*' \
+            -not -path './node_modules/*' -type f)
+          if [ -z "$JSON_FILES" ]; then
+            echo "No JSON files found."
+            exit 0
+          fi
+          ERRORS=0
+          while IFS= read -r f; do
+            if ! python3 -m json.tool "$f" > /dev/null 2>&1; then
+              echo "::error file=${f}::Invalid JSON: ${f}"
+              ERRORS=1
+            fi
+          done <<< "$JSON_FILES"
+          if [ "$ERRORS" -eq 1 ]; then exit 1; fi
+          echo "All JSON files are valid."
+
+      - name: Validate AHAP files
+        run: |
+          AHAP_FILES=$(find . -name '*.ahap' -not -path './.git/*' -type f || true)
+          if [ -z "$AHAP_FILES" ]; then
+            echo "No AHAP files found. Skipping."
+            exit 0
+          fi
+          ERRORS=0
+          while IFS= read -r f; do
+            if ! python3 -m json.tool "$f" > /dev/null 2>&1; then
+              echo "::error file=${f}::Invalid AHAP JSON: ${f}"
+              ERRORS=1
+            fi
+          done <<< "$AHAP_FILES"
+          if [ "$ERRORS" -eq 1 ]; then exit 1; fi
+          echo "All AHAP files are valid JSON."
+
+  commit-lint:
+    name: Conventional Commits (CC-001)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate PR title format
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          PATTERN='^(feat|fix|refactor|test|chore|docs)\((coordinator|audio|haptics|webhook|ch[1-6]|assets|tests|ci|skills|context)\): .+'
+          if ! echo "$PR_TITLE" | grep -qE "$PATTERN"; then
+            echo "::error::PR title does not match Conventional Commits format."
+            echo ""
+            echo "Expected: type(scope): imperative description"
+            echo "  Types:  feat | fix | refactor | test | chore | docs"
+            echo "  Scopes: coordinator | audio | haptics | webhook | ch1-ch6 | assets | tests | ci | skills | context"
+            echo ""
+            echo "Received: ${PR_TITLE}"
+            exit 1
+          fi
+          echo "PR title conforms to Conventional Commits: ${PR_TITLE}"

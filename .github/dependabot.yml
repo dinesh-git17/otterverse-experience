@@ -1,0 +1,35 @@
+# Dependabot configuration — Starlight Sync
+#
+# This project has ZERO third-party dependencies by architectural mandate
+# (CLAUDE.md §3.1). Dependabot monitors GitHub Actions workflows only.
+#
+# If the project ever introduces SPM packages (requires design doc amendment),
+# add a "swift" package-ecosystem entry below.
+
+version: 2
+
+updates:
+  # GitHub Actions — monitor for security patches and runner updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    assignees:
+      - "dinesh-git17"
+    labels:
+      - "dependencies"
+      - "ci"
+    commit-message:
+      prefix: "chore(ci)"
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+      major:
+        update-types:
+          - "major"

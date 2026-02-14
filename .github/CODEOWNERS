@@ -1,0 +1,83 @@
+# CODEOWNERS — Starlight Sync (Project OtterVerse)
+#
+# Ownership rules enforcing architectural responsibility boundaries.
+# Reference: CLAUDE.md §3.3 (Component Boundaries), §8 (Project Structure)
+#
+# Syntax: pattern    owner(s)
+# Order matters: last matching pattern takes precedence.
+
+# ──────────────────────────────────────────────
+# Default ownership (catch-all)
+# ──────────────────────────────────────────────
+*                                           @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Governance & Architecture (requires explicit review)
+# ──────────────────────────────────────────────
+CLAUDE.md                                   @dinesh-git17
+Design-Doc.md                               @dinesh-git17
+docs/                                       @dinesh-git17
+docs/PHASES.md                              @dinesh-git17
+docs/AGENT_CONTEXT_SYSTEM.md                @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Core Architecture — FlowCoordinator state machine
+# ──────────────────────────────────────────────
+StarlightSync/Coordinators/                 @dinesh-git17
+StarlightSync/StarlightSyncApp.swift        @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Singleton Managers — Audio & Haptic engine lifecycle
+# ──────────────────────────────────────────────
+StarlightSync/Managers/                     @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Security-sensitive — Webhook, secrets, network boundary
+# ──────────────────────────────────────────────
+StarlightSync/Services/                     @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Game Constants — Tuning values, beat maps, thresholds
+# ──────────────────────────────────────────────
+StarlightSync/Models/                       @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Chapter implementations (per-chapter isolation)
+# ──────────────────────────────────────────────
+StarlightSync/Chapters/                     @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Shared UI components
+# ──────────────────────────────────────────────
+StarlightSync/Components/                   @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Media assets — HEIC, sprites, audio, haptic patterns
+# ──────────────────────────────────────────────
+StarlightSync/Assets.xcassets/              @dinesh-git17
+StarlightSync/Audio/                        @dinesh-git17
+StarlightSync/Haptics/                      @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Skill infrastructure — Agent tooling
+# ──────────────────────────────────────────────
+.claude/                                    @dinesh-git17
+.claude/skills/                             @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Agent Context System — Persistent agent memory
+# ──────────────────────────────────────────────
+.claude/context/                            @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Scripts & automation
+# ──────────────────────────────────────────────
+scripts/                                    @dinesh-git17
+
+# ──────────────────────────────────────────────
+# Build & project configuration
+# ──────────────────────────────────────────────
+*.xcodeproj                                 @dinesh-git17
+*.xcworkspace                               @dinesh-git17
+.gitignore                                  @dinesh-git17
+.github/                                    @dinesh-git17
