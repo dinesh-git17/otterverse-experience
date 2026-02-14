@@ -37,17 +37,17 @@ jobs:
             const head_sha = context.payload.workflow_run.head_sha;
 
             const targetWorkflows = [
-              'Governance & Security',
-              'Code Quality',
-              'Build & Test'
+              { name: 'Governance & Security', file: 'ci-governance.yml' },
+              { name: 'Code Quality', file: 'ci-quality.yml' },
+              { name: 'Build & Test', file: 'ci-build.yml' }
             ];
 
             const results = [];
-            for (const name of targetWorkflows) {
+            for (const { name, file } of targetWorkflows) {
               try {
                 const runs = await github.rest.actions.listWorkflowRuns({
                   owner, repo,
-                  workflow_id: name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-') + '.yml',
+                  workflow_id: file,
                   head_sha: head_sha,
                   per_page: 1
                 });
