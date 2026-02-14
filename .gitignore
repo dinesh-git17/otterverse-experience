@@ -5,6 +5,7 @@
 ._*
 .Spotlight-V100
 .Trashes
+Thumbs.db
 
 # === Xcode ===
 ## Build artifacts
@@ -16,6 +17,8 @@ DerivedData/
 *.xcuserdata
 *.xcscmblueprint
 *.xccheckout
+*.pbxuser
+*.perspectivev3
 
 ## Workspace settings (no shared workspace required)
 *.xcworkspace/xcuserdata/
@@ -40,6 +43,7 @@ Package.resolved
 *.atlasc
 
 # === Secrets (Design-Doc §9.4, CLAUDE.md §5) ===
+.env
 *.env
 *.secret
 Secrets.plaintext

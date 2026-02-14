@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-02-14T12:00:00Z
-total_entries: 2
+last_updated: 2026-02-14T12:30:00Z
+total_entries: 3
 schema_version: 1
 ---
 
@@ -33,3 +33,19 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
   - S7: Build validation — zero errors, zero compiler warnings
 - **Files created:** 32 (2 Swift sources, 17 Contents.json, 14 .gitkeep, project.pbxproj, xcscheme)
 - **Verification:** `xcodebuild clean build` exits 0, zero errors, zero compiler warnings
+
+### 2026-02-14 — INFRA_02: Version control hardening
+
+- **Phase:** PH-01
+- **Scope:** .gitignore secret exclusion patterns, pre-commit audit skeleton
+- **Branch:** `feat/infra-02-version-control`
+- **Stories completed:** 6/6
+  - S1: .gitignore Xcode exclusion rules (*.pbxuser, *.perspectivev3 added)
+  - S2: Secret exclusion patterns (.env, *.secret, *.pem, *.p12, *.mobileprovision)
+  - S3: scripts/audit.py skeleton with 7 check IDs (PZ-001 through CB-001)
+  - S4: Git repository verified on main (pre-existing from INFRA_01)
+  - S5: Initial commit verified (project skeleton committed via INFRA_01)
+  - S6: Validation — build succeeds, audit exits 0, directory tree matches §8
+- **Files created:** 1 (scripts/audit.py)
+- **Files modified:** 1 (.gitignore)
+- **Verification:** `xcodebuild build` succeeds, `python3 scripts/audit.py --all` exits 0
