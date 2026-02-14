@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-14T12:00:00Z
+last_updated: 2026-02-14T18:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -8,18 +8,19 @@ schema_version: 1
 
 ## Current Phase
 
-**PH-01** — Xcode Project Scaffold
-Completion: 100%
-Status: Complete
+**PH-02** — FlowCoordinator State Machine
+Completion: 0%
+Status: Not Started
 
 ## Blocking Issues
 
-None. PH-01 deliverables ready for review.
+None. PH-01 gate passed. PH-02 and PH-12 unblocked.
 
 ## Recently Completed
 
-- INFRA_01: Bootstrap Xcode project (all 7 stories)
-- INFRA_02: Version control hardening (.gitignore patch, audit script skeleton)
+- **PH-01 COMPLETE** — Xcode Project Scaffold (all epics delivered)
+  - INFRA_01: Bootstrap Xcode project (7/7 stories, PR #6)
+  - INFRA_02: Version control hardening (6/6 stories, PR #8)
 
 ## Active Decisions
 
@@ -53,5 +54,6 @@ No ADRs recorded.
 ## Coordination Notes
 
 INFRA_01 merged via PR #6.
-INFRA_02 in review.
-Next: PH-02 (FlowCoordinator state machine).
+INFRA_02 merged via PR #8.
+PH-01 phase gate: PASSED.
+Next: PH-02 (FlowCoordinator state machine), PH-12 (WebhookService) now unblocked.
