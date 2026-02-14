@@ -48,10 +48,12 @@
         --radius-md: 8px;
         --radius-lg: 12px;
 
-        --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, sans-serif;
-        --font-mono: "SF Mono", "Fira Code", "Cascadia Code",
-          "JetBrains Mono", Consolas, monospace;
+        --font-sans:
+          "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        --font-mono:
+          "SF Mono", "Fira Code", "Cascadia Code", "JetBrains Mono", Consolas,
+          monospace;
 
         --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
         --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -537,11 +539,7 @@
       .section-header-line {
         flex: 1;
         height: 1px;
-        background: linear-gradient(
-          90deg,
-          var(--border-default),
-          transparent
-        );
+        background: linear-gradient(90deg, var(--border-default), transparent);
       }
 
       .section-description {
@@ -1146,6 +1144,27 @@
             </svg>
             Introduction
           </a>
+          <a
+            href="#SAMPLE_COST_EVAL.md"
+            class="sidebar-link"
+            data-path="SAMPLE_COST_EVAL.md"
+          >
+            <svg
+              class="sidebar-link-icon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M3 3h10a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1z"
+              />
+              <path d="M5 6h6M5 9h4" />
+            </svg>
+            Cost Evaluation
+          </a>
           <a href="#PHASES.md" class="sidebar-link" data-path="PHASES.md">
             <svg
               class="sidebar-link-icon"
@@ -1240,9 +1259,7 @@
         detectEnvironment() {
           const hostname = window.location.hostname;
           if (hostname.endsWith(".github.io")) {
-            const parts = window.location.pathname
-              .split("/")
-              .filter(Boolean);
+            const parts = window.location.pathname.split("/").filter(Boolean);
             if (parts.length > 0) {
               this.repoInfo = {
                 owner: hostname.replace(".github.io", ""),
@@ -1250,7 +1267,11 @@
               };
               this.baseUrl = `/${parts[0]}/docs`;
             }
-          } else if (hostname && hostname !== "localhost" && hostname !== "127.0.0.1") {
+          } else if (
+            hostname &&
+            hostname !== "localhost" &&
+            hostname !== "127.0.0.1"
+          ) {
             const pathParts = window.location.pathname.split("/");
             const docsIndex = pathParts.indexOf("docs");
             if (docsIndex !== -1) {
@@ -1270,13 +1291,11 @@
         },
 
         buildPhaseList() {
-          this.phases = Object.entries(this.PHASE_NAMES).map(
-            ([id, name]) => ({
-              id,
-              name,
-              epics: [],
-            }),
-          );
+          this.phases = Object.entries(this.PHASE_NAMES).map(([id, name]) => ({
+            id,
+            name,
+            epics: [],
+          }));
         },
 
         setupEventListeners() {
@@ -1372,10 +1391,7 @@
 
             const toggle = () => {
               const expanded = group.classList.toggle("expanded");
-              header.setAttribute(
-                "aria-expanded",
-                expanded ? "true" : "false",
-              );
+              header.setAttribute("aria-expanded", expanded ? "true" : "false");
             };
             header.addEventListener("click", toggle);
             header.addEventListener("keydown", (e) => {
@@ -1416,29 +1432,22 @@
 
         updateActiveNav(path) {
           document
-            .querySelectorAll(
-              ".sidebar-link, .phase-group-item",
-            )
+            .querySelectorAll(".sidebar-link, .phase-group-item")
             .forEach((el) => {
-              el.classList.toggle(
-                "active",
-                el.dataset.path === path,
-              );
+              el.classList.toggle("active", el.dataset.path === path);
             });
 
-          document
-            .querySelectorAll(".phase-group-header")
-            .forEach((header) => {
-              const section = header.parentElement;
-              const isActive = section.querySelector(
-                `.phase-group-item[data-path="${path}"]`,
-              );
-              header.classList.toggle("active", !!isActive);
-              if (isActive) {
-                section.classList.add("expanded");
-                header.setAttribute("aria-expanded", "true");
-              }
-            });
+          document.querySelectorAll(".phase-group-header").forEach((header) => {
+            const section = header.parentElement;
+            const isActive = section.querySelector(
+              `.phase-group-item[data-path="${path}"]`,
+            );
+            header.classList.toggle("active", !!isActive);
+            if (isActive) {
+              section.classList.add("expanded");
+              header.setAttribute("aria-expanded", "true");
+            }
+          });
         },
 
         /* ═══════════════════════════════════════
@@ -1473,10 +1482,7 @@
             const { owner, repo } = this.repoInfo;
             url = `https://raw.githubusercontent.com/${owner}/${repo}/main/docs/${path}`;
           } else {
-            url =
-              this.baseUrl === "."
-                ? path
-                : `${this.baseUrl}/${path}`;
+            url = this.baseUrl === "." ? path : `${this.baseUrl}/${path}`;
           }
 
           const response = await fetch(url);
@@ -1504,9 +1510,7 @@
             content.innerHTML = `<article class="markdown-body">${html}</article>`;
 
             const h1 = content.querySelector("h1");
-            breadcrumb.textContent = h1
-              ? h1.textContent
-              : path;
+            breadcrumb.textContent = h1 ? h1.textContent : path;
 
             content.querySelectorAll("pre code").forEach((block) => {
               hljs.highlightElement(block);
@@ -1564,6 +1568,13 @@
                     <path d="M6 5h4M6 8h4M6 11h2"/>
                   </svg>
                   Phase Plan
+                </a>
+                <a href="#SAMPLE_COST_EVAL.md" class="hero-link hero-link-secondary">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 3h10a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1z"/>
+                    <path d="M5 6h6M5 9h4"/>
+                  </svg>
+                  Cost Evaluation
                 </a>
                 <a href="#AGENT_CONTEXT_SYSTEM.md" class="hero-link hero-link-secondary">
                   <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1631,7 +1642,18 @@
               <div class="critical-path">
                 <h3>Critical Path</h3>
                 <div class="critical-path-flow">
-                  ${["PH-01", "PH-02", "PH-06", "PH-08", "PH-10", "PH-13", "PH-14", "PH-15", "PH-16", "PH-17"]
+                  ${[
+                    "PH-01",
+                    "PH-02",
+                    "PH-06",
+                    "PH-08",
+                    "PH-10",
+                    "PH-13",
+                    "PH-14",
+                    "PH-15",
+                    "PH-16",
+                    "PH-17",
+                  ]
                     .map(
                       (id, i, arr) =>
                         `<span class="critical-path-node">${id}</span>${i < arr.length - 1 ? '<span class="critical-path-arrow">&rarr;</span>' : ""}`,
@@ -1674,23 +1696,125 @@
         },
 
         PHASE_TABLE_DATA: [
-          { id: "PH-01", desc: "Initialize Xcode project targeting iOS 19+ with directory structure, asset catalogs, and git repository.", risk: "low", size: "S", deps: "&mdash;" },
-          { id: "PH-02", desc: "Implement @Observable FlowCoordinator with chapter enum, linear transitions, UserDefaults persistence, and view routing skeleton.", risk: "low", size: "M", deps: "PH-01" },
-          { id: "PH-03", desc: "AVFoundation audio with .playback session, dual-player cross-fade, interruption handling, and SFX playback API.", risk: "medium", size: "L", deps: "PH-02" },
-          { id: "PH-04", desc: "CoreHaptics engine with lifecycle recovery, AHAP pattern caching, graceful degradation, and pattern playback API.", risk: "medium", size: "M", deps: "PH-02" },
-          { id: "PH-05", desc: "Launch-time orchestration for HEIC decode, texture atlas preload, audio prepare, and AHAP parse within the Chapter 1 interaction window.", risk: "medium", size: "M", deps: "PH-03, PH-04" },
-          { id: "PH-06", desc: "Named constants for all tuning values, Auto-Assist thresholds, beat map, and type-safe enums for asset identifiers.", risk: "low", size: "S", deps: "PH-02" },
-          { id: "PH-07", desc: "Long-press fingerprint interaction with capacitor charge haptics, CRT turn-on transition, and Reduce Motion fallback.", risk: "low", size: "M", deps: "PH-02, PH-06" },
-          { id: "PH-08", desc: "SpriteKit side-scroller with physics-based collision, heart collection, 120fps target, and Auto-Assist speed reduction.", risk: "high", size: "XL", deps: "PH-02, PH-06" },
-          { id: "PH-09", desc: "Cryptex puzzle with three scroll wheels, haptic clicks per tick, and Auto-Assist glow on correct segment.", risk: "medium", size: "L", deps: "PH-02, PH-06" },
-          { id: "PH-10", desc: "SpriteKit rhythm game with beat-synced particle spawning via CACurrentMediaTime and adjustable hit windows.", risk: "high", size: "XL", deps: "PH-02, PH-06, PH-03" },
-          { id: "PH-11", desc: "Drag-to-connect node graph forming a heart silhouette with 4 labeled cornerstones and idle-triggered Auto-Assist.", risk: "medium", size: "L", deps: "PH-02, PH-06" },
-          { id: "PH-12", desc: "Discord webhook with XOR-encoded URL storage, 3x exponential backoff retry, and fire-and-forget execution.", risk: "low", size: "M", deps: "PH-01" },
-          { id: "PH-13", desc: "Progressive-resistance friction slider, parallel finale orchestration (webhook, audio, confetti, art cross-fade).", risk: "high", size: "XL", deps: "PH-02, PH-06, PH-12" },
-          { id: "PH-14", desc: "Spatial transitions with matchedGeometryEffect, audio cross-fade wiring, SpriteView memory cleanup, and Reduce Motion compliance.", risk: "medium", size: "L", deps: "PH-07 — PH-13" },
-          { id: "PH-15", desc: "XCTest coverage for FlowCoordinator, cipher validation, webhook retry logic, and beat map data integrity.", risk: "low", size: "L", deps: "PH-02, PH-09, PH-12, PH-06" },
-          { id: "PH-16", desc: "Full playtest on iPhone 17 Pro validating haptics, audio sync, transitions, Auto-Assist, interruption recovery, and slider tuning.", risk: "high", size: "L", deps: "PH-14, PH-15" },
-          { id: "PH-17", desc: "Archive, upload to App Store Connect, process through TestFlight, and send invitation to the target recipient.", risk: "low", size: "S", deps: "PH-16" },
+          {
+            id: "PH-01",
+            desc: "Initialize Xcode project targeting iOS 19+ with directory structure, asset catalogs, and git repository.",
+            risk: "low",
+            size: "S",
+            deps: "&mdash;",
+          },
+          {
+            id: "PH-02",
+            desc: "Implement @Observable FlowCoordinator with chapter enum, linear transitions, UserDefaults persistence, and view routing skeleton.",
+            risk: "low",
+            size: "M",
+            deps: "PH-01",
+          },
+          {
+            id: "PH-03",
+            desc: "AVFoundation audio with .playback session, dual-player cross-fade, interruption handling, and SFX playback API.",
+            risk: "medium",
+            size: "L",
+            deps: "PH-02",
+          },
+          {
+            id: "PH-04",
+            desc: "CoreHaptics engine with lifecycle recovery, AHAP pattern caching, graceful degradation, and pattern playback API.",
+            risk: "medium",
+            size: "M",
+            deps: "PH-02",
+          },
+          {
+            id: "PH-05",
+            desc: "Launch-time orchestration for HEIC decode, texture atlas preload, audio prepare, and AHAP parse within the Chapter 1 interaction window.",
+            risk: "medium",
+            size: "M",
+            deps: "PH-03, PH-04",
+          },
+          {
+            id: "PH-06",
+            desc: "Named constants for all tuning values, Auto-Assist thresholds, beat map, and type-safe enums for asset identifiers.",
+            risk: "low",
+            size: "S",
+            deps: "PH-02",
+          },
+          {
+            id: "PH-07",
+            desc: "Long-press fingerprint interaction with capacitor charge haptics, CRT turn-on transition, and Reduce Motion fallback.",
+            risk: "low",
+            size: "M",
+            deps: "PH-02, PH-06",
+          },
+          {
+            id: "PH-08",
+            desc: "SpriteKit side-scroller with physics-based collision, heart collection, 120fps target, and Auto-Assist speed reduction.",
+            risk: "high",
+            size: "XL",
+            deps: "PH-02, PH-06",
+          },
+          {
+            id: "PH-09",
+            desc: "Cryptex puzzle with three scroll wheels, haptic clicks per tick, and Auto-Assist glow on correct segment.",
+            risk: "medium",
+            size: "L",
+            deps: "PH-02, PH-06",
+          },
+          {
+            id: "PH-10",
+            desc: "SpriteKit rhythm game with beat-synced particle spawning via CACurrentMediaTime and adjustable hit windows.",
+            risk: "high",
+            size: "XL",
+            deps: "PH-02, PH-06, PH-03",
+          },
+          {
+            id: "PH-11",
+            desc: "Drag-to-connect node graph forming a heart silhouette with 4 labeled cornerstones and idle-triggered Auto-Assist.",
+            risk: "medium",
+            size: "L",
+            deps: "PH-02, PH-06",
+          },
+          {
+            id: "PH-12",
+            desc: "Discord webhook with XOR-encoded URL storage, 3x exponential backoff retry, and fire-and-forget execution.",
+            risk: "low",
+            size: "M",
+            deps: "PH-01",
+          },
+          {
+            id: "PH-13",
+            desc: "Progressive-resistance friction slider, parallel finale orchestration (webhook, audio, confetti, art cross-fade).",
+            risk: "high",
+            size: "XL",
+            deps: "PH-02, PH-06, PH-12",
+          },
+          {
+            id: "PH-14",
+            desc: "Spatial transitions with matchedGeometryEffect, audio cross-fade wiring, SpriteView memory cleanup, and Reduce Motion compliance.",
+            risk: "medium",
+            size: "L",
+            deps: "PH-07 — PH-13",
+          },
+          {
+            id: "PH-15",
+            desc: "XCTest coverage for FlowCoordinator, cipher validation, webhook retry logic, and beat map data integrity.",
+            risk: "low",
+            size: "L",
+            deps: "PH-02, PH-09, PH-12, PH-06",
+          },
+          {
+            id: "PH-16",
+            desc: "Full playtest on iPhone 17 Pro validating haptics, audio sync, transitions, Auto-Assist, interruption recovery, and slider tuning.",
+            risk: "high",
+            size: "L",
+            deps: "PH-14, PH-15",
+          },
+          {
+            id: "PH-17",
+            desc: "Archive, upload to App Store Connect, process through TestFlight, and send invitation to the target recipient.",
+            risk: "low",
+            size: "S",
+            deps: "PH-16",
+          },
         ],
 
         renderPhaseRows() {
