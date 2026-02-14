@@ -1,15 +1,15 @@
 ---
-last_updated: 2026-02-14T12:00:00Z
+last_updated: 2026-02-14T18:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
-session_id: infra-01-bootstrap
+session_id: ph01-complete
 ---
 
 # Active Work
 
 ## In Progress
 
-INFRA_02 — PR pending review.
+No active work items.
 
 ## Blockers
 
@@ -17,9 +17,9 @@ None.
 
 ## Next Steps
 
-1. Merge INFRA_02 PR
-2. Implement FlowCoordinator state machine (PH-02)
-3. Implement GameConstants type-safe models (PH-06)
+1. Implement FlowCoordinator state machine (PH-02)
+2. Implement GameConstants type-safe models (PH-06)
+3. Implement WebhookService (PH-12, parallelizable)
 
 ## Session Notes
 

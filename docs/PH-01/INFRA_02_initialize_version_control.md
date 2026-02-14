@@ -9,7 +9,7 @@
 | **Phase**     | PH-01                          |
 | **Domain**    | INFRA                          |
 | **Owner**     | iOS Engineer                   |
-| **Status**    | Draft                          |
+| **Status**    | Complete                       |
 
 ---
 
@@ -54,7 +54,7 @@ The commit will be verified by checking `git log --oneline` shows exactly one co
 
 | Dependency                             | Source   | Status    | Owner        |
 | -------------------------------------- | -------- | --------- | ------------ |
-| Buildable Xcode project with directory structure | INFRA_01 | Draft | iOS Engineer |
+| Buildable Xcode project with directory structure | INFRA_01 | Complete | iOS Engineer |
 | Governance documents on disk (`CLAUDE.md`, `Design-Doc.md`) | External | Committed | Project Owner |
 
 ### Outbound (This Epic Unblocks)
@@ -74,15 +74,15 @@ The commit will be verified by checking `git log --oneline` shows exactly one co
 
 **Acceptance Criteria:**
 
-- [ ] `.gitignore` file exists at the repository root.
-- [ ] Excludes `*.xcuserdata` (Xcode user-specific state).
-- [ ] Excludes `DerivedData/` (build intermediates and indexes).
-- [ ] Excludes `.build/` (Swift Package Manager build directory, defensive).
-- [ ] Excludes `*.xcworkspace` if no workspace is required by the project structure.
-- [ ] Excludes `*.pbxuser`, `*.perspectivev3`, `xcuserdata/` variants.
-- [ ] Excludes OS artifacts: `.DS_Store`, `._*`, `Thumbs.db`.
-- [ ] Does NOT exclude the `.xcodeproj` bundle (required for version control).
-- [ ] Does NOT exclude `Assets.xcassets` or any source directories.
+- [x] `.gitignore` file exists at the repository root.
+- [x] Excludes `*.xcuserdata` (Xcode user-specific state).
+- [x] Excludes `DerivedData/` (build intermediates and indexes).
+- [x] Excludes `.build/` (Swift Package Manager build directory, defensive).
+- [x] Excludes `*.xcworkspace` if no workspace is required by the project structure.
+- [x] Excludes `*.pbxuser`, `*.perspectivev3`, `xcuserdata/` variants.
+- [x] Excludes OS artifacts: `.DS_Store`, `._*`, `Thumbs.db`.
+- [x] Does NOT exclude the `.xcodeproj` bundle (required for version control).
+- [x] Does NOT exclude `Assets.xcassets` or any source directories.
 
 **Dependencies:** None
 **Completion Signal:** `.gitignore` file exists at repository root with all specified patterns. Manual verification against CLAUDE.md §9 exclusion list.
@@ -93,13 +93,13 @@ The commit will be verified by checking `git log --oneline` shows exactly one co
 
 **Acceptance Criteria:**
 
-- [ ] `.gitignore` includes `Secrets.plaintext` pattern.
-- [ ] `.gitignore` includes `*.secret` glob pattern.
-- [ ] `.gitignore` includes `*.env` glob pattern.
-- [ ] `.gitignore` includes `.env` (dotenv files).
-- [ ] `.gitignore` includes `*.pem`, `*.p12`, `*.mobileprovision` (certificate/provisioning artifacts).
-- [ ] No plaintext Discord webhook URL pattern (`https://discord.com/api/webhooks/`) exists in any tracked file.
-- [ ] Comment in `.gitignore` references Design-Doc §9.4 for secret exclusion rationale.
+- [x] `.gitignore` includes `Secrets.plaintext` pattern.
+- [x] `.gitignore` includes `*.secret` glob pattern.
+- [x] `.gitignore` includes `*.env` glob pattern.
+- [x] `.gitignore` includes `.env` (dotenv files).
+- [x] `.gitignore` includes `*.pem`, `*.p12`, `*.mobileprovision` (certificate/provisioning artifacts).
+- [x] No plaintext Discord webhook URL pattern (`https://discord.com/api/webhooks/`) exists in any tracked file.
+- [x] Comment in `.gitignore` references Design-Doc §9.4 for secret exclusion rationale.
 
 **Dependencies:** INFRA_02-S1
 **Completion Signal:** `grep -r "discord.com/api/webhooks" .` returns zero results across all files staged for commit.
@@ -110,14 +110,14 @@ The commit will be verified by checking `git log --oneline` shows exactly one co
 
 **Acceptance Criteria:**
 
-- [ ] `scripts/audit.py` exists with executable permissions (`chmod 755`).
-- [ ] Script accepts `--staged` flag (runs checks on staged files only).
-- [ ] Script accepts `--all` flag (runs checks on entire repository).
-- [ ] Check ID registry is defined with all 7 check IDs from CLAUDE.md §9: PZ-001 (AI attribution), FU-001 (force unwraps), DA-001 (debug artifacts), DP-001 (deprecated APIs), SL-001 (plaintext secrets), CC-001 (Conventional Commits), CB-001 (Combine prohibition).
-- [ ] Each check is implemented as a named stub that returns pass (no false negatives on empty project).
-- [ ] Script prints check results in a structured format (check ID, status, file count).
-- [ ] Script exits with code 0 when all checks pass, code 1 when any check fails.
-- [ ] No `print` statements — uses structured output only.
+- [x] `scripts/audit.py` exists with executable permissions (`chmod 755`).
+- [x] Script accepts `--staged` flag (runs checks on staged files only).
+- [x] Script accepts `--all` flag (runs checks on entire repository).
+- [x] Check ID registry is defined with all 7 check IDs from CLAUDE.md §9: PZ-001 (AI attribution), FU-001 (force unwraps), DA-001 (debug artifacts), DP-001 (deprecated APIs), SL-001 (plaintext secrets), CC-001 (Conventional Commits), CB-001 (Combine prohibition).
+- [x] Each check is implemented as a named stub that returns pass (no false negatives on empty project).
+- [x] Script prints check results in a structured format (check ID, status, file count).
+- [x] Script exits with code 0 when all checks pass, code 1 when any check fails.
+- [x] No `print` statements — uses structured output only.
 
 **Dependencies:** None
 **Completion Signal:** `python3 scripts/audit.py --all` executes successfully and exits with code 0 on the clean project skeleton.
@@ -128,11 +128,11 @@ The commit will be verified by checking `git log --oneline` shows exactly one co
 
 **Acceptance Criteria:**
 
-- [ ] `git init` executed at the repository root.
-- [ ] Default branch is `main` (not `master`).
-- [ ] `git config` for the repository does not contain AI-attributed user names or emails (Protocol Zero).
-- [ ] `.git/` directory exists and is a valid git repository.
-- [ ] `git status` shows untracked files ready for staging.
+- [x] `git init` executed at the repository root.
+- [x] Default branch is `main` (not `master`).
+- [x] `git config` for the repository does not contain AI-attributed user names or emails (Protocol Zero).
+- [x] `.git/` directory exists and is a valid git repository.
+- [x] `git status` shows untracked files ready for staging.
 
 **Dependencies:** INFRA_02-S1, INFRA_02-S2
 **Completion Signal:** `git rev-parse --is-inside-work-tree` returns `true`. `git branch --show-current` returns `main`.
@@ -143,15 +143,15 @@ The commit will be verified by checking `git log --oneline` shows exactly one co
 
 **Acceptance Criteria:**
 
-- [ ] All project files staged via `git add`: Xcode project, source directories (with `.gitkeep` files), `Assets.xcassets`, `Audio/`, `Haptics/`, `StarlightSyncApp.swift`.
-- [ ] All governance documents staged: `CLAUDE.md`, `Design-Doc.md`, `docs/PHASES.md`, `docs/AGENT_CONTEXT_SYSTEM.md`.
-- [ ] All skill infrastructure staged: `.claude/skills/` directory tree.
-- [ ] All agent context files staged: `.claude/context/` directory tree.
-- [ ] Pre-commit audit script staged: `scripts/audit.py`.
-- [ ] `.gitignore` staged.
-- [ ] Commit message follows Conventional Commits format: `chore(scaffold): initialize Xcode project with directory structure and governance docs`.
-- [ ] No files matching `.gitignore` patterns are included in the commit.
-- [ ] No plaintext secrets in any committed file.
+- [x] All project files staged via `git add`: Xcode project, source directories (with `.gitkeep` files), `Assets.xcassets`, `Audio/`, `Haptics/`, `StarlightSyncApp.swift`.
+- [x] All governance documents staged: `CLAUDE.md`, `Design-Doc.md`, `docs/PHASES.md`, `docs/AGENT_CONTEXT_SYSTEM.md`.
+- [x] All skill infrastructure staged: `.claude/skills/` directory tree.
+- [x] All agent context files staged: `.claude/context/` directory tree.
+- [x] Pre-commit audit script staged: `scripts/audit.py`.
+- [x] `.gitignore` staged.
+- [x] Commit message follows Conventional Commits format: `chore(scaffold): initialize Xcode project with directory structure and governance docs`.
+- [x] No files matching `.gitignore` patterns are included in the commit.
+- [x] No plaintext secrets in any committed file.
 
 **Dependencies:** INFRA_01 (all stories), INFRA_02-S1, INFRA_02-S2, INFRA_02-S3, INFRA_02-S4
 **Completion Signal:** `git log --oneline` shows exactly one commit with the correct message format. `git status` shows clean working tree.
@@ -162,15 +162,15 @@ The commit will be verified by checking `git log --oneline` shows exactly one co
 
 **Acceptance Criteria:**
 
-- [ ] `git log --oneline` shows one commit on `main`.
-- [ ] `git status` returns clean working tree (nothing to commit, working tree clean).
-- [ ] `git diff` returns empty (no unstaged changes).
-- [ ] `xcodebuild build` succeeds from a clean state (delete DerivedData first).
-- [ ] `python3 scripts/audit.py --all` exits with code 0.
-- [ ] Directory tree matches CLAUDE.md §8 canonical structure (verified via `find` comparison).
-- [ ] No `.gitignore`-excluded files appear in `git ls-files` output.
-- [ ] `git ls-files` includes `CLAUDE.md` and `Design-Doc.md`.
-- [ ] PH-01 Definition of Done checklist from PHASES.md is fully satisfied: buildable project, correct directory tree, `.gitignore` with required exclusions, governance docs committed.
+- [x] `git log --oneline` shows one commit on `main`.
+- [x] `git status` returns clean working tree (nothing to commit, working tree clean).
+- [x] `git diff` returns empty (no unstaged changes).
+- [x] `xcodebuild build` succeeds from a clean state (delete DerivedData first).
+- [x] `python3 scripts/audit.py --all` exits with code 0.
+- [x] Directory tree matches CLAUDE.md §8 canonical structure (verified via `find` comparison).
+- [x] No `.gitignore`-excluded files appear in `git ls-files` output.
+- [x] `git ls-files` includes `CLAUDE.md` and `Design-Doc.md`.
+- [x] PH-01 Definition of Done checklist from PHASES.md is fully satisfied: buildable project, correct directory tree, `.gitignore` with required exclusions, governance docs committed.
 
 **Dependencies:** INFRA_02-S5
 **Completion Signal:** All 9 acceptance criteria verified. PH-01 phase gate passed. PH-02 (FlowCoordinator State Machine) is unblocked for execution.
@@ -190,22 +190,22 @@ The commit will be verified by checking `git log --oneline` shows exactly one co
 
 ## Definition of Done
 
-- [ ] All 6 stories completed and individually verified.
-- [ ] Git repository initialized with clean working tree on `main` branch.
-- [ ] `.gitignore` excludes all required patterns (build artifacts, user state, secrets).
-- [ ] Initial commit contains complete project skeleton and all governance documents.
-- [ ] `scripts/audit.py` executes successfully with `--staged` and `--all` flags.
-- [ ] No plaintext secrets in any committed file (`grep` verification).
-- [ ] Commit message follows Conventional Commits format per CLAUDE.md §9.
-- [ ] No AI attribution artifacts in commit message or committed files (Protocol Zero).
+- [x] All 6 stories completed and individually verified.
+- [x] Git repository initialized with clean working tree on `main` branch.
+- [x] `.gitignore` excludes all required patterns (build artifacts, user state, secrets).
+- [x] Initial commit contains complete project skeleton and all governance documents.
+- [x] `scripts/audit.py` executes successfully with `--staged` and `--all` flags.
+- [x] No plaintext secrets in any committed file (`grep` verification).
+- [x] Commit message follows Conventional Commits format per CLAUDE.md §9.
+- [x] No AI attribution artifacts in commit message or committed files (Protocol Zero).
 
 ## Exit Criteria
 
-- [ ] All Definition of Done conditions satisfied.
-- [ ] `git log --oneline` shows exactly one commit with correct format.
-- [ ] `git status` returns clean working tree.
-- [ ] `xcodebuild build` succeeds on clean checkout (DerivedData deleted).
-- [ ] `python3 scripts/audit.py --all` exits with code 0.
-- [ ] PH-01 phase Definition of Done from PHASES.md is fully satisfied.
-- [ ] PH-02 (FlowCoordinator State Machine) and PH-12 (WebhookService) are unblocked.
-- [ ] ACS files updated: `MANIFEST.md` reflects PH-01 complete, `progress/completed.md` records deliverables.
+- [x] All Definition of Done conditions satisfied.
+- [x] `git log --oneline` shows exactly one commit with correct format.
+- [x] `git status` returns clean working tree.
+- [x] `xcodebuild build` succeeds on clean checkout (DerivedData deleted).
+- [x] `python3 scripts/audit.py --all` exits with code 0.
+- [x] PH-01 phase Definition of Done from PHASES.md is fully satisfied.
+- [x] PH-02 (FlowCoordinator State Machine) and PH-12 (WebhookService) are unblocked.
+- [x] ACS files updated: `MANIFEST.md` reflects PH-01 complete, `progress/completed.md` records deliverables.
