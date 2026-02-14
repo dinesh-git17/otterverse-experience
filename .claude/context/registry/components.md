@@ -8,7 +8,7 @@ schema_version: 1
 | Component | File Path | Status | Phase | Tests | Notes |
 |-----------|-----------|--------|-------|-------|-------|
 | StarlightSyncApp | StarlightSync/StarlightSyncApp.swift | not_started | PH-02 | no | App entry point |
-| FlowCoordinator | StarlightSync/Coordinators/FlowCoordinator.swift | not_started | PH-02 | no | State machine, chapter transitions |
+| FlowCoordinator | StarlightSync/Coordinators/FlowCoordinator.swift | implemented | PH-02 | no | @Observable @MainActor, 6-chapter state machine, UserDefaults persistence |
 | AudioManager | StarlightSync/Managers/AudioManager.swift | not_started | PH-03 | no | AVFoundation singleton |
 | HapticManager | StarlightSync/Managers/HapticManager.swift | not_started | PH-04 | no | CoreHaptics singleton |
 | WebhookService | StarlightSync/Services/WebhookService.swift | not_started | PH-12 | no | Discord webhook, retry logic |
