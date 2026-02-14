@@ -135,13 +135,13 @@ jobs:
         env:
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          PATTERN='^(feat|fix|refactor|test|chore|docs)\((coordinator|audio|haptics|webhook|ch[1-6]|assets|tests|ci|skills|context)\): .+'
+          PATTERN='^(feat|fix|refactor|test|chore|docs)\((coordinator|audio|haptics|webhook|ch[1-6]|assets|tests|ci|repo|skills|context)\): .+'
           if ! echo "$PR_TITLE" | grep -qE "$PATTERN"; then
             echo "::error::PR title does not match Conventional Commits format."
             echo ""
             echo "Expected: type(scope): imperative description"
             echo "  Types:  feat | fix | refactor | test | chore | docs"
-            echo "  Scopes: coordinator | audio | haptics | webhook | ch1-ch6 | assets | tests | ci | skills | context"
+            echo "  Scopes: coordinator | audio | haptics | webhook | ch1-ch6 | assets | tests | ci | repo | skills | context"
             echo ""
             echo "Received: ${PR_TITLE}"
             exit 1
