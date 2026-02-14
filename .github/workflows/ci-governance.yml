@@ -55,11 +55,10 @@ jobs:
               --include='*.txt' --include='*.py' --include='*.sh' \
               'https://discord\.com/api/webhooks/' . \
               --exclude-dir=.git \
-              --exclude-dir='.claude/skills' \
-              --exclude-dir='docs' \
+              --exclude-dir=.claude \
+              --exclude-dir=docs \
               --exclude='Design-Doc.md' \
-              --exclude='CLAUDE.md' \
-              --exclude='SKILL.md'; then
+              --exclude='CLAUDE.md'; then
             echo "::error::Plaintext Discord webhook URL detected in source files"
             VIOLATIONS=1
           fi
@@ -69,11 +68,10 @@ jobs:
               --include='*.txt' --include='*.py' --include='*.sh' \
               'https://discordapp\.com/api/webhooks/' . \
               --exclude-dir=.git \
-              --exclude-dir='.claude/skills' \
-              --exclude-dir='docs' \
+              --exclude-dir=.claude \
+              --exclude-dir=docs \
               --exclude='Design-Doc.md' \
-              --exclude='CLAUDE.md' \
-              --exclude='SKILL.md'; then
+              --exclude='CLAUDE.md'; then
             echo "::error::Plaintext Discord webhook URL (legacy format) detected"
             VIOLATIONS=1
           fi
