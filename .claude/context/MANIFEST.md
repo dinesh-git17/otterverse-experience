@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-14T11:00:00Z
+last_updated: 2026-02-14T12:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -9,18 +9,16 @@ schema_version: 1
 ## Current Phase
 
 **PH-01** — Xcode Project Scaffold
-Completion: 0%
-Status: Not started
+Completion: 100%
+Status: Complete (pending PR merge)
 
 ## Blocking Issues
 
-- Xcode project not yet initialized.
-- No `.gitignore` committed.
-- No git repository initialized.
+None. PH-01 deliverables ready for review.
 
 ## Recently Completed
 
-No completed phases.
+- INFRA_01: Bootstrap Xcode project (all 7 stories)
 
 ## Active Decisions
 
@@ -30,6 +28,8 @@ No ADRs recorded.
 
 | Component | File Path | Status | Phase | Tests | Notes |
 |-----------|-----------|--------|-------|-------|-------|
+| StarlightSyncApp | StarlightSync/StarlightSyncApp.swift | scaffold | PH-01 | no | Minimal @main entry point |
+| ContentView | StarlightSync/ContentView.swift | scaffold | PH-01 | no | Placeholder, replaced in PH-02 |
 | FlowCoordinator | Coordinators/FlowCoordinator.swift | not_started | PH-02 | no | — |
 | AudioManager | Managers/AudioManager.swift | not_started | PH-03 | no | — |
 | HapticManager | Managers/HapticManager.swift | not_started | PH-04 | no | — |
@@ -51,4 +51,5 @@ No ADRs recorded.
 
 ## Coordination Notes
 
-No active agents. System initialized 2026-02-14.
+INFRA_01 implemented on branch `feat/bootstrap-xcode-project`. PR pending review.
+Next: PH-02 (FlowCoordinator state machine) and INFRA_02 (version control init) are unblocked.
