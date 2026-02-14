@@ -316,13 +316,38 @@ StarlightSync/
 
 ---
 
-## 9. Workflow (Local, Pre-Remote)
+## 9. Workflow
 
-No remote repository, CI/CD, branch protection, PR workflow, or issue tracking. All rules apply locally.
+**Remote:** `origin` → `https://github.com/dinesh-git17/otterverse-experience.git`
 
-**Git Init:** `.gitignore` for Xcode/Swift (`*.xcuserdata`, `DerivedData/`, `.build/`, `*.xcworkspace` if unneeded). Initial commit: skeleton, `CLAUDE.md`, `Design-Doc.md`.
+### 9.1 Branch Protection
 
-**Commit Format:** `type(scope): imperative description`
+**`main` is protected.** All changes MUST reach `main` through a pull request. Direct commits and force pushes to `main` are **FORBIDDEN**.
+
+**Agent Refusal Policy:** If instructed to commit directly to `main`, the agent MUST:
+
+1. **HALT** — Do not commit.
+2. **REJECT** — State: "Direct commits to `main` are prohibited per §9.1."
+3. **OFFER** — Create a feature/fix branch and open a PR instead.
+
+**Emergency Exception:** Direct commits to `main` are permitted ONLY when the user explicitly declares an emergency (e.g., "emergency fix", "hotfix directly to main"). The agent MUST confirm before proceeding: "You are requesting a direct commit to `main`. Confirm this is an emergency bypass of §9.1." Even under emergency, force push to `main` remains **FORBIDDEN**.
+
+### 9.2 Pull Request Workflow
+
+1. Create a branch from `main` using the naming conventions below.
+2. Commit work to the feature/fix branch. Push to `origin` with `-u`.
+3. Open a PR via `gh pr create` with a summary and test plan.
+4. Squash merge after approval. Delete the remote branch after merge.
+
+**PR Requirements:**
+
+- Title: concise, under 70 chars, imperative mood.
+- Body: MUST populate the PR template at `.github/pull_request_template.md`. Every section filled out, every applicable governance checklist box checked. Do not strip, skip, or summarize template sections.
+- All pre-commit checks (§9.5) MUST pass before merge.
+
+### 9.3 Commit Format
+
+`type(scope): imperative description`
 
 | Type       | Purpose                                    |
 | ---------- | ------------------------------------------ |
@@ -337,9 +362,17 @@ No remote repository, CI/CD, branch protection, PR workflow, or issue tracking. 
 
 **Examples:** `feat(ch2): add obstacle spawning with parallax scrolling`, `fix(audio): resolve playback interruption on incoming call`
 
-**Branching:** `main` (always builds/runs), `feat/<chapter>-<desc>`, `fix/<desc>`. Squash merge preferred. Delete after merge.
+### 9.4 Branching
 
-**Pre-Commit Checks** (enforced by Pre-Commit Auditor `scripts/audit.py`):
+- `main` — always builds and runs. Protected (§9.1).
+- `feat/<chapter>-<desc>` — feature work.
+- `fix/<desc>` — bug fixes.
+
+Squash merge preferred. Delete remote branch after merge.
+
+### 9.5 Pre-Commit Checks
+
+Enforced by Pre-Commit Auditor (`scripts/audit.py`):
 
 | Check ID | Rule                 | Reference        |
 | -------- | -------------------- | ---------------- |
