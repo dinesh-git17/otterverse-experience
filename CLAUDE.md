@@ -30,7 +30,8 @@ AI agents are **FORBIDDEN** from leaving evidence of machine generation in the c
 
 1. This `CLAUDE.md` — supreme authority.
 2. `Design-Doc.md` — architecture alignment required for all changes.
-3. Apple HIG and API documentation — authoritative for framework usage.
+3. `docs/ASSET_INT_PLAN.md` — authoritative for asset integration timing, placement, and transformations.
+4. Apple HIG and API documentation — authoritative for framework usage.
 
 **Refusal Policy:** If a request violates these standards or `Design-Doc.md`:
 
@@ -204,6 +205,8 @@ Cross-boundary access outside this matrix is a governance violation.
 ---
 
 ## 6. Agent Rules
+
+**Asset Integration:** All asset placement, format conversion, scale variant generation, and catalog structuring MUST follow `docs/ASSET_INT_PLAN.md`. Source files are at `/Users/Dinesh/Desktop/assets/`. No asset may be integrated before its phase gate (ASSET_INT_PLAN §5). No asset may bypass the prescribed transformations (ASSET_INT_PLAN §3). Agents performing PH-01 or PH-05 work MUST read `docs/ASSET_INT_PLAN.md` before touching `Assets.xcassets/`.
 
 **Modification Discipline:**
 
