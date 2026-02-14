@@ -19,6 +19,7 @@ None. PH-01 deliverables ready for review.
 ## Recently Completed
 
 - INFRA_01: Bootstrap Xcode project (all 7 stories)
+- INFRA_02: Version control hardening (.gitignore patch, audit script skeleton)
 
 ## Active Decisions
 
@@ -52,4 +53,5 @@ No ADRs recorded.
 ## Coordination Notes
 
 INFRA_01 merged via PR #6.
-Next: INFRA_02 (version control init), then PH-02 (FlowCoordinator state machine).
+INFRA_02 in review.
+Next: PH-02 (FlowCoordinator state machine).

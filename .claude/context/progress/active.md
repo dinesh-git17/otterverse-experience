@@ -9,7 +9,7 @@ session_id: infra-01-bootstrap
 
 ## In Progress
 
-None.
+INFRA_02 — PR pending review.
 
 ## Blockers
 
@@ -17,7 +17,7 @@ None.
 
 ## Next Steps
 
-1. Execute INFRA_02 (version control initialization) if separate from existing git
+1. Merge INFRA_02 PR
 2. Implement FlowCoordinator state machine (PH-02)
 3. Implement GameConstants type-safe models (PH-06)
 
