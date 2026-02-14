@@ -82,7 +82,7 @@ jobs:
             const pr_number = parseInt('${{ steps.results.outputs.pr_number }}');
 
             function statusIcon(conclusion, status) {
-              if (status === 'not_found') return '\u23F3';
+              if (status === 'not_found') return '\u23ED\uFE0F';
               if (status === 'in_progress' || status === 'queued') return '\u23F3';
               if (conclusion === 'success') return '\u2705';
               if (conclusion === 'failure') return '\u274C';
@@ -92,7 +92,7 @@ jobs:
             }
 
             function statusLabel(conclusion, status) {
-              if (status === 'not_found') return 'Pending';
+              if (status === 'not_found') return 'Skipped (path filter)';
               if (status === 'in_progress' || status === 'queued') return 'Running';
               if (conclusion === 'success') return 'Passed';
               if (conclusion === 'failure') return 'Failed';
@@ -109,15 +109,12 @@ jobs:
               return `${m}m ${s}s`;
             }
 
-            const blocking = results.filter(r =>
-              r.name !== 'Build & Test' || r.status !== 'not_found'
-            );
-            const allPassed = blocking.every(r =>
-              r.conclusion === 'success' || r.conclusion === 'skipped'
+            const allPassed = results.every(r =>
+              r.conclusion === 'success' || r.conclusion === 'skipped' || r.status === 'not_found'
             );
             const anyFailed = results.some(r => r.conclusion === 'failure');
             const anyPending = results.some(r =>
-              r.status === 'in_progress' || r.status === 'queued' || r.status === 'not_found'
+              r.status === 'in_progress' || r.status === 'queued'
             );
 
             let verdict, verdictIcon;
