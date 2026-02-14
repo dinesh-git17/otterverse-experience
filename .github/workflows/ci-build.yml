@@ -48,7 +48,7 @@ jobs:
       project_path: ${{ steps.check.outputs.project_path }}
       scheme: ${{ steps.check.outputs.scheme }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Locate Xcode project
         id: check
@@ -74,7 +74,7 @@ jobs:
       SCHEME: ${{ needs.detect-project.outputs.scheme }}
       PROJECT: ${{ needs.detect-project.outputs.project_path }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
@@ -102,7 +102,7 @@ jobs:
       SCHEME: ${{ needs.detect-project.outputs.scheme }}
       PROJECT: ${{ needs.detect-project.outputs.project_path }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Select Xcode version
         run: sudo xcode-select -s /Applications/Xcode_16.app/Contents/Developer
@@ -121,7 +121,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: test-results
           path: |
