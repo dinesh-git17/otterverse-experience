@@ -10,7 +10,7 @@ schema_version: 1
 
 **PH-01** — Xcode Project Scaffold
 Completion: 100%
-Status: Complete (pending PR merge)
+Status: Complete
 
 ## Blocking Issues
 
@@ -51,5 +51,5 @@ No ADRs recorded.
 
 ## Coordination Notes
 
-INFRA_01 implemented on branch `feat/bootstrap-xcode-project`. PR pending review.
-Next: PH-02 (FlowCoordinator state machine) and INFRA_02 (version control init) are unblocked.
+INFRA_01 merged via PR #6.
+Next: INFRA_02 (version control init), then PH-02 (FlowCoordinator state machine).

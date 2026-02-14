@@ -9,7 +9,7 @@ session_id: infra-01-bootstrap
 
 ## In Progress
 
-- INFRA_01 complete, PR pending review on `feat/bootstrap-xcode-project`
+None.
 
 ## Blockers
 
@@ -17,10 +17,9 @@ None.
 
 ## Next Steps
 
-1. Merge INFRA_01 PR
-2. Execute INFRA_02 (version control initialization) if separate from existing git
-3. Implement FlowCoordinator state machine (PH-02)
-4. Implement GameConstants type-safe models (PH-06)
+1. Execute INFRA_02 (version control initialization) if separate from existing git
+2. Implement FlowCoordinator state machine (PH-02)
+3. Implement GameConstants type-safe models (PH-06)
 
 ## Session Notes
 
