@@ -18,7 +18,7 @@ jobs:
     name: Protocol Zero (PZ-001)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Run Protocol Zero scanner
         run: |
@@ -31,9 +31,9 @@ jobs:
     name: Pre-Commit Auditor
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -44,7 +44,7 @@ jobs:
     name: Secret Leakage (SL-001)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Scan for plaintext Discord webhook URLs
         run: |
@@ -94,7 +94,7 @@ jobs:
     name: Repository Structure
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Verify required governance files
         run: |
@@ -166,7 +166,7 @@ jobs:
     name: Swift Governance Patterns
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Check for Swift source files
         id: swift-check
