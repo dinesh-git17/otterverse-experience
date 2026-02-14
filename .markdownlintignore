@@ -4,3 +4,4 @@ DerivedData/
 *.xcuserdata/
 CHANGELOG.md
 LICENSE.md
+.claude/

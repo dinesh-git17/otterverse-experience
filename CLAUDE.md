@@ -341,7 +341,7 @@ StarlightSync/
 
 **PR Requirements:**
 
-- Title: concise, under 70 chars, imperative mood.
+- Title: MUST use Conventional Commits format (`type(scope): description`) — CI validates the PR title against §9.3. Concise, under 70 chars, imperative mood.
 - Body: MUST populate the PR template at `.github/pull_request_template.md`. Every section filled out, every applicable governance checklist box checked. Do not strip, skip, or summarize template sections.
 - All pre-commit checks (§9.5) MUST pass before merge.
 
