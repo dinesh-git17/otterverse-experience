@@ -1,8 +1,8 @@
 ---
-last_updated: 2026-02-14T18:00:00Z
+last_updated: 2026-02-14T20:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
-session_id: ph01-complete
+session_id: coord01-complete
 ---
 
 # Active Work
@@ -17,14 +17,13 @@ None.
 
 ## Next Steps
 
-1. Implement FlowCoordinator state machine (PH-02)
+1. Implement walking skeleton view routing (COORD_02)
 2. Implement GameConstants type-safe models (PH-06)
 3. Implement WebhookService (PH-12, parallelizable)
 
 ## Session Notes
 
-- Xcode 26.2 / Swift 6.2.3 / iOS SDK 26.2 detected
-- Design-Doc iOS 19+ target mapped to iOS 26.0 (Apple version renumbering)
-- Swift language version set to 6.0 (exceeds CLAUDE.md 5.9+ requirement)
-- Build validates with zero errors, zero compiler warnings
-- appintentsmetadataprocessor emits benign diagnostic (standard for projects without App Intents)
+- COORD_01 delivered: FlowCoordinator state machine (6/6 stories)
+- @Observable @MainActor final class with Chapter enum (0–5)
+- Forward-only progression, UserDefaults persistence, defensive checkpoint resume
+- Build succeeds, audit passes, .gitkeep removed from Coordinators/

@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-02-14T12:30:00Z
-total_entries: 4
+last_updated: 2026-02-14T20:00:00Z
+total_entries: 5
 schema_version: 1
 ---
 
@@ -58,3 +58,19 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Deliverables:** Buildable Xcode project, directory structure per §8, `.gitignore` with secret exclusions, `scripts/audit.py` skeleton, governance docs committed, agent context system operational
 - **Phase gate:** All Definition of Done criteria satisfied
 - **Unblocked:** PH-02 (FlowCoordinator), PH-12 (WebhookService)
+
+### 2026-02-14 — COORD_01: Implement FlowCoordinator State Machine — PH-02 COMPLETE
+
+- **Phase:** PH-02
+- **Scope:** FlowCoordinator state machine — chapter enum, progression, persistence, checkpoint resume
+- **Stories completed:** 6/6
+  - S1: Chapter enum with 6 cases (handshake=0 through eventHorizon=5), CaseIterable
+  - S2: @Observable @MainActor final class with private(set) currentChapter
+  - S3: Forward-only completeCurrentChapter() with terminal no-op at eventHorizon
+  - S4: UserDefaults persistence via injectable defaults, private static key constant
+  - S5: Resume-from-checkpoint with defensive clamping (negative→handshake, overflow→eventHorizon)
+  - S6: Governance validation — build succeeds, audit passes, .gitkeep removed
+- **Files created:** 1 (`StarlightSync/Coordinators/FlowCoordinator.swift`)
+- **Files removed:** 1 (`StarlightSync/Coordinators/.gitkeep`)
+- **Verification:** `xcodebuild build` exits 0, `scripts/audit.py --all` passes 7/7 checks
+- **Unblocked:** COORD_02 (walking skeleton), PH-06 (GameConstants), PH-03 (AudioManager), PH-07–PH-13 (chapters)
