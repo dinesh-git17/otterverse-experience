@@ -1,0 +1,76 @@
+# Path-based auto-labeling rules for actions/labeler
+# Reference: CLAUDE.md §8 (Project Structure), §9 (Workflow)
+
+"area: coordinator":
+  - changed-files:
+      - any-glob-to-any-file: "StarlightSync/Coordinators/**"
+
+"area: audio":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "StarlightSync/Managers/AudioManager.swift"
+          - "StarlightSync/Audio/**"
+
+"area: haptics":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "StarlightSync/Managers/HapticManager.swift"
+          - "StarlightSync/Haptics/**"
+
+"area: webhook":
+  - changed-files:
+      - any-glob-to-any-file: "StarlightSync/Services/**"
+
+"area: ch1":
+  - changed-files:
+      - any-glob-to-any-file: "StarlightSync/Chapters/Chapter1_Handshake/**"
+
+"area: ch2":
+  - changed-files:
+      - any-glob-to-any-file: "StarlightSync/Chapters/Chapter2_PacketRun/**"
+
+"area: ch3":
+  - changed-files:
+      - any-glob-to-any-file: "StarlightSync/Chapters/Chapter3_Cipher/**"
+
+"area: ch4":
+  - changed-files:
+      - any-glob-to-any-file: "StarlightSync/Chapters/Chapter4_Firewall/**"
+
+"area: ch5":
+  - changed-files:
+      - any-glob-to-any-file: "StarlightSync/Chapters/Chapter5_Blueprint/**"
+
+"area: ch6":
+  - changed-files:
+      - any-glob-to-any-file: "StarlightSync/Chapters/Chapter6_EventHorizon/**"
+
+"area: ci-cd":
+  - changed-files:
+      - any-glob-to-any-file: ".github/workflows/**"
+
+"area: infra":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "scripts/**"
+          - ".claude/skills/**"
+          - ".claude/context/**"
+
+"area: assets":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "StarlightSync/Assets.xcassets/**"
+          - "StarlightSync/Audio/**"
+          - "StarlightSync/Haptics/**"
+
+"area: design":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "StarlightSync/Components/**"
+
+"governance":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "CLAUDE.md"
+          - "Design-Doc.md"
+          - "docs/**"

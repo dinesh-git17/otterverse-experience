@@ -344,9 +344,21 @@ def check_deprecated_apis(filepath: str, lines: list[str], result: AuditResult) 
                 )
 
 
+def is_secret_scan_exempt(filepath: str) -> bool:
+    """Check if a file is exempt from secret scanning (skill refs, epic docs)."""
+    normalized = filepath.replace(os.sep, "/")
+    if normalized.startswith(".claude/skills/") and "/references/" in normalized:
+        return True
+    if normalized.startswith("docs/"):
+        return True
+    return False
+
+
 def check_secret_leakage(filepath: str, lines: list[str], result: AuditResult) -> None:
     """SL-001: Detect plaintext secrets and tokens."""
     if is_governance_file(filepath):
+        return
+    if is_secret_scan_exempt(filepath):
         return
     for line_num, line in enumerate(lines, start=1):
         if SECRET_FALSE_POSITIVE_PATTERNS.search(line):
