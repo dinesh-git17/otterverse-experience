@@ -12,7 +12,7 @@
 | Phase | Status |
 |-------|--------|
 | PH-01 | **COMPLETE** |
-| PH-02 | Pending |
+| PH-02 | **COMPLETE** |
 | PH-03 | Pending |
 | PH-04 | Pending |
 | PH-05 | Pending |

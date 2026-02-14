@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-14T20:00:00Z
+last_updated: 2026-02-14T21:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -8,8 +8,8 @@ schema_version: 1
 
 ## Current Phase
 
-**PH-02** — FlowCoordinator State Machine
-Completion: 100% (COORD_01 delivered)
+**PH-02** — FlowCoordinator State Machine + Walking Skeleton
+Completion: 100% (COORD_01 + COORD_02 delivered)
 Status: Complete
 
 ## Blocking Issues
@@ -18,16 +18,13 @@ None.
 
 ## Recently Completed
 
+- **COORD_02 COMPLETE** — Wire Walking Skeleton View Routing (4/4 stories)
+  - S1: Placeholder views for SwiftUI chapters (1, 3, 5, 6)
+  - S2: Placeholder views for SpriteKit-target chapters (2, 4) — plain SwiftUI, no SpriteKit
+  - S3: StarlightSyncApp wired with FlowCoordinator and exhaustive chapter routing
+  - S4: End-to-end validation — build, audit, persistence, navigation verified
 - **COORD_01 COMPLETE** — FlowCoordinator State Machine (6/6 stories)
-  - S1: Chapter enum with 6 type-safe cases (Int raw values 0–5)
-  - S2: @Observable @MainActor final class with currentChapter tracking
-  - S3: Forward-only chapter progression (terminal no-op at eventHorizon)
-  - S4: UserDefaults checkpoint persistence with injectable defaults
-  - S5: Resume-from-checkpoint with defensive clamping
-  - S6: Governance validation (build + audit pass, .gitkeep removed)
 - **PH-01 COMPLETE** — Xcode Project Scaffold (all epics delivered)
-  - INFRA_01: Bootstrap Xcode project (7/7 stories, PR #6)
-  - INFRA_02: Version control hardening (6/6 stories, PR #8)
 
 ## Active Decisions
 
@@ -37,26 +34,19 @@ No ADRs recorded.
 
 | Component | File Path | Status | Phase | Tests | Notes |
 |-----------|-----------|--------|-------|-------|-------|
-| StarlightSyncApp | StarlightSync/StarlightSyncApp.swift | scaffold | PH-01 | no | Minimal @main entry point |
-| ContentView | StarlightSync/ContentView.swift | scaffold | PH-01 | no | Placeholder, replaced in COORD_02 |
+| StarlightSyncApp | StarlightSync/StarlightSyncApp.swift | implemented | PH-02 | no | @main entry with FlowCoordinator injection and chapter routing |
+| ChapterRouterView | StarlightSync/StarlightSyncApp.swift | implemented | PH-02 | no | Exhaustive switch on Chapter enum |
 | FlowCoordinator | StarlightSync/Coordinators/FlowCoordinator.swift | implemented | PH-02 | no | @Observable @MainActor, 6-chapter state machine |
-| AudioManager | Managers/AudioManager.swift | not_started | PH-03 | no | — |
-| HapticManager | Managers/HapticManager.swift | not_started | PH-04 | no | — |
-| WebhookService | Services/WebhookService.swift | not_started | PH-12 | no | — |
-| GameConstants | Models/GameConstants.swift | not_started | PH-06 | no | — |
-| HandshakeView | Chapters/Chapter1_Handshake/HandshakeView.swift | not_started | PH-07 | no | — |
-| PacketRunScene | Chapters/Chapter2_PacketRun/PacketRunScene.swift | not_started | PH-08 | no | — |
-| PacketRunView | Chapters/Chapter2_PacketRun/PacketRunView.swift | not_started | PH-08 | no | — |
-| CipherView | Chapters/Chapter3_Cipher/CipherView.swift | not_started | PH-09 | no | — |
-| CipherWheelView | Chapters/Chapter3_Cipher/CipherWheelView.swift | not_started | PH-09 | no | — |
-| FirewallScene | Chapters/Chapter4_Firewall/FirewallScene.swift | not_started | PH-10 | no | — |
-| FirewallView | Chapters/Chapter4_Firewall/FirewallView.swift | not_started | PH-10 | no | — |
-| BlueprintView | Chapters/Chapter5_Blueprint/BlueprintView.swift | not_started | PH-11 | no | — |
-| HeartNodeLayout | Chapters/Chapter5_Blueprint/HeartNodeLayout.swift | not_started | PH-11 | no | — |
-| EventHorizonView | Chapters/Chapter6_EventHorizon/EventHorizonView.swift | not_started | PH-13 | no | — |
-| FrictionSlider | Chapters/Chapter6_EventHorizon/FrictionSlider.swift | not_started | PH-13 | no | — |
-| ConfettiView | Components/ConfettiView.swift | not_started | PH-13 | no | — |
-| CRTTransitionView | Components/CRTTransitionView.swift | not_started | PH-07 | no | — |
+| HandshakeView | StarlightSync/Chapters/Chapter1_Handshake/HandshakeView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
+| PacketRunView | StarlightSync/Chapters/Chapter2_PacketRun/PacketRunView.swift | placeholder | PH-02 | no | Walking skeleton placeholder (no SpriteKit) |
+| CipherView | StarlightSync/Chapters/Chapter3_Cipher/CipherView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
+| FirewallView | StarlightSync/Chapters/Chapter4_Firewall/FirewallView.swift | placeholder | PH-02 | no | Walking skeleton placeholder (no SpriteKit) |
+| BlueprintView | StarlightSync/Chapters/Chapter5_Blueprint/BlueprintView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
+| EventHorizonView | StarlightSync/Chapters/Chapter6_EventHorizon/EventHorizonView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
+| AudioManager | StarlightSync/Managers/AudioManager.swift | not_started | PH-03 | no | — |
+| HapticManager | StarlightSync/Managers/HapticManager.swift | not_started | PH-04 | no | — |
+| WebhookService | StarlightSync/Services/WebhookService.swift | not_started | PH-12 | no | — |
+| GameConstants | StarlightSync/Models/GameConstants.swift | not_started | PH-06 | no | — |
 
 ## Coordination Notes
 
@@ -64,5 +54,8 @@ INFRA_01 merged via PR #6.
 INFRA_02 merged via PR #8.
 PH-01 phase gate: PASSED.
 COORD_01 complete: FlowCoordinator state machine delivered (6/6 stories).
+COORD_02 complete: Walking skeleton wired (4/4 stories).
 PH-02 phase gate: PASSED.
-Unblocked: COORD_02 (walking skeleton), PH-06 (GameConstants), PH-03 (AudioManager), PH-07–PH-13 (chapters), PH-12 (WebhookService).
+ContentView.swift removed (dead code).
+All source files registered in pbxproj Sources build phase.
+Unblocked: PH-03 (AudioManager), PH-04 (HapticManager), PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService).
