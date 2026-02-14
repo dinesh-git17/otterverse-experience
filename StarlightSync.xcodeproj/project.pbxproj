@@ -8,19 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		B7D1E38A2D5F6A0100000101 /* StarlightSyncApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000001 /* StarlightSyncApp.swift */; };
-		B7D1E38A2D5F6A0100000102 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000002 /* ContentView.swift */; };
 		B7D1E38A2D5F6A0100000103 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000003 /* Assets.xcassets */; };
 		B7D1E38A2D5F6A0100000104 /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000004 /* Audio */; };
 		B7D1E38A2D5F6A0100000105 /* Haptics in Resources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000005 /* Haptics */; };
+		B7D1E38A2D5F6A0100000106 /* FlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000007 /* FlowCoordinator.swift */; };
+		B7D1E38A2D5F6A0100000107 /* HandshakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000008 /* HandshakeView.swift */; };
+		B7D1E38A2D5F6A0100000108 /* PacketRunView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000009 /* PacketRunView.swift */; };
+		B7D1E38A2D5F6A0100000109 /* CipherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A010000000A /* CipherView.swift */; };
+		B7D1E38A2D5F6A010000010A /* FirewallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A010000000B /* FirewallView.swift */; };
+		B7D1E38A2D5F6A010000010B /* BlueprintView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A010000000C /* BlueprintView.swift */; };
+		B7D1E38A2D5F6A010000010C /* EventHorizonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A010000000D /* EventHorizonView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B7D1E38A2D5F6A0100000001 /* StarlightSyncApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarlightSyncApp.swift; sourceTree = "<group>"; };
-		B7D1E38A2D5F6A0100000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000004 /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000005 /* Haptics */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Haptics; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000006 /* StarlightSync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarlightSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7D1E38A2D5F6A0100000007 /* FlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowCoordinator.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A0100000008 /* HandshakeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HandshakeView.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A0100000009 /* PacketRunView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketRunView.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A010000000A /* CipherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CipherView.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A010000000B /* FirewallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirewallView.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A010000000C /* BlueprintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueprintView.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A010000000D /* EventHorizonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventHorizonView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,7 +58,6 @@
 			isa = PBXGroup;
 			children = (
 				B7D1E38A2D5F6A0100000001 /* StarlightSyncApp.swift */,
-				B7D1E38A2D5F6A0100000002 /* ContentView.swift */,
 				B7D1E38A2D5F6A0100000202 /* Coordinators */,
 				B7D1E38A2D5F6A0100000203 /* Managers */,
 				B7D1E38A2D5F6A0100000204 /* Services */,
@@ -63,6 +74,7 @@
 		B7D1E38A2D5F6A0100000202 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
+				B7D1E38A2D5F6A0100000007 /* FlowCoordinator.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -111,6 +123,7 @@
 		B7D1E38A2D5F6A0100000208 /* Chapter1_Handshake */ = {
 			isa = PBXGroup;
 			children = (
+				B7D1E38A2D5F6A0100000008 /* HandshakeView.swift */,
 			);
 			path = Chapter1_Handshake;
 			sourceTree = "<group>";
@@ -118,6 +131,7 @@
 		B7D1E38A2D5F6A0100000209 /* Chapter2_PacketRun */ = {
 			isa = PBXGroup;
 			children = (
+				B7D1E38A2D5F6A0100000009 /* PacketRunView.swift */,
 			);
 			path = Chapter2_PacketRun;
 			sourceTree = "<group>";
@@ -125,6 +139,7 @@
 		B7D1E38A2D5F6A010000020A /* Chapter3_Cipher */ = {
 			isa = PBXGroup;
 			children = (
+				B7D1E38A2D5F6A010000000A /* CipherView.swift */,
 			);
 			path = Chapter3_Cipher;
 			sourceTree = "<group>";
@@ -132,6 +147,7 @@
 		B7D1E38A2D5F6A010000020B /* Chapter4_Firewall */ = {
 			isa = PBXGroup;
 			children = (
+				B7D1E38A2D5F6A010000000B /* FirewallView.swift */,
 			);
 			path = Chapter4_Firewall;
 			sourceTree = "<group>";
@@ -139,6 +155,7 @@
 		B7D1E38A2D5F6A010000020C /* Chapter5_Blueprint */ = {
 			isa = PBXGroup;
 			children = (
+				B7D1E38A2D5F6A010000000C /* BlueprintView.swift */,
 			);
 			path = Chapter5_Blueprint;
 			sourceTree = "<group>";
@@ -146,6 +163,7 @@
 		B7D1E38A2D5F6A010000020D /* Chapter6_EventHorizon */ = {
 			isa = PBXGroup;
 			children = (
+				B7D1E38A2D5F6A010000000D /* EventHorizonView.swift */,
 			);
 			path = Chapter6_EventHorizon;
 			sourceTree = "<group>";
@@ -230,7 +248,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7D1E38A2D5F6A0100000101 /* StarlightSyncApp.swift in Sources */,
-				B7D1E38A2D5F6A0100000102 /* ContentView.swift in Sources */,
+				B7D1E38A2D5F6A0100000106 /* FlowCoordinator.swift in Sources */,
+				B7D1E38A2D5F6A0100000107 /* HandshakeView.swift in Sources */,
+				B7D1E38A2D5F6A0100000108 /* PacketRunView.swift in Sources */,
+				B7D1E38A2D5F6A0100000109 /* CipherView.swift in Sources */,
+				B7D1E38A2D5F6A010000010A /* FirewallView.swift in Sources */,
+				B7D1E38A2D5F6A010000010B /* BlueprintView.swift in Sources */,
+				B7D1E38A2D5F6A010000010C /* EventHorizonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

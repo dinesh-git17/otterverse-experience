@@ -40,8 +40,8 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Scope:** .gitignore secret exclusion patterns, pre-commit audit skeleton
 - **Branch:** `feat/infra-02-version-control`
 - **Stories completed:** 6/6
-  - S1: .gitignore Xcode exclusion rules (*.pbxuser, *.perspectivev3 added)
-  - S2: Secret exclusion patterns (.env, *.secret, *.pem, *.p12, *.mobileprovision)
+  - S1: .gitignore Xcode exclusion rules (*.pbxuser,*.perspectivev3 added)
+  - S2: Secret exclusion patterns (.env, *.secret,*.pem, *.p12,*.mobileprovision)
   - S3: scripts/audit.py skeleton with 7 check IDs (PZ-001 through CB-001)
   - S4: Git repository verified on main (pre-existing from INFRA_01)
   - S5: Initial commit verified (project skeleton committed via INFRA_01)
@@ -74,3 +74,27 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Files removed:** 1 (`StarlightSync/Coordinators/.gitkeep`)
 - **Verification:** `xcodebuild build` exits 0, `scripts/audit.py --all` passes 7/7 checks
 - **Unblocked:** COORD_02 (walking skeleton), PH-06 (GameConstants), PH-03 (AudioManager), PH-07–PH-13 (chapters)
+
+### 2026-02-14 — COORD_02: Wire Walking Skeleton View Routing
+
+- **Phase:** PH-02
+- **Scope:** Walking skeleton — placeholder chapter views, app entry point routing, ContentView removal
+- **Stories completed:** 4/4
+  - S1: Placeholder views for SwiftUI-target chapters (HandshakeView, CipherView, BlueprintView, EventHorizonView)
+  - S2: Placeholder views for SpriteKit-target chapters (PacketRunView, FirewallView) — plain SwiftUI, no SpriteKit imports
+  - S3: StarlightSyncApp wired with FlowCoordinator injection, exhaustive switch routing, ContentView deleted
+  - S4: End-to-end validation — build succeeds, audit 7/7, no governance violations
+- **Files created:** 6 (chapter placeholder views)
+- **Files modified:** 2 (`StarlightSyncApp.swift`, `project.pbxproj`)
+- **Files removed:** 8 (`ContentView.swift`, 6 chapter `.gitkeep` files, `Coordinators/.gitkeep` already removed)
+- **Verification:** `xcodebuild build` exits 0, `scripts/audit.py --all` passes 7/7, zero warnings
+- **Unblocked:** PH-03 (AudioManager), PH-04 (HapticManager), PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService)
+
+### 2026-02-14 — PH-02: FlowCoordinator + Walking Skeleton — PHASE COMPLETE
+
+- **Phase:** PH-02
+- **Scope:** Full phase gate passed
+- **Epics delivered:** COORD_01 (FlowCoordinator state machine), COORD_02 (walking skeleton view routing)
+- **Deliverables:** FlowCoordinator with chapter enum/progression/persistence, StarlightSyncApp with environment injection and exhaustive routing, 6 placeholder chapter views, ContentView removed
+- **Phase gate:** All Definition of Done criteria satisfied
+- **Unblocked:** PH-03, PH-04, PH-06, PH-07–PH-13, PH-12
