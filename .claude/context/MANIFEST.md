@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-15T21:00:00Z
+last_updated: 2026-02-15T22:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -8,9 +8,9 @@ schema_version: 1
 
 ## Current Phase
 
-**PH-05** — Asset Pre-load Pipeline
-Completion: ASSET_01 + ASSET_02 + ASSET_03 delivered (visuals, preload coordinator, audio)
-Status: In Progress (ASSET_04 AHAP authoring pending)
+**PH-05** — Asset Pre-load Pipeline — PHASE COMPLETE
+Completion: ASSET_01 + ASSET_02 + ASSET_03 + ASSET_04 delivered (visuals, preload coordinator, audio, AHAP haptics)
+Status: Complete (all 4 epics delivered)
 
 ## Blocking Issues
 
@@ -18,6 +18,12 @@ None.
 
 ## Recently Completed
 
+- **PH-05 COMPLETE** — Asset Pre-load Pipeline (all 4 epics delivered)
+- **ASSET_04 COMPLETE** — Author AHAP Haptic Patterns (4/4 stories)
+  - 3 AHAP files authored: heartbeat.ahap, capacitor_charge.ahap, thud.ahap
+  - .gitkeep placeholder removed from Haptics/
+  - Folder reference auto-includes files in Copy Bundle Resources
+  - Build succeeds, audit 7/7, all files verified in built bundle
 - **ASSET_03 COMPLETE** — Integrate Audio Assets into Bundle (4/4 stories)
   - 2 BGM tracks + 7 SFX files placed in Audio/ and Audio/SFX/ via folder references
   - .gitkeep placeholders removed, no pbxproj edits required
@@ -79,4 +85,6 @@ All source files registered in pbxproj Sources build phase.
 ASSET_01 complete: Visual assets integrated into catalog (4/4 stories).
 ASSET_02 complete: Pre-load coordinator delivered (6/6 stories).
 ASSET_03 complete: Audio assets integrated into bundle (4/4 stories).
-Unblocked: ASSET_04 (AHAP), PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (Cross-Chapter Transitions).
+ASSET_04 complete: AHAP haptic patterns authored (4/4 stories).
+PH-05 phase gate: PASSED. All 4 epics delivered.
+Unblocked: PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (Cross-Chapter Transitions).

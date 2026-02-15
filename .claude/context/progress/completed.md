@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-02-15T20:00:00Z
-total_entries: 8
+last_updated: 2026-02-15T22:00:00Z
+total_entries: 10
 schema_version: 1
 ---
 
@@ -204,3 +204,26 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Files modified:** 1 (AssetPreloadCoordinator.swift — explicit self fix for Swift 6 Logger interpolation)
 - **Verification:** `xcodebuild build` exits 0, zero errors, zero warnings. `scripts/audit.py --all` passes 7/7. Source files unmodified.
 - **Unblocked:** ASSET_02 preload (AudioManager.preloadAssets()), PH-06 (beat map authoring), PH-07–PH-13 (chapter BGM/SFX), PH-14 (cross-chapter transitions)
+
+### 2026-02-15 — ASSET_04: Author AHAP Haptic Patterns
+
+- **Phase:** PH-05
+- **Scope:** AHAP haptic pattern authoring — data artifacts only, no code changes
+- **Stories completed:** 4/4
+  - S1: heartbeat.ahap — 4-cycle double-pulse (lub-dub) with rising intensity (0.3→0.8) and sharpness (0.2→0.6), 8 transient events over ~2.4s
+  - S2: capacitor_charge.ahap — continuous event (2.6s duration) with exponential-feel intensity ramp (0.1→0.9) via ParameterCurve, sharpness ramp (0.1→0.7), terminal transient snap at 2.8s (1.0/1.0)
+  - S3: thud.ahap — single transient event at Time 0.0 (intensity 0.9, sharpness 0.4)
+  - S4: Bundle integration — .gitkeep removed, all 3 files verified in built .app bundle via folder reference, build succeeds, audit 7/7
+- **Files created:** 3 (heartbeat.ahap, capacitor_charge.ahap, thud.ahap)
+- **Files removed:** 1 (.gitkeep placeholder in Haptics/)
+- **Verification:** `python3 -m json.tool` validates all 3 files. `xcodebuild build` exits 0, zero errors, zero warnings. `scripts/audit.py --all` passes 7/7. All values in [0,1], monotonic timestamps.
+- **Unblocked:** PH-07 (Ch. 1 capacitor_charge), PH-09 (Ch. 3 thud), PH-13 (Ch. 6 heartbeat), PH-14 (cross-chapter transitions)
+
+### 2026-02-15 — PH-05: Asset Pre-load Pipeline — PHASE COMPLETE
+
+- **Phase:** PH-05
+- **Scope:** Full phase gate passed
+- **Epics delivered:** ASSET_01 (visual assets), ASSET_02 (preload coordinator), ASSET_03 (audio assets), ASSET_04 (AHAP haptics)
+- **Deliverables:** 5 HEIC backgrounds in Asset Catalog, 5 sprites in atlas, AssetPreloadCoordinator singleton, 9 audio files in bundle, 3 AHAP patterns in bundle
+- **Phase gate:** All Definition of Done criteria satisfied
+- **Unblocked:** PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (cross-chapter transitions)
