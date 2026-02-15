@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-15T22:00:00Z
+last_updated: 2026-02-15T23:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -8,9 +8,9 @@ schema_version: 1
 
 ## Current Phase
 
-**PH-05** — Asset Pre-load Pipeline — PHASE COMPLETE
-Completion: ASSET_01 + ASSET_02 + ASSET_03 + ASSET_04 delivered (visuals, preload coordinator, audio, AHAP haptics)
-Status: Complete (all 4 epics delivered)
+**PH-06** — GameConstants & Type-Safe Models — PHASE COMPLETE
+Completion: CONST_01 delivered (7/7 stories)
+Status: Complete
 
 ## Blocking Issues
 
@@ -18,6 +18,15 @@ None.
 
 ## Recently Completed
 
+- **PH-06 COMPLETE** — GameConstants & Type-Safe Models (CONST_01 delivered)
+  - Caseless enum namespace with 10 nested enums
+  - Auto-Assist thresholds: 3 deaths, 3 incorrect, 5 misses, 10s idle
+  - Timing: 0.5s cross-fade, 60s runner, 45s firewall, 3s handshake, 0.8 slider exponent
+  - Difficulty: 20% speed/gap modifiers, ±150ms/±300ms hit windows
+  - Physics: 20 hearts target, 120fps ProMotion
+  - Beat map: 32 timestamps at ~85 BPM across 44.5s, track duration 174.66s
+  - 5 BackgroundAsset + 5 SpriteAsset + 1 SpriteAtlas + 7 AudioAsset + 3 HapticAsset + 1 Persistence enum cases
+  - Build succeeds, audit 7/7, pbxproj registered (FileRef 11, BuildFile 10)
 - **PH-05 COMPLETE** — Asset Pre-load Pipeline (all 4 epics delivered)
 - **ASSET_04 COMPLETE** — Author AHAP Haptic Patterns (4/4 stories)
   - 3 AHAP files authored: heartbeat.ahap, capacitor_charge.ahap, thud.ahap
@@ -67,7 +76,7 @@ No ADRs recorded.
 | BlueprintView | StarlightSync/Chapters/Chapter5_Blueprint/BlueprintView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
 | EventHorizonView | StarlightSync/Chapters/Chapter6_EventHorizon/EventHorizonView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
 | WebhookService | StarlightSync/Services/WebhookService.swift | not_started | PH-12 | no | — |
-| GameConstants | StarlightSync/Models/GameConstants.swift | not_started | PH-06 | no | — |
+| GameConstants | StarlightSync/Models/GameConstants.swift | implemented | PH-06 | no | Caseless enum namespace, 10 nested enums, type-safe asset identifiers, beat map |
 
 ## Coordination Notes
 
@@ -88,3 +97,6 @@ ASSET_03 complete: Audio assets integrated into bundle (4/4 stories).
 ASSET_04 complete: AHAP haptic patterns authored (4/4 stories).
 PH-05 phase gate: PASSED. All 4 epics delivered.
 Unblocked: PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (Cross-Chapter Transitions).
+CONST_01 complete: GameConstants namespace delivered (7/7 stories).
+PH-06 phase gate: PASSED.
+Unblocked: PH-07–PH-13 (chapters with type-safe constants), PH-10 (beat map for FirewallScene), PH-15 (beat map validation tests).
