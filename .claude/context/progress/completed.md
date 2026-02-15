@@ -1,7 +1,8 @@
 ---
-last_updated: 2026-02-15T22:00:00Z
-total_entries: 10
+last_updated: 2026-02-15T23:00:00Z
+total_entries: 12
 schema_version: 1
+updated_by: claude-opus-4-6
 ---
 
 # Completed Work Log
@@ -227,3 +228,30 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Deliverables:** 5 HEIC backgrounds in Asset Catalog, 5 sprites in atlas, AssetPreloadCoordinator singleton, 9 audio files in bundle, 3 AHAP patterns in bundle
 - **Phase gate:** All Definition of Done criteria satisfied
 - **Unblocked:** PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (cross-chapter transitions)
+
+### 2026-02-15 — CONST_01: Implement GameConstants & Type-Safe Models
+
+- **Phase:** PH-06
+- **Scope:** Centralized constants namespace with all tuning values, type-safe asset identifier enums, and Ch. 4 beat map
+- **Stories completed:** 7/7
+  - S1: AutoAssist thresholds — 3 deaths, 3 incorrect, 5 misses, 10s idle
+  - S2: Timing constants — 0.5s cross-fade, 60s runner, 45s firewall, 3s handshake, 0.8 slider exponent, 10s blueprint idle
+  - S3: Difficulty modifiers (20% speed/gap, ±150ms/±300ms hit windows) + Physics (20 hearts, 120fps)
+  - S4: Beat map — 32 timestamps at ~85 BPM across 44.5s, trackDuration 174.66s, monotonically increasing, first ≥0.5s
+  - S5: Visual asset enums — 5 BackgroundAsset, 5 SpriteAsset, 1 SpriteAtlas, all rawValues match catalog identifiers
+  - S6: Audio (7 cases + fileExtension), Haptic (3 cases + fileExtension), Persistence (1 case) enums
+  - S7: pbxproj registration (FileRef 11, BuildFile 10, Models group, Sources phase), .gitkeep removed, build + audit clean
+- **Files created:** 1 (`StarlightSync/Models/GameConstants.swift`)
+- **Files removed:** 1 (`StarlightSync/Models/.gitkeep`)
+- **Files modified:** 1 (`project.pbxproj`)
+- **Verification:** `xcodebuild build` exits 0, zero errors, zero warnings. `scripts/audit.py --all` passes 7/7
+- **Unblocked:** PH-07–PH-13 (type-safe constants for all chapters), PH-10 (beat map for FirewallScene), PH-15 (beat map validation tests)
+
+### 2026-02-15 — PH-06: GameConstants & Type-Safe Models — PHASE COMPLETE
+
+- **Phase:** PH-06
+- **Scope:** Full phase gate passed
+- **Epics delivered:** CONST_01 (GameConstants namespace)
+- **Deliverables:** Caseless enum namespace with 10 nested enums, Auto-Assist thresholds, timing/difficulty/physics constants, 32-entry beat map, type-safe asset/persistence identifier enums
+- **Phase gate:** All Definition of Done criteria satisfied
+- **Unblocked:** PH-07–PH-13 (chapters), PH-10 (beat map), PH-15 (unit tests)
