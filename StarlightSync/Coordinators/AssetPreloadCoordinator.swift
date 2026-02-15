@@ -103,7 +103,9 @@ final class AssetPreloadCoordinator {
         }
 
         #if DEBUG
-            Self.logger.info("Decoded \(decodedBackgrounds.count)/\(backgroundIdentifiers.count) backgrounds")
+            let decodedCount = decodedBackgrounds.count
+            let totalCount = backgroundIdentifiers.count
+            Self.logger.info("Decoded \(decodedCount)/\(totalCount) backgrounds")
         #endif
     }
 
@@ -115,7 +117,8 @@ final class AssetPreloadCoordinator {
 
         guard !textureNames.isEmpty else {
             #if DEBUG
-                Self.logger.warning("Sprite atlas '\(spriteAtlasName)' contains no textures")
+                let atlasName = spriteAtlasName
+                Self.logger.warning("Sprite atlas '\(atlasName)' contains no textures")
             #endif
             return
         }
@@ -136,10 +139,11 @@ final class AssetPreloadCoordinator {
     private func verifyFontRegistration() {
         let font = UIFont(name: customFontName, size: 17)
         #if DEBUG
+            let fontName = customFontName
             if font != nil {
-                Self.logger.info("Custom font registered: \(customFontName)")
+                Self.logger.info("Custom font registered: \(fontName)")
             } else {
-                Self.logger.info("Custom font not registered: \(customFontName) — using system fallback")
+                Self.logger.info("Custom font not registered: \(fontName) — using system fallback")
             }
         #endif
         _ = font

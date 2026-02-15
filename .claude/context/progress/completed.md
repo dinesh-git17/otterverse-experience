@@ -189,3 +189,18 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Files modified:** 2 (`StarlightSyncApp.swift`, `project.pbxproj`)
 - **Verification:** `xcodebuild build` exits 0, zero errors, zero warnings. `scripts/audit.py --all` passes 7/7
 - **Unblocked:** PH-07–PH-13 (zero-latency chapter transitions), PH-14 (cross-chapter transitions), PH-08/PH-10 (GPU-cached sprite textures)
+
+### 2026-02-15 — ASSET_03: Integrate Audio Assets into Bundle
+
+- **Phase:** PH-05
+- **Scope:** Audio asset placement — BGM tracks and SFX files into bundle directories
+- **Stories completed:** 4/4
+  - S1: 2 BGM tracks (audio_bgm_main.m4a, audio_bgm_finale.m4a) placed in StarlightSync/Audio/
+  - S2: 7 SFX files (5 Design Doc + 2 alternates) placed in StarlightSync/Audio/SFX/
+  - S3: Bundle resource resolution verified — all 9 files in built .app via folder references
+  - S4: Build validation, audit 7/7, .gitkeep removal, governance compliance
+- **Files placed:** 9 (.m4a audio files)
+- **Files removed:** 2 (.gitkeep placeholders in Audio/ and Audio/SFX/)
+- **Files modified:** 1 (AssetPreloadCoordinator.swift — explicit self fix for Swift 6 Logger interpolation)
+- **Verification:** `xcodebuild build` exits 0, zero errors, zero warnings. `scripts/audit.py --all` passes 7/7. Source files unmodified.
+- **Unblocked:** ASSET_02 preload (AudioManager.preloadAssets()), PH-06 (beat map authoring), PH-07–PH-13 (chapter BGM/SFX), PH-14 (cross-chapter transitions)

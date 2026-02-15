@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-15T20:00:00Z
+last_updated: 2026-02-15T21:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -9,8 +9,8 @@ schema_version: 1
 ## Current Phase
 
 **PH-05** — Asset Pre-load Pipeline
-Completion: ASSET_01 + ASSET_02 delivered (visuals integrated, preload coordinator implemented)
-Status: In Progress (ASSET_03 audio integration pending, ASSET_04 AHAP authoring pending)
+Completion: ASSET_01 + ASSET_02 + ASSET_03 delivered (visuals, preload coordinator, audio)
+Status: In Progress (ASSET_04 AHAP authoring pending)
 
 ## Blocking Issues
 
@@ -18,6 +18,11 @@ None.
 
 ## Recently Completed
 
+- **ASSET_03 COMPLETE** — Integrate Audio Assets into Bundle (4/4 stories)
+  - 2 BGM tracks + 7 SFX files placed in Audio/ and Audio/SFX/ via folder references
+  - .gitkeep placeholders removed, no pbxproj edits required
+  - AssetPreloadCoordinator explicit self fix for Swift 6 Logger interpolation
+  - Build succeeds, audit 7/7, source files unmodified
 - **ASSET_02 COMPLETE** — Implement Asset Pre-load Coordinator (6/6 stories)
   - @Observable @MainActor singleton with session-lifetime asset retention
   - 5 HEIC backgrounds decoded via withTaskGroup + byPreparingForDisplay()
@@ -73,4 +78,5 @@ PH-04 phase gate: PASSED.
 All source files registered in pbxproj Sources build phase.
 ASSET_01 complete: Visual assets integrated into catalog (4/4 stories).
 ASSET_02 complete: Pre-load coordinator delivered (6/6 stories).
-Unblocked: ASSET_03 (audio), ASSET_04 (AHAP), PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (Cross-Chapter Transitions).
+ASSET_03 complete: Audio assets integrated into bundle (4/4 stories).
+Unblocked: ASSET_04 (AHAP), PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (Cross-Chapter Transitions).
