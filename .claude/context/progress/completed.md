@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-02-14T20:00:00Z
-total_entries: 5
+last_updated: 2026-02-15T12:00:00Z
+total_entries: 6
 schema_version: 1
 ---
 
@@ -129,3 +129,31 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Deliverables:** AudioManager with .playback session, dual-player cross-fade, SFX pool, interruption/route-change handling, preload cache, CACurrentMediaTime timing, failure isolation
 - **Phase gate:** All Definition of Done criteria satisfied
 - **Unblocked:** PH-04, PH-05, PH-06, PH-07–PH-14
+
+### 2026-02-15 — HAPTIC_01: Implement HapticManager Singleton
+
+- **Phase:** PH-04
+- **Scope:** HapticManager singleton — CHHapticEngine lifecycle, AHAP caching, crash recovery, graceful degradation
+- **Stories completed:** 9/9
+  - S1: @Observable @MainActor final class with static let shared, private init, injectable bundle resolver
+  - S2: CHHapticEngine capability detection (supportsHaptics), engine creation with do/catch, engineAvailable state
+  - S3: stoppedHandler with [weak self], os.Logger logging, single restart attempt, degradation on failure
+  - S4: resetHandler with [weak self], full engine rebuild, re-register handlers, re-cache patterns, restart
+  - S5: preloadPatterns() parsing heartbeat/capacitor_charge/thud via CHHapticPattern(contentsOf:), [String: CHHapticPattern] cache
+  - S6: play(_:) fire-and-forget with transient CHHapticPatternPlayer per-playback, do/catch, silent no-op on missing pattern
+  - S7: playTransientEvent(intensity:sharpness:) inline CHHapticEvent of type .hapticTransient with clamped parameters
+  - S8: Graceful degradation validation — all public APIs non-throwing, do/catch throughout, os.Logger under #if DEBUG
+  - S9: pbxproj registration (FileRef 0F, BuildFile 0E), build succeeds, audit passes 7/7
+- **Files created:** 1 (`StarlightSync/Managers/HapticManager.swift`)
+- **Files modified:** 1 (`project.pbxproj` — FileRef 0F, BuildFile 0E, Managers group, Sources phase)
+- **Verification:** `xcodebuild build` exits 0, zero errors, zero warnings. `scripts/audit.py --all` passes 7/7
+- **Unblocked:** PH-05 (preloadPatterns API), PH-07 (capacitor_charge), PH-09 (thud + transient detents), PH-13 (heartbeat), PH-14 (engineAvailable)
+
+### 2026-02-15 — PH-04: HapticManager Singleton — PHASE COMPLETE
+
+- **Phase:** PH-04
+- **Scope:** Full phase gate passed
+- **Epics delivered:** HAPTIC_01 (HapticManager singleton)
+- **Deliverables:** HapticManager with capability detection, engine lifecycle, stoppedHandler/resetHandler crash recovery, AHAP pattern caching, fire-and-forget playback, inline transient events, graceful degradation
+- **Phase gate:** All Definition of Done criteria satisfied
+- **Unblocked:** PH-05, PH-06, PH-07–PH-14

@@ -13,8 +13,8 @@
 |-------|--------|
 | PH-01 | **COMPLETE** |
 | PH-02 | **COMPLETE** |
-| PH-03 | Pending |
-| PH-04 | Pending |
+| PH-03 | **COMPLETE** |
+| PH-04 | **COMPLETE** |
 | PH-05 | Pending |
 | PH-06 | Pending |
 | PH-07 | Pending |
