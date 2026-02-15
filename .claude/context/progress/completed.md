@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-02-15T12:00:00Z
-total_entries: 6
+last_updated: 2026-02-15T18:00:00Z
+total_entries: 7
 schema_version: 1
 ---
 
@@ -157,3 +157,19 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Deliverables:** HapticManager with capability detection, engine lifecycle, stoppedHandler/resetHandler crash recovery, AHAP pattern caching, fire-and-forget playback, inline transient events, graceful degradation
 - **Phase gate:** All Definition of Done criteria satisfied
 - **Unblocked:** PH-05, PH-06, PH-07–PH-14
+
+### 2026-02-15 — ASSET_01: Integrate Visual Assets into Asset Catalog
+
+- **Phase:** PH-05
+- **Scope:** Visual asset transformation and catalog integration — backgrounds (PNG→HEIC), sprites, bubble shield
+- **Stories completed:** 4/4
+  - S1: 5 backgrounds transformed to HEIC with @3x (1536x2752) and @2x (1024x1835) scale variants using sips
+  - S2: 10 HEIC files placed in Backgrounds/<id>.imageset/ with §8.2 Contents.json; img_bubble_shield.imageset removed from Backgrounds
+  - S3: 4 sprite PNGs + img_bubble_shield.png placed in Sprites.spriteatlas/<id>.imageset/ with §8.3 Contents.json; sprite Contents.json corrected from background template to 1x universal
+  - S4: Full validation — catalog structure matches ASSET_INT_PLAN §4, all Contents.json valid, no dangling refs, no duplicate IDs, build succeeds, audit 7/7
+- **Files created:** 11 (10 HEIC background files, 1 img_bubble_shield.imageset/Contents.json)
+- **Files placed:** 5 (sprite PNGs copied into atlas imagesets)
+- **Files modified:** 10 (5 background Contents.json, 4 sprite Contents.json, img_bubble_shield Contents.json)
+- **Files removed:** 1 (Backgrounds/img_bubble_shield.imageset/ — relocated to Sprites.spriteatlas/)
+- **Verification:** `xcodebuild build` exits 0, zero errors, zero actool warnings. `scripts/audit.py --all` passes 7/7. Source PNGs unmodified.
+- **Unblocked:** ASSET_02 (pre-load coordinator), PH-07–PH-13 (chapter views with asset references)

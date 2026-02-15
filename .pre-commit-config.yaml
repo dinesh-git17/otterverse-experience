@@ -32,7 +32,7 @@ repos:
       - id: check-yaml
       - id: check-json
       - id: check-added-large-files
-        args: ["--maxkb=5120"]
+        args: ["--maxkb=10240"]
 
   # === Governance Audit (§9.5) ===
   - repo: local

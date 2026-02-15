@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-15T12:00:00Z
+last_updated: 2026-02-15T18:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -8,9 +8,9 @@ schema_version: 1
 
 ## Current Phase
 
-**PH-04** — HapticManager Singleton
-Completion: 100% (HAPTIC_01 delivered)
-Status: Complete
+**PH-05** — Asset Pre-load Pipeline
+Completion: ASSET_01 delivered (visual assets integrated)
+Status: In Progress (ASSET_02 pre-load coordinator pending)
 
 ## Blocking Issues
 
@@ -18,6 +18,11 @@ None.
 
 ## Recently Completed
 
+- **ASSET_01 COMPLETE** — Integrate Visual Assets into Asset Catalog (4/4 stories)
+  - 5 backgrounds: PNG→HEIC @3x/@2x, placed in Backgrounds/ with §8.2 Contents.json
+  - 4 sprites + img_bubble_shield: PNG placed in Sprites.spriteatlas/ with §8.3 Contents.json
+  - img_bubble_shield relocated from Backgrounds/ to Sprites.spriteatlas/
+  - Build succeeds, audit 7/7, zero actool warnings
 - **HAPTIC_01 COMPLETE** — Implement HapticManager Singleton (9/9 stories)
   - S1: @Observable @MainActor singleton with injectable bundle resolver
   - S2: CHHapticEngine capability detection and creation
@@ -67,4 +72,5 @@ PH-03 phase gate: PASSED.
 HAPTIC_01 complete: HapticManager singleton delivered (9/9 stories).
 PH-04 phase gate: PASSED.
 All source files registered in pbxproj Sources build phase.
-Unblocked: PH-05 (Asset Pre-load Pipeline), PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (Cross-Chapter Transitions).
+ASSET_01 complete: Visual assets integrated into catalog (4/4 stories).
+Unblocked: ASSET_02 (pre-load coordinator), PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (Cross-Chapter Transitions).
