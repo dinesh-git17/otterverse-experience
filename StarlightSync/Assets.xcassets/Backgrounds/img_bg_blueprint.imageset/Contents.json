@@ -1,6 +1,10 @@
 {
   "images" : [
     {
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
       "filename" : "img_bg_blueprint@2x.heic",
       "idiom" : "universal",
       "scale" : "2x"
@@ -16,7 +20,6 @@
     "version" : 1
   },
   "properties" : {
-    "compression-type" : "lossless",
-    "preserves-vector-representation" : false
+    "compression-type" : "lossless"
   }
 }

@@ -8,8 +8,8 @@ schema_version: 1
 
 ## Current Phase
 
-**PH-06** — GameConstants & Type-Safe Models — PHASE COMPLETE
-Completion: CONST_01 delivered (7/7 stories)
+**PH-07** — Chapter 1: The Handshake — PHASE COMPLETE
+Next: PH-08 (Chapter 2 — Packet Run), PH-12 (WebhookService — parallelizable)
 Status: Complete
 
 ## Blocking Issues
@@ -18,6 +18,16 @@ None.
 
 ## Recently Completed
 
+- **PH-07 COMPLETE** — Chapter 1: The Handshake (CH1_01, 7/7 stories)
+  - HandshakeView: OLED black + img_bg_intro, screen-relative pulsing touchid overlay, 3s DragGesture hold with TimelineView progress ring
+  - capacitor_charge.ahap haptic on press with stop-on-release + transient snap, thud.ahap on completion
+  - CRTTransitionView: vertical sweep + Canvas scanlines + brightness ramp (~0.6s), Reduce Motion cross-fade
+  - Completion sequence: SFX → CRT → BGM start → coordinator advance
+  - "HOLD TO CONNECT" instruction text at bottom with layered neon glow bloom, breathing animation
+  - Bundle subdirectory fix: AudioManager/HapticManager resolve Audio/, Audio/SFX/, Haptics/ paths
+  - Asset catalog namespace fix: BackgroundAsset rawValues prefixed with "Backgrounds/"
+  - pbxproj: CRTTransitionView (FileRef 12, BuildFile 11), Components/.gitkeep removed
+  - Build succeeds, audit 7/7
 - **PH-06 COMPLETE** — GameConstants & Type-Safe Models (CONST_01 delivered)
   - Caseless enum namespace with 10 nested enums
   - Auto-Assist thresholds: 3 deaths, 3 incorrect, 5 misses, 10s idle
@@ -69,7 +79,8 @@ No ADRs recorded.
 | AssetPreloadCoordinator | StarlightSync/Coordinators/AssetPreloadCoordinator.swift | implemented | PH-05 | no | @Observable @MainActor singleton, HEIC decode, sprite atlas preload, manager orchestration |
 | AudioManager | StarlightSync/Managers/AudioManager.swift | implemented | PH-03 | no | @Observable @MainActor singleton, dual-player cross-fade, SFX pool, interruption handling |
 | HapticManager | StarlightSync/Managers/HapticManager.swift | implemented | PH-04 | no | @Observable @MainActor singleton, CHHapticEngine lifecycle, AHAP caching, crash recovery |
-| HandshakeView | StarlightSync/Chapters/Chapter1_Handshake/HandshakeView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
+| HandshakeView | StarlightSync/Chapters/Chapter1_Handshake/HandshakeView.swift | implemented | PH-07 | no | OLED black, pulsing glyph, 3s long-press, CRT transition, BGM start |
+| CRTTransitionView | StarlightSync/Components/CRTTransitionView.swift | implemented | PH-07 | no | Vertical sweep + Canvas scanlines + Reduce Motion cross-fade |
 | PacketRunView | StarlightSync/Chapters/Chapter2_PacketRun/PacketRunView.swift | placeholder | PH-02 | no | Walking skeleton placeholder (no SpriteKit) |
 | CipherView | StarlightSync/Chapters/Chapter3_Cipher/CipherView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
 | FirewallView | StarlightSync/Chapters/Chapter4_Firewall/FirewallView.swift | placeholder | PH-02 | no | Walking skeleton placeholder (no SpriteKit) |
@@ -100,3 +111,6 @@ Unblocked: PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookServic
 CONST_01 complete: GameConstants namespace delivered (7/7 stories).
 PH-06 phase gate: PASSED.
 Unblocked: PH-07–PH-13 (chapters with type-safe constants), PH-10 (beat map for FirewallScene), PH-15 (beat map validation tests).
+CH1_01 complete: Chapter 1 Handshake delivered (7/7 stories).
+PH-07 CH1_01: COMPLETE.
+Unblocked: PH-08 (Chapter 2), PH-14 (CRTTransitionView reusable component), PH-16 (Chapter 1 on-device QA).

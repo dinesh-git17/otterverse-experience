@@ -22,6 +22,7 @@
 		B7D1E38A2D5F6A010000010E /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A010000000F /* HapticManager.swift */; };
 		B7D1E38A2D5F6A010000010F /* AssetPreloadCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000010 /* AssetPreloadCoordinator.swift */; };
 		B7D1E38A2D5F6A0100000110 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000011 /* GameConstants.swift */; };
+		B7D1E38A2D5F6A0100000111 /* CRTTransitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000012 /* CRTTransitionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		B7D1E38A2D5F6A010000000F /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000010 /* AssetPreloadCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPreloadCoordinator.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000011 /* GameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameConstants.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A0100000012 /* CRTTransitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRTTransitionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 		B7D1E38A2D5F6A0100000207 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				B7D1E38A2D5F6A0100000012 /* CRTTransitionView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 				B7D1E38A2D5F6A010000010E /* HapticManager.swift in Sources */,
 				B7D1E38A2D5F6A010000010F /* AssetPreloadCoordinator.swift in Sources */,
 				B7D1E38A2D5F6A0100000110 /* GameConstants.swift in Sources */,
+				B7D1E38A2D5F6A0100000111 /* CRTTransitionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

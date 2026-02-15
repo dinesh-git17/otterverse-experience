@@ -27,6 +27,10 @@ final class HapticManager {
 
     private var cachedPatterns: [String: CHHapticPattern] = [:]
 
+    // MARK: - Active Player
+
+    private var activePlayer: CHHapticPatternPlayer?
+
     // MARK: - Dependencies
 
     private let bundleResolver: @Sendable (String, String?) -> URL?
@@ -44,7 +48,8 @@ final class HapticManager {
 
     private init(
         bundleResolver: @escaping @Sendable (String, String?) -> URL? = { name, ext in
-            Bundle.main.url(forResource: name, withExtension: ext)
+            Bundle.main.url(forResource: name, withExtension: ext, subdirectory: "Haptics")
+                ?? Bundle.main.url(forResource: name, withExtension: ext)
         }
     ) {
         self.bundleResolver = bundleResolver
@@ -167,14 +172,29 @@ final class HapticManager {
         guard engineAvailable, let hapticEngine = engine else { return }
         guard let pattern = cachedPatterns[patternName] else { return }
 
+        stopCurrentPattern()
+
         do {
             let player = try hapticEngine.makePlayer(with: pattern)
             try player.start(atTime: CHHapticTimeImmediate)
+            activePlayer = player
         } catch {
             #if DEBUG
                 Self.logger.error("Pattern playback failed for \(patternName): \(error.localizedDescription)")
             #endif
         }
+    }
+
+    func stopCurrentPattern() {
+        guard let player = activePlayer else { return }
+        do {
+            try player.stop(atTime: CHHapticTimeImmediate)
+        } catch {
+            #if DEBUG
+                Self.logger.error("Pattern stop failed: \(error.localizedDescription)")
+            #endif
+        }
+        activePlayer = nil
     }
 
     // MARK: - Transient Event Playback (S7)

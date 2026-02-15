@@ -76,7 +76,9 @@ final class AudioManager {
     init(
         notificationCenter: NotificationCenter = .default,
         assetLoader: @escaping @Sendable (String, String?) -> URL? = { name, ext in
-            Bundle.main.url(forResource: name, withExtension: ext)
+            Bundle.main.url(forResource: name, withExtension: ext, subdirectory: "Audio/SFX")
+                ?? Bundle.main.url(forResource: name, withExtension: ext, subdirectory: "Audio")
+                ?? Bundle.main.url(forResource: name, withExtension: ext)
         }
     ) {
         self.notificationCenter = notificationCenter
@@ -322,9 +324,7 @@ private extension AudioManager {
     func applyMuteState() {
         let bgmVolume: Float = isMuted ? 0.0 : bgmDefaultVolume
         let sfxVolume: Float = isMuted ? 0.0 : sfxDefaultVolume
-
         activePlayer?.setVolume(bgmVolume, fadeDuration: 0)
-
         for entry in activeSFXPlayers {
             entry.player.volume = sfxVolume
         }
