@@ -9,7 +9,7 @@
 | **Phase**     | PH-05                          |
 | **Domain**    | ASSET                          |
 | **Owner**     | iOS Engineer                   |
-| **Status**    | Draft                          |
+| **Status**    | Complete                       |
 
 ---
 
@@ -99,12 +99,12 @@ Audio files are placed directly into the `StarlightSync/Audio/` and `StarlightSy
 
 **Acceptance Criteria:**
 
-- [ ] `audio_bgm_main.m4a` copied from `/Users/Dinesh/Desktop/assets/audio/` to `StarlightSync/Audio/audio_bgm_main.m4a`.
-- [ ] `audio_bgm_finale.m4a` copied from `/Users/Dinesh/Desktop/assets/audio/` to `StarlightSync/Audio/audio_bgm_finale.m4a`.
-- [ ] File names match Design Doc §7.4 asset IDs exactly (snake_case, `.m4a` extension).
-- [ ] Files are valid AAC/ALAC `.m4a` containers (verified via `file` command).
-- [ ] `.gitkeep` in `StarlightSync/Audio/` removed — directory is no longer empty.
-- [ ] Source files at `/Users/Dinesh/Desktop/assets/audio/` are not modified or deleted.
+- [x]`audio_bgm_main.m4a` copied from `/Users/Dinesh/Desktop/assets/audio/` to `StarlightSync/Audio/audio_bgm_main.m4a`.
+- [x]`audio_bgm_finale.m4a` copied from `/Users/Dinesh/Desktop/assets/audio/` to `StarlightSync/Audio/audio_bgm_finale.m4a`.
+- [x]File names match Design Doc §7.4 asset IDs exactly (snake_case, `.m4a` extension).
+- [x]Files are valid AAC/ALAC `.m4a` containers (verified via `file` command).
+- [x]`.gitkeep` in `StarlightSync/Audio/` removed — directory is no longer empty.
+- [x]Source files at `/Users/Dinesh/Desktop/assets/audio/` are not modified or deleted.
 
 **Dependencies:** None
 **Completion Signal:** `ls StarlightSync/Audio/` shows `audio_bgm_main.m4a` and `audio_bgm_finale.m4a` with correct file sizes matching the source.
@@ -115,19 +115,19 @@ Audio files are placed directly into the `StarlightSync/Audio/` and `StarlightSy
 
 **Acceptance Criteria:**
 
-- [ ] 5 Design Doc SFX files copied to `StarlightSync/Audio/SFX/`:
+- [x]5 Design Doc SFX files copied to `StarlightSync/Audio/SFX/`:
   - `sfx_haptic_thud.m4a`
   - `sfx_success_chime.m4a`
   - `sfx_shield_impact.m4a`
   - `sfx_click.m4a`
   - `sfx_error.m4a`
-- [ ] 2 alternate SFX files copied to `StarlightSync/Audio/SFX/`:
+- [x]2 alternate SFX files copied to `StarlightSync/Audio/SFX/`:
   - `sfx_fail_soft.m4a`
   - `sfx_heart_collect.m4a`
-- [ ] File names match source file names exactly (snake_case, `.m4a` extension).
-- [ ] All 7 files are valid AAC/ALAC `.m4a` containers (verified via `file` command).
-- [ ] `.gitkeep` in `StarlightSync/Audio/SFX/` removed — directory is no longer empty.
-- [ ] Source files at `/Users/Dinesh/Desktop/assets/audio/` are not modified or deleted.
+- [x]File names match source file names exactly (snake_case, `.m4a` extension).
+- [x]All 7 files are valid AAC/ALAC `.m4a` containers (verified via `file` command).
+- [x]`.gitkeep` in `StarlightSync/Audio/SFX/` removed — directory is no longer empty.
+- [x]Source files at `/Users/Dinesh/Desktop/assets/audio/` are not modified or deleted.
 
 **Dependencies:** None (parallel with S1)
 **Completion Signal:** `ls StarlightSync/Audio/SFX/` shows all 7 SFX files with correct file sizes.
@@ -138,12 +138,12 @@ Audio files are placed directly into the `StarlightSync/Audio/` and `StarlightSy
 
 **Acceptance Criteria:**
 
-- [ ] All 9 audio files appear in the Xcode Copy Bundle Resources build phase automatically via folder reference inclusion. No manual `project.pbxproj` edits required for individual audio files.
-- [ ] `Bundle.main.url(forResource: "audio_bgm_main", withExtension: "m4a", subdirectory: "Audio")` resolves to a valid URL in a runtime context.
-- [ ] `Bundle.main.url(forResource: "sfx_click", withExtension: "m4a", subdirectory: "Audio/SFX")` resolves to a valid URL in a runtime context.
-- [ ] All 7 Design Doc asset IDs resolve successfully via the subdirectory-aware `Bundle.main.url` pattern.
-- [ ] Alternate SFX files (`sfx_fail_soft`, `sfx_heart_collect`) also resolve via `Bundle.main.url` — they are bundled and accessible even though not mapped to Design Doc events.
-- [ ] `AudioManager.shared.preloadAssets()` can create `AVAudioPlayer` instances from the bundled files without error (verified by build and runtime initialization).
+- [x]All 9 audio files appear in the Xcode Copy Bundle Resources build phase automatically via folder reference inclusion. No manual `project.pbxproj` edits required for individual audio files.
+- [x]`Bundle.main.url(forResource: "audio_bgm_main", withExtension: "m4a", subdirectory: "Audio")` resolves to a valid URL in a runtime context.
+- [x]`Bundle.main.url(forResource: "sfx_click", withExtension: "m4a", subdirectory: "Audio/SFX")` resolves to a valid URL in a runtime context.
+- [x]All 7 Design Doc asset IDs resolve successfully via the subdirectory-aware `Bundle.main.url` pattern.
+- [x]Alternate SFX files (`sfx_fail_soft`, `sfx_heart_collect`) also resolve via `Bundle.main.url` — they are bundled and accessible even though not mapped to Design Doc events.
+- [x]`AudioManager.shared.preloadAssets()` can create `AVAudioPlayer` instances from the bundled files without error (verified by build and runtime initialization).
 
 **Dependencies:** ASSET_03-S1, ASSET_03-S2
 **Completion Signal:** `xcodebuild build` succeeds. Inspecting the built `.app` bundle confirms `Audio/` and `Audio/SFX/` directories contain all 9 `.m4a` files.
@@ -154,17 +154,17 @@ Audio files are placed directly into the `StarlightSync/Audio/` and `StarlightSy
 
 **Acceptance Criteria:**
 
-- [ ] `xcodebuild build -project StarlightSync.xcodeproj -scheme StarlightSync -destination 'generic/platform=iOS Simulator'` exits with code 0 and zero warnings.
-- [ ] `python3 scripts/audit.py --all` passes with zero violations.
-- [ ] No Protocol Zero violations in any new or modified file.
-- [ ] No plaintext secret patterns in any audio file name, directory, or metadata.
-- [ ] Total audio bundle size is reasonable:
+- [x]`xcodebuild build -project StarlightSync.xcodeproj -scheme StarlightSync -destination 'generic/platform=iOS Simulator'` exits with code 0 and zero warnings.
+- [x]`python3 scripts/audit.py --all` passes with zero violations.
+- [x]No Protocol Zero violations in any new or modified file.
+- [x]No plaintext secret patterns in any audio file name, directory, or metadata.
+- [x]Total audio bundle size is reasonable:
   - BGM: `audio_bgm_main.m4a` (~1.0MB) + `audio_bgm_finale.m4a` (~1.8MB) = ~2.8MB.
   - SFX: 7 files totaling ~200KB.
   - Total audio: ~3MB (well within Design Doc §7.1 "100-300MB" total bundle target).
-- [ ] No `.gitkeep` files remain in `Audio/` or `Audio/SFX/` directories.
-- [ ] Source files at `/Users/Dinesh/Desktop/assets/audio/` are intact and unmodified (all 9 files present with original sizes).
-- [ ] Git diff shows only file additions (audio files) and `.gitkeep` removals — no unrelated modifications.
+- [x]No `.gitkeep` files remain in `Audio/` or `Audio/SFX/` directories.
+- [x]Source files at `/Users/Dinesh/Desktop/assets/audio/` are intact and unmodified (all 9 files present with original sizes).
+- [x]Git diff shows only file additions (audio files) and `.gitkeep` removals — no unrelated modifications.
 
 **Dependencies:** ASSET_03-S1, ASSET_03-S2, ASSET_03-S3
 **Completion Signal:** Clean build with zero errors. Audit passes 7/7 checks. `Audio/` and `Audio/SFX/` contain exactly the expected files with no placeholders.
@@ -185,22 +185,22 @@ Audio files are placed directly into the `StarlightSync/Audio/` and `StarlightSy
 
 ## Definition of Done
 
-- [ ] All 4 stories completed and individually verified.
-- [ ] 2 BGM tracks in `StarlightSync/Audio/` with correct file names.
-- [ ] 7 SFX files (5 Design Doc + 2 alternate) in `StarlightSync/Audio/SFX/` with correct file names.
-- [ ] All 9 files included in Copy Bundle Resources via folder reference.
-- [ ] All 7 Design Doc audio identifiers resolvable via `Bundle.main.url(forResource:withExtension:subdirectory:)`.
-- [ ] No `.gitkeep` placeholder files remain in `Audio/` or `Audio/SFX/`.
-- [ ] `xcodebuild build` succeeds with zero errors.
-- [ ] `scripts/audit.py --all` passes with zero violations.
-- [ ] No Protocol Zero violations.
-- [ ] Source files at `/Users/Dinesh/Desktop/assets/audio/` unmodified.
+- [x]All 4 stories completed and individually verified.
+- [x]2 BGM tracks in `StarlightSync/Audio/` with correct file names.
+- [x]7 SFX files (5 Design Doc + 2 alternate) in `StarlightSync/Audio/SFX/` with correct file names.
+- [x]All 9 files included in Copy Bundle Resources via folder reference.
+- [x]All 7 Design Doc audio identifiers resolvable via `Bundle.main.url(forResource:withExtension:subdirectory:)`.
+- [x]No `.gitkeep` placeholder files remain in `Audio/` or `Audio/SFX/`.
+- [x]`xcodebuild build` succeeds with zero errors.
+- [x]`scripts/audit.py --all` passes with zero violations.
+- [x]No Protocol Zero violations.
+- [x]Source files at `/Users/Dinesh/Desktop/assets/audio/` unmodified.
 
 ## Exit Criteria
 
-- [ ] All Definition of Done conditions satisfied.
-- [ ] ASSET_02 (pre-load coordinator) is unblocked — `AudioManager.preloadAssets()` can create and prepare all `AVAudioPlayer` instances from bundled files.
-- [ ] PH-06 (GameConstants) is unblocked — `audio_bgm_main.m4a` is in-bundle for beat map authoring.
-- [ ] PH-07 through PH-13 (chapter implementations) are unblocked — all BGM and SFX files are bundled and accessible.
-- [ ] PH-14 (cross-chapter transitions) is unblocked — BGM cross-fade has actual audio files to play.
-- [ ] Epic ID `ASSET_03` recorded in `.claude/context/progress/active.md` upon start and `.claude/context/progress/completed.md` upon completion.
+- [x]All Definition of Done conditions satisfied.
+- [x]ASSET_02 (pre-load coordinator) is unblocked — `AudioManager.preloadAssets()` can create and prepare all `AVAudioPlayer` instances from bundled files.
+- [x]PH-06 (GameConstants) is unblocked — `audio_bgm_main.m4a` is in-bundle for beat map authoring.
+- [x]PH-07 through PH-13 (chapter implementations) are unblocked — all BGM and SFX files are bundled and accessible.
+- [x]PH-14 (cross-chapter transitions) is unblocked — BGM cross-fade has actual audio files to play.
+- [x]Epic ID `ASSET_03` recorded in `.claude/context/progress/active.md` upon start and `.claude/context/progress/completed.md` upon completion.
