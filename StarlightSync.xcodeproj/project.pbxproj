@@ -20,6 +20,7 @@
 		B7D1E38A2D5F6A010000010C /* EventHorizonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A010000000D /* EventHorizonView.swift */; };
 		B7D1E38A2D5F6A010000010D /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A010000000E /* AudioManager.swift */; };
 		B7D1E38A2D5F6A010000010E /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A010000000F /* HapticManager.swift */; };
+		B7D1E38A2D5F6A010000010F /* AssetPreloadCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000010 /* AssetPreloadCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		B7D1E38A2D5F6A010000000D /* EventHorizonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventHorizonView.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A010000000E /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A010000000F /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A0100000010 /* AssetPreloadCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPreloadCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 		B7D1E38A2D5F6A0100000202 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
+				B7D1E38A2D5F6A0100000010 /* AssetPreloadCoordinator.swift */,
 				B7D1E38A2D5F6A0100000007 /* FlowCoordinator.swift */,
 			);
 			path = Coordinators;
@@ -263,6 +266,7 @@
 				B7D1E38A2D5F6A010000010C /* EventHorizonView.swift in Sources */,
 				B7D1E38A2D5F6A010000010D /* AudioManager.swift in Sources */,
 				B7D1E38A2D5F6A010000010E /* HapticManager.swift in Sources */,
+				B7D1E38A2D5F6A010000010F /* AssetPreloadCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,10 +330,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = (
-					"DEBUG",
-					"$(inherited)",
-				);
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
 			};
@@ -399,6 +400,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WWDLQL8W8W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -421,6 +423,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WWDLQL8W8W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -458,7 +461,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
 	};
 	rootObject = B7D1E38A2D5F6A0100000500 /* Project object */;
 }
