@@ -98,3 +98,34 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Deliverables:** FlowCoordinator with chapter enum/progression/persistence, StarlightSyncApp with environment injection and exhaustive routing, 6 placeholder chapter views, ContentView removed
 - **Phase gate:** All Definition of Done criteria satisfied
 - **Unblocked:** PH-03, PH-04, PH-06, PH-07–PH-13, PH-12
+
+### 2026-02-15 — AUDIO_01: Implement AudioManager Singleton
+
+- **Phase:** PH-03
+- **Scope:** AudioManager singleton — AVAudioSession, dual-player cross-fade, SFX, preload, interruption handling, timing API
+- **Stories completed:** 11/11
+  - S1: AVAudioSession .playback category configuration with do/catch and sessionConfigured flag
+  - S2: @Observable @MainActor final class with static let shared, injectable NotificationCenter and asset loader
+  - S3: Dual-player BGM cross-fade (playerA/playerB) using setVolume(_:fadeDuration:) with 500ms overlap, CACurrentMediaTime timestamps
+  - S4: SFX one-shot playback with reuse pool keyed by identifier, lazy recycling of finished players
+  - S5: preloadAssets() cache with [String: AVAudioPlayer] dictionary, idempotent for repeated calls
+  - S6: AVAudioSession.interruptionNotification handling — pause on .began, resume on .ended with .shouldResume
+  - S7: AVAudioSession.routeChangeNotification handling — pause on .oldDeviceUnavailable (headphone disconnect)
+  - S8: currentPlaybackTimestamp() using CACurrentMediaTime() - playbackStartMediaTime, recalibrated on resume
+  - S9: stopBGM/pauseBGM/resumeBGM controls, isMuted property with didSet applying to all active players
+  - S10: All public APIs non-throwing, do/catch on all AVFoundation calls, os.Logger under #if DEBUG
+  - S11: Zero force unwraps, zero print, zero Combine, zero deprecated APIs, build + audit clean
+- **Files created:** 1 (`StarlightSync/Managers/AudioManager.swift`)
+- **Files removed:** 1 (`StarlightSync/Managers/.gitkeep`)
+- **Files modified:** 1 (`project.pbxproj` — FileRef 0E, BuildFile 0D, Managers group, Sources phase)
+- **Verification:** `xcodebuild build` exits 0, zero errors, zero warnings. `scripts/audit.py --all` passes 7/7
+- **Unblocked:** PH-05 (Asset Pre-load Pipeline), PH-07–PH-13 (chapter SFX/BGM), PH-14 (cross-chapter transitions), PH-10 (beat sync timing)
+
+### 2026-02-15 — PH-03: AudioManager Singleton — PHASE COMPLETE
+
+- **Phase:** PH-03
+- **Scope:** Full phase gate passed
+- **Epics delivered:** AUDIO_01 (AudioManager singleton)
+- **Deliverables:** AudioManager with .playback session, dual-player cross-fade, SFX pool, interruption/route-change handling, preload cache, CACurrentMediaTime timing, failure isolation
+- **Phase gate:** All Definition of Done criteria satisfied
+- **Unblocked:** PH-04, PH-05, PH-06, PH-07–PH-14
