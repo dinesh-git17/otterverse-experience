@@ -8,6 +8,9 @@ struct StarlightSyncApp: App {
         WindowGroup {
             ChapterRouterView()
                 .environment(coordinator)
+                .task {
+                    await AssetPreloadCoordinator.shared.preloadAllAssets()
+                }
         }
     }
 }

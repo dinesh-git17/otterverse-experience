@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-15T12:00:00Z
+last_updated: 2026-02-15T20:00:00Z
 schema_version: 1
 ---
 
@@ -18,6 +18,7 @@ schema_version: 1
 | EventHorizonView | StarlightSync/Chapters/Chapter6_EventHorizon/EventHorizonView.swift | placeholder | PH-02 | no | Walking skeleton, replaced in PH-13 |
 | AudioManager | StarlightSync/Managers/AudioManager.swift | implemented | PH-03 | no | @Observable @MainActor singleton, dual-player cross-fade, SFX pool, interruption handling |
 | HapticManager | StarlightSync/Managers/HapticManager.swift | implemented | PH-04 | no | @Observable @MainActor singleton, CHHapticEngine lifecycle, AHAP caching, crash recovery, graceful degradation |
+| AssetPreloadCoordinator | StarlightSync/Coordinators/AssetPreloadCoordinator.swift | implemented | PH-05 | no | @Observable @MainActor singleton, HEIC decode, sprite atlas preload, manager orchestration |
 | WebhookService | StarlightSync/Services/WebhookService.swift | not_started | PH-12 | no | Discord webhook, retry logic |
 | GameConstants | StarlightSync/Models/GameConstants.swift | not_started | PH-06 | no | Tuning values, thresholds, beat maps |
 | CRTTransitionView | StarlightSync/Components/CRTTransitionView.swift | not_started | PH-07 | no | CRT turn-on effect |

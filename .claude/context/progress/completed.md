@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-02-15T18:00:00Z
-total_entries: 7
+last_updated: 2026-02-15T20:00:00Z
+total_entries: 8
 schema_version: 1
 ---
 
@@ -173,3 +173,19 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Files removed:** 1 (Backgrounds/img_bubble_shield.imageset/ — relocated to Sprites.spriteatlas/)
 - **Verification:** `xcodebuild build` exits 0, zero errors, zero actool warnings. `scripts/audit.py --all` passes 7/7. Source PNGs unmodified.
 - **Unblocked:** ASSET_02 (pre-load coordinator), PH-07–PH-13 (chapter views with asset references)
+
+### 2026-02-15 — ASSET_02: Implement Asset Pre-load Coordinator
+
+- **Phase:** PH-05
+- **Scope:** Runtime asset pre-load coordinator — HEIC decode, sprite atlas preload, manager orchestration, launch integration
+- **Stories completed:** 6/6
+  - S1: @Observable @MainActor final class with static let shared, private init, storage properties, named constants
+  - S2: Background image pre-decode using withTaskGroup + byPreparingForDisplay() on background threads
+  - S3: SKTextureAtlas preload via withCheckedContinuation bridge, strong session-lifetime reference
+  - S4: HapticManager.preloadPatterns() + AudioManager.preloadAssets() orchestration, font verification
+  - S5: App launch integration via .task modifier on ChapterRouterView in StarlightSyncApp
+  - S6: Build validation, audit 7/7, pbxproj registration (FileRef 10, BuildFile 0F), governance compliance
+- **Files created:** 1 (`StarlightSync/Coordinators/AssetPreloadCoordinator.swift`)
+- **Files modified:** 2 (`StarlightSyncApp.swift`, `project.pbxproj`)
+- **Verification:** `xcodebuild build` exits 0, zero errors, zero warnings. `scripts/audit.py --all` passes 7/7
+- **Unblocked:** PH-07–PH-13 (zero-latency chapter transitions), PH-14 (cross-chapter transitions), PH-08/PH-10 (GPU-cached sprite textures)

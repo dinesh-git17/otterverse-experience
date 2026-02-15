@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-15T18:00:00Z
+last_updated: 2026-02-15T20:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -9,8 +9,8 @@ schema_version: 1
 ## Current Phase
 
 **PH-05** — Asset Pre-load Pipeline
-Completion: ASSET_01 delivered (visual assets integrated)
-Status: In Progress (ASSET_02 pre-load coordinator pending)
+Completion: ASSET_01 + ASSET_02 delivered (visuals integrated, preload coordinator implemented)
+Status: In Progress (ASSET_03 audio integration pending, ASSET_04 AHAP authoring pending)
 
 ## Blocking Issues
 
@@ -18,21 +18,19 @@ None.
 
 ## Recently Completed
 
+- **ASSET_02 COMPLETE** — Implement Asset Pre-load Coordinator (6/6 stories)
+  - @Observable @MainActor singleton with session-lifetime asset retention
+  - 5 HEIC backgrounds decoded via withTaskGroup + byPreparingForDisplay()
+  - Sprite atlas preloaded via withCheckedContinuation bridge
+  - AudioManager + HapticManager orchestration per §7.9.2
+  - Launch integration via .task modifier, preloadComplete observable
+  - Build succeeds, audit 7/7, pbxproj registered
 - **ASSET_01 COMPLETE** — Integrate Visual Assets into Asset Catalog (4/4 stories)
   - 5 backgrounds: PNG→HEIC @3x/@2x, placed in Backgrounds/ with §8.2 Contents.json
   - 4 sprites + img_bubble_shield: PNG placed in Sprites.spriteatlas/ with §8.3 Contents.json
   - img_bubble_shield relocated from Backgrounds/ to Sprites.spriteatlas/
   - Build succeeds, audit 7/7, zero actool warnings
 - **HAPTIC_01 COMPLETE** — Implement HapticManager Singleton (9/9 stories)
-  - S1: @Observable @MainActor singleton with injectable bundle resolver
-  - S2: CHHapticEngine capability detection and creation
-  - S3: stoppedHandler crash recovery with single restart attempt
-  - S4: resetHandler full engine rebuild with re-registration and re-caching
-  - S5: AHAP pattern parsing and caching (heartbeat, capacitor_charge, thud)
-  - S6: Fire-and-forget play(_:) with transient CHHapticPatternPlayer
-  - S7: Inline transient event playback (playTransientEvent)
-  - S8: Graceful degradation validation
-  - S9: pbxproj registration, build validation, audit compliance
 - **AUDIO_01 COMPLETE** — AudioManager Singleton (11/11 stories)
 - **PH-02 COMPLETE** — FlowCoordinator + Walking Skeleton (COORD_01 + COORD_02)
 - **PH-01 COMPLETE** — Xcode Project Scaffold (all epics delivered)
@@ -45,9 +43,10 @@ No ADRs recorded.
 
 | Component | File Path | Status | Phase | Tests | Notes |
 |-----------|-----------|--------|-------|-------|-------|
-| StarlightSyncApp | StarlightSync/StarlightSyncApp.swift | implemented | PH-02 | no | @main entry with FlowCoordinator injection and chapter routing |
+| StarlightSyncApp | StarlightSync/StarlightSyncApp.swift | implemented | PH-02 | no | @main entry with FlowCoordinator injection, chapter routing, preload .task |
 | ChapterRouterView | StarlightSync/StarlightSyncApp.swift | implemented | PH-02 | no | Exhaustive switch on Chapter enum |
 | FlowCoordinator | StarlightSync/Coordinators/FlowCoordinator.swift | implemented | PH-02 | no | @Observable @MainActor, 6-chapter state machine |
+| AssetPreloadCoordinator | StarlightSync/Coordinators/AssetPreloadCoordinator.swift | implemented | PH-05 | no | @Observable @MainActor singleton, HEIC decode, sprite atlas preload, manager orchestration |
 | AudioManager | StarlightSync/Managers/AudioManager.swift | implemented | PH-03 | no | @Observable @MainActor singleton, dual-player cross-fade, SFX pool, interruption handling |
 | HapticManager | StarlightSync/Managers/HapticManager.swift | implemented | PH-04 | no | @Observable @MainActor singleton, CHHapticEngine lifecycle, AHAP caching, crash recovery |
 | HandshakeView | StarlightSync/Chapters/Chapter1_Handshake/HandshakeView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
@@ -73,4 +72,5 @@ HAPTIC_01 complete: HapticManager singleton delivered (9/9 stories).
 PH-04 phase gate: PASSED.
 All source files registered in pbxproj Sources build phase.
 ASSET_01 complete: Visual assets integrated into catalog (4/4 stories).
-Unblocked: ASSET_02 (pre-load coordinator), PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (Cross-Chapter Transitions).
+ASSET_02 complete: Pre-load coordinator delivered (6/6 stories).
+Unblocked: ASSET_03 (audio), ASSET_04 (AHAP), PH-06 (GameConstants), PH-07–PH-13 (chapters), PH-12 (WebhookService), PH-14 (Cross-Chapter Transitions).
