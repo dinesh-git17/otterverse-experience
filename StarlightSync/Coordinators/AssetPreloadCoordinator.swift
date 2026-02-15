@@ -8,11 +8,11 @@ final class AssetPreloadCoordinator {
     // MARK: - Background Asset Identifiers
 
     private let backgroundIdentifiers = [
-        "img_bg_intro",
-        "img_bg_runner",
-        "img_bg_cipher",
-        "img_bg_blueprint",
-        "img_finale_art"
+        "Backgrounds/img_bg_intro",
+        "Backgrounds/img_bg_runner",
+        "Backgrounds/img_bg_cipher",
+        "Backgrounds/img_bg_blueprint",
+        "Backgrounds/img_finale_art"
     ]
 
     // MARK: - Sprite Atlas Identifier

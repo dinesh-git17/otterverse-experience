@@ -100,11 +100,11 @@ enum GameConstants {
     // MARK: - Visual Asset Identifiers
 
     enum BackgroundAsset: String {
-        case intro = "img_bg_intro"
-        case runner = "img_bg_runner"
-        case cipher = "img_bg_cipher"
-        case blueprint = "img_bg_blueprint"
-        case finale = "img_finale_art"
+        case intro = "Backgrounds/img_bg_intro"
+        case runner = "Backgrounds/img_bg_runner"
+        case cipher = "Backgrounds/img_bg_cipher"
+        case blueprint = "Backgrounds/img_bg_blueprint"
+        case finale = "Backgrounds/img_finale_art"
     }
 
     enum SpriteAsset: String {

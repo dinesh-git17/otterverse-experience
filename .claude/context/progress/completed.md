@@ -255,3 +255,41 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Deliverables:** Caseless enum namespace with 10 nested enums, Auto-Assist thresholds, timing/difficulty/physics constants, 32-entry beat map, type-safe asset/persistence identifier enums
 - **Phase gate:** All Definition of Done criteria satisfied
 - **Unblocked:** PH-07–PH-13 (chapters), PH-10 (beat map), PH-15 (unit tests)
+
+### 2026-02-15 — CH1_01: Implement Chapter 1 — The Handshake
+
+- **Phase:** PH-07
+- **Scope:** Full Chapter 1 implementation replacing walking skeleton placeholder
+- **Stories completed:** 7/7
+  - S1: OLED black background with img_bg_intro, pulsing touchid glyph (70pt, custom neon purple), asymmetric timing curve animation, Reduce Motion static glow
+  - S2: 3-second long-press gesture via onLongPressGesture with TimelineView(.animation) tick source, circular progress ring (Circle().trim), animated reset on early release
+  - S3: capacitor_charge.ahap haptic fired on press start via HapticManager.shared.play(), fire-and-forget pattern
+  - S4: CRTTransitionView component — vertical sweep (scaleEffect(y:) 0.003→1.0), brightness ramp, Canvas scanline overlay, custom timingCurve, ~0.6s duration, Reduce Motion cross-fade fallback
+  - S5: Completion sequence — sfx_haptic_thud SFX, CRT transition, audio_bgm_main BGM start after transition, FlowCoordinator.completeCurrentChapter() advancement
+  - S6: Reduce Motion fallback — static glyph opacity, progress ring unaffected, CRT replaced with 0.4s cross-fade
+  - S7: pbxproj registration (FileRef 12, BuildFile 11, Components group, Sources phase), .gitkeep removed, build succeeds, audit 7/7
+- **Files created:** 1 (`StarlightSync/Components/CRTTransitionView.swift`)
+- **Files modified:** 2 (`HandshakeView.swift`, `project.pbxproj`)
+- **Files removed:** 1 (`StarlightSync/Components/.gitkeep`)
+- **Verification:** `xcodebuild build` exits 0, zero errors, zero warnings. `scripts/audit.py --all` passes 7/7
+- **Unblocked:** PH-08 (Chapter 2), PH-14 (CRTTransitionView reusable component), PH-16 (Chapter 1 on-device QA)
+
+### 2026-02-15 — PH-07: Chapter 1 — The Handshake — PHASE COMPLETE
+
+- **Phase:** PH-07
+- **Scope:** On-device polish, bundle resolution fixes, haptic refinement, instruction text
+- **Additional work after initial implementation:**
+  - Asset catalog namespace fix: BackgroundAsset rawValues prefixed "Backgrounds/" (provides-namespace groups)
+  - AssetPreloadCoordinator backgroundIdentifiers updated with same prefix
+  - AudioManager default assetLoader: searches Audio/SFX/ → Audio/ → bundle root
+  - HapticManager default bundleResolver: searches Haptics/ → bundle root
+  - HandshakeView glyph: screen-relative sizing (52%/72% screen width), ultraLight weight, very low opacity overlay
+  - DragGesture(minimumDistance: 0) replaces onLongPressGesture for instant touch response
+  - HapticManager.stopCurrentPattern(): stops active CHHapticPatternPlayer on release
+  - Release snap: transient haptic (intensity proportional to hold progress, sharpness 0.9)
+  - Completion: thud.ahap fires alongside sfx_haptic_thud
+  - Instruction text: "HOLD TO CONNECT" in SF Mono, white with 3-layer neon bloom glow, breathing animation, bottom-anchored
+- **Files modified:** `HandshakeView.swift`, `GameConstants.swift`, `AssetPreloadCoordinator.swift`, `AudioManager.swift`, `HapticManager.swift`
+- **Verification:** `xcodebuild build` exits 0, on-device tested
+- **Phase gate:** All Definition of Done criteria satisfied
+- **Unblocked:** PH-08, PH-12 (parallelizable), PH-14, PH-16
