@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-15T23:30:00Z
+last_updated: 2026-02-16T03:30:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -8,8 +8,8 @@ schema_version: 1
 
 ## Current Phase
 
-**PH-09** — Chapter 3: The Cipher
-Next: PH-09 (Chapter 3 — Cipher), PH-12 (WebhookService — parallelizable)
+**PH-10** — Chapter 4: The Firewall
+Next: PH-10 (Chapter 4 — Firewall), PH-12 (WebhookService — parallelizable)
 Status: Ready to start
 
 ## Blocking Issues
@@ -18,6 +18,19 @@ None.
 
 ## Recently Completed
 
+- **PH-09 COMPLETE** — Chapter 3: The Cipher (CH3_01, 7/7 stories)
+  - CipherWheelView: vertical drum scroll with DragGesture, snap-to-position, cyclic wrapping
+  - Per-tick haptic click (inline transient) + sfx_click audio feedback
+  - Heavy thud (thud.ahap + sfx_haptic_thud) on correct segment alignment
+  - CipherView: three-wheel Cryptex over img_bg_cipher with brushed metal frame
+  - Intro card: "We have our own language" with Britney Spears hint, blurred background, DECODE button
+  - Unlock validation with shake + flash + sfx_error + haptic on incorrect
+  - Auto-Assist: subtle pulsing glow after 3 incorrect submissions
+  - Victory: smooth zoom-in + fade-out transition to next chapter
+  - Reduce Motion: easeOut instead of spring, static glow, flash instead of shake
+  - CipherValidation pure function for PH-15 unit test consumption
+  - pbxproj: CipherWheelView (FileRef 15, BuildFile 13)
+  - Build succeeds, audit 7/7
 - **PH-08 COMPLETE** — Chapter 2: The Packet Run (CH2_01, 8/8 stories)
   - PacketRunScene: vertical infinite runner with two-layer parallax (stars + neon highway)
   - Frame-based collision detection with hitbox insets, drag-to-move input
@@ -96,7 +109,8 @@ No ADRs recorded.
 | CRTTransitionView | StarlightSync/Components/CRTTransitionView.swift | implemented | PH-07 | no | Vertical sweep + Canvas scanlines + Reduce Motion cross-fade |
 | PacketRunView | StarlightSync/Chapters/Chapter2_PacketRun/PacketRunView.swift | implemented | PH-08 | no | SpriteView wrapper with optional scene pattern, 120fps |
 | PacketRunScene | StarlightSync/Chapters/Chapter2_PacketRun/PacketRunScene.swift | implemented | PH-08 | no | SKScene: vertical runner, two-layer parallax, frame collision, overlays |
-| CipherView | StarlightSync/Chapters/Chapter3_Cipher/CipherView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
+| CipherView | StarlightSync/Chapters/Chapter3_Cipher/CipherView.swift | implemented | PH-09 | no | Cryptex puzzle with intro card, 3-wheel validation, Auto-Assist glow |
+| CipherWheelView | StarlightSync/Chapters/Chapter3_Cipher/CipherWheelView.swift | implemented | PH-09 | no | Vertical drum scroll, snap-to-position, haptic tick, thud on correct |
 | FirewallView | StarlightSync/Chapters/Chapter4_Firewall/FirewallView.swift | placeholder | PH-02 | no | Walking skeleton placeholder (no SpriteKit) |
 | BlueprintView | StarlightSync/Chapters/Chapter5_Blueprint/BlueprintView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
 | EventHorizonView | StarlightSync/Chapters/Chapter6_EventHorizon/EventHorizonView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
@@ -131,3 +145,6 @@ Unblocked: PH-08 (Chapter 2), PH-14 (CRTTransitionView reusable component), PH-1
 CH2_01 complete: Chapter 2 Packet Run delivered (8/8 stories).
 PH-08 CH2_01: COMPLETE.
 Unblocked: PH-09 (Chapter 3), PH-10 (SpriteKit lifecycle pattern validated), PH-14 (SpriteView memory cleanup verified), PH-16 (Chapter 2 on-device QA).
+CH3_01 complete: Chapter 3 Cipher delivered (7/7 stories).
+PH-09 CH3_01: COMPLETE.
+Unblocked: PH-10 (Chapter 4), PH-14 (Chapter 3 in transition polish), PH-15 (CipherValidation pure function for unit tests), PH-16 (Chapter 3 on-device QA).

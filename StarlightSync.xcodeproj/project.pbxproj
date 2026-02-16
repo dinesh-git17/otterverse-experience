@@ -24,6 +24,8 @@
 		B7D1E38A2D5F6A0100000110 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000011 /* GameConstants.swift */; };
 		B7D1E38A2D5F6A0100000111 /* CRTTransitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000012 /* CRTTransitionView.swift */; };
 		B7D1E38A2D5F6A0100000112 /* PacketRunScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000013 /* PacketRunScene.swift */; };
+		B7D1E38A2D5F6A0100000113 /* CipherWheelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000015 /* CipherWheelView.swift */; };
+		B7D1E38A2D5F6A0100000114 /* CipherConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000016 /* CipherConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +48,8 @@
 		B7D1E38A2D5F6A0100000012 /* CRTTransitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRTTransitionView.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000013 /* PacketRunScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketRunScene.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000014 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A0100000015 /* CipherWheelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CipherWheelView.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A0100000016 /* CipherConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CipherConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +164,8 @@
 			isa = PBXGroup;
 			children = (
 				B7D1E38A2D5F6A010000000A /* CipherView.swift */,
+				B7D1E38A2D5F6A0100000015 /* CipherWheelView.swift */,
+				B7D1E38A2D5F6A0100000016 /* CipherConstants.swift */,
 			);
 			path = Chapter3_Cipher;
 			sourceTree = "<group>";
@@ -281,6 +287,8 @@
 				B7D1E38A2D5F6A0100000110 /* GameConstants.swift in Sources */,
 				B7D1E38A2D5F6A0100000111 /* CRTTransitionView.swift in Sources */,
 				B7D1E38A2D5F6A0100000112 /* PacketRunScene.swift in Sources */,
+				B7D1E38A2D5F6A0100000113 /* CipherWheelView.swift in Sources */,
+				B7D1E38A2D5F6A0100000114 /* CipherConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

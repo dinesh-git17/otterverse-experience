@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-02-15T23:30:00Z
-total_entries: 14
+last_updated: 2026-02-16T03:30:00Z
+total_entries: 16
 schema_version: 1
 updated_by: claude-opus-4-6
 ---
@@ -329,3 +329,35 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Deliverables:** PacketRunScene with vertical runner, two-layer parallax, frame collision, overlays, Auto-Assist, SFX, highway confinement. PacketRunView SpriteView wrapper. FlowCoordinator fresh-start behavior. AudioManager SFX pool pre-seeding. HEIC→PNG asset conversion.
 - **Phase gate:** All Definition of Done criteria satisfied
 - **Unblocked:** PH-09, PH-10, PH-12 (parallelizable), PH-14, PH-16
+
+### 2026-02-16 — CH3_01: Implement Chapter 3 — The Cipher
+
+- **Phase:** PH-09
+- **Scope:** Full Chapter 3 implementation replacing walking skeleton placeholder
+- **Stories completed:** 7/7
+  - S1: CipherWheelView with vertical drum scroll, DragGesture(minimumDistance: 0), snap-to-position spring, cyclic wrapping, 3D rotation3DEffect perspective
+  - S2: CipherView container with three-wheel Cryptex layout over img_bg_cipher, brushed metal frame with linear gradients, inner shadow, specular highlight
+  - S3: Per-wheel correct alignment detection — thud.ahap + sfx_haptic_thud on snap to correctIndex
+  - S4: Submission validation (CipherValidation pure function), incorrect attempt tracking, shake + flash + sfx_error + haptic error feedback, win condition with chime + zoom-fade exit
+  - S5: Auto-Assist subtle pulsing glow (RadialGradient, GlowPulseModifier with timingCurve) after 3 incorrect submissions, proximity-only visibility
+  - S6: Reduce Motion compliance — easeOut instead of spring, static glow, flash instead of shake, cross-fade victory
+  - S7: CipherWheelView.swift registered in pbxproj (FileRef 15, BuildFile 13), build succeeds, audit 7/7
+- **Additional features beyond epic:**
+  - Intro card: "We have our own language" headline, "Britney Spears might jog your memory" hint, DECODE button
+  - Blurred background on intro (12pt) and puzzle (6pt) screens
+  - Background moved to .background{} modifier to fix centering
+  - Error haptic (transient, intensity 0.9, sharpness 0.6) + sfx_error on incorrect unlock
+  - Smooth single-phase zoom-in (1.5x) + fade-out (0.45s easeIn) victory transition
+- **Files created:** 1 (`StarlightSync/Chapters/Chapter3_Cipher/CipherWheelView.swift`)
+- **Files modified:** 2 (`CipherView.swift`, `project.pbxproj`)
+- **Verification:** `xcodebuild build` exits 0, zero errors. `scripts/audit.py --all` passes 7/7
+- **Unblocked:** PH-10 (Chapter 4), PH-14 (Chapter 3 transitions), PH-15 (CipherValidation unit tests), PH-16 (Chapter 3 QA)
+
+### 2026-02-16 — PH-09: Chapter 3 — The Cipher — PHASE COMPLETE
+
+- **Phase:** PH-09
+- **Scope:** Full phase gate passed
+- **Epics delivered:** CH3_01 (Chapter 3 Cipher)
+- **Deliverables:** CipherView with intro card, three-wheel Cryptex puzzle, brushed metal frame, Auto-Assist glow, error feedback, victory transition. CipherWheelView with drum scroll, haptic ticks, thud confirmation. CipherValidation pure function for PH-15.
+- **Phase gate:** All Definition of Done criteria satisfied
+- **Unblocked:** PH-10, PH-12 (parallelizable), PH-14, PH-15, PH-16
