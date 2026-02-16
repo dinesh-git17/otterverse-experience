@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-15T23:00:00Z
+last_updated: 2026-02-15T23:30:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -8,9 +8,9 @@ schema_version: 1
 
 ## Current Phase
 
-**PH-07** — Chapter 1: The Handshake — PHASE COMPLETE
-Next: PH-08 (Chapter 2 — Packet Run), PH-12 (WebhookService — parallelizable)
-Status: Complete
+**PH-09** — Chapter 3: The Cipher
+Next: PH-09 (Chapter 3 — Cipher), PH-12 (WebhookService — parallelizable)
+Status: Ready to start
 
 ## Blocking Issues
 
@@ -18,6 +18,19 @@ None.
 
 ## Recently Completed
 
+- **PH-08 COMPLETE** — Chapter 2: The Packet Run (CH2_01, 8/8 stories)
+  - PacketRunScene: vertical infinite runner with two-layer parallax (stars + neon highway)
+  - Frame-based collision detection with hitbox insets, drag-to-move input
+  - Hearts-only win condition (20 hearts), Auto-Assist after 3 deaths
+  - Welcome overlay, game over overlay with score/high score, win overlay with CONTINUE
+  - SKAction-based SFX with silent pre-warm, layer isolation (backgroundLayer/gameLayer)
+  - Highway bounds confinement for player, obstacles, hearts
+  - Fade-from-black scene entrance, BGM volume reduced to 50%
+  - FlowCoordinator always starts from .handshake on fresh launch
+  - Background images converted HEIC→PNG for SpriteKit GPU compatibility
+  - New assets: img_bg_runner_stars, img_bg_runner_highway imagesets
+  - AudioManager: SFX reuse pool pre-seeded during preload
+  - Build succeeds, all governance checks pass
 - **PH-07 COMPLETE** — Chapter 1: The Handshake (CH1_01, 7/7 stories)
   - HandshakeView: OLED black + img_bg_intro, screen-relative pulsing touchid overlay, 3s DragGesture hold with TimelineView progress ring
   - capacitor_charge.ahap haptic on press with stop-on-release + transient snap, thud.ahap on completion
@@ -81,7 +94,8 @@ No ADRs recorded.
 | HapticManager | StarlightSync/Managers/HapticManager.swift | implemented | PH-04 | no | @Observable @MainActor singleton, CHHapticEngine lifecycle, AHAP caching, crash recovery |
 | HandshakeView | StarlightSync/Chapters/Chapter1_Handshake/HandshakeView.swift | implemented | PH-07 | no | OLED black, pulsing glyph, 3s long-press, CRT transition, BGM start |
 | CRTTransitionView | StarlightSync/Components/CRTTransitionView.swift | implemented | PH-07 | no | Vertical sweep + Canvas scanlines + Reduce Motion cross-fade |
-| PacketRunView | StarlightSync/Chapters/Chapter2_PacketRun/PacketRunView.swift | placeholder | PH-02 | no | Walking skeleton placeholder (no SpriteKit) |
+| PacketRunView | StarlightSync/Chapters/Chapter2_PacketRun/PacketRunView.swift | implemented | PH-08 | no | SpriteView wrapper with optional scene pattern, 120fps |
+| PacketRunScene | StarlightSync/Chapters/Chapter2_PacketRun/PacketRunScene.swift | implemented | PH-08 | no | SKScene: vertical runner, two-layer parallax, frame collision, overlays |
 | CipherView | StarlightSync/Chapters/Chapter3_Cipher/CipherView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
 | FirewallView | StarlightSync/Chapters/Chapter4_Firewall/FirewallView.swift | placeholder | PH-02 | no | Walking skeleton placeholder (no SpriteKit) |
 | BlueprintView | StarlightSync/Chapters/Chapter5_Blueprint/BlueprintView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
@@ -114,3 +128,6 @@ Unblocked: PH-07–PH-13 (chapters with type-safe constants), PH-10 (beat map fo
 CH1_01 complete: Chapter 1 Handshake delivered (7/7 stories).
 PH-07 CH1_01: COMPLETE.
 Unblocked: PH-08 (Chapter 2), PH-14 (CRTTransitionView reusable component), PH-16 (Chapter 1 on-device QA).
+CH2_01 complete: Chapter 2 Packet Run delivered (8/8 stories).
+PH-08 CH2_01: COMPLETE.
+Unblocked: PH-09 (Chapter 3), PH-10 (SpriteKit lifecycle pattern validated), PH-14 (SpriteView memory cleanup verified), PH-16 (Chapter 2 on-device QA).

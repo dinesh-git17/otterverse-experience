@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-02-15T23:00:00Z
-total_entries: 12
+last_updated: 2026-02-15T23:30:00Z
+total_entries: 14
 schema_version: 1
 updated_by: claude-opus-4-6
 ---
@@ -293,3 +293,39 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Verification:** `xcodebuild build` exits 0, on-device tested
 - **Phase gate:** All Definition of Done criteria satisfied
 - **Unblocked:** PH-08, PH-12 (parallelizable), PH-14, PH-16
+
+### 2026-02-15 — CH2_01: Implement Chapter 2 — The Packet Run
+
+- **Phase:** PH-08
+- **Scope:** Full Chapter 2 SpriteKit runner replacing walking skeleton placeholder
+- **Stories completed:** 8/8
+  - S1: PacketRunScene with two-layer parallax background (stars + neon highway), fade-from-black entrance
+  - S2: Otter-Dinn player with drag-to-move input, highway-confined movement
+  - S3: Obstacle spawning within highway bounds, frame-based collision with hitbox insets
+  - S4: Heart collectibles with SKAction SFX (sfx_success_chime), silent audio pre-warm
+  - S5: Hearts-only win condition (20 hearts), win overlay with CONTINUE button
+  - S6: Auto-Assist after 3 deaths (speed -20%, gap +20%), silent activation
+  - S7: PacketRunView SpriteView wrapper with optional scene pattern, 120fps, #Preview
+  - S8: Welcome overlay, game over overlay with score/high score, willMove(from:) cleanup
+- **Architecture decisions:**
+  - Frame-based collision over SKPhysicsBody bitmasks (more reliable with position-driven movement)
+  - Vertical scrolling with drag input (adapted from horizontal tap-to-jump for better mobile UX)
+  - Layer isolation (backgroundLayer/gameLayer) eliminates scroll jitter on node operations
+  - SKAction.playSoundFileNamed for in-scene SFX (no main thread stall vs AVAudioPlayer)
+  - HUD dirty-flag pattern (updateHUD only on heartsCollected change, not per-frame)
+  - Reusable collectedHearts buffer eliminates per-frame heap allocation
+- **Files created:** 1 (PacketRunScene.swift)
+- **Files modified:** 6 (PacketRunView.swift, FlowCoordinator.swift, AudioManager.swift, AssetPreloadCoordinator.swift, GameConstants.swift, project.pbxproj)
+- **Assets added:** 2 imagesets (img_bg_runner_stars, img_bg_runner_highway)
+- **Assets converted:** 5 backgrounds HEIC→PNG (SpriteKit GPU compatibility)
+- **Verification:** `xcodebuild build` exits 0, on-device tested
+- **Unblocked:** PH-09 (Chapter 3), PH-10 (SpriteKit lifecycle pattern), PH-14 (SpriteView cleanup), PH-16 (Ch2 QA)
+
+### 2026-02-15 — PH-08: Chapter 2 — The Packet Run — PHASE COMPLETE
+
+- **Phase:** PH-08
+- **Scope:** Full phase gate passed
+- **Epics delivered:** CH2_01 (Chapter 2 Packet Run)
+- **Deliverables:** PacketRunScene with vertical runner, two-layer parallax, frame collision, overlays, Auto-Assist, SFX, highway confinement. PacketRunView SpriteView wrapper. FlowCoordinator fresh-start behavior. AudioManager SFX pool pre-seeding. HEIC→PNG asset conversion.
+- **Phase gate:** All Definition of Done criteria satisfied
+- **Unblocked:** PH-09, PH-10, PH-12 (parallelizable), PH-14, PH-16

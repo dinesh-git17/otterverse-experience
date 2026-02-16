@@ -37,9 +37,6 @@ final class FlowCoordinator {
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-
-        let persistedValue = defaults.integer(forKey: Self.highestUnlockedChapterKey)
-        let clampedValue = max(0, min(persistedValue, Chapter.allCases.count - 1))
-        currentChapter = Chapter(rawValue: clampedValue) ?? .handshake
+        currentChapter = .handshake
     }
 }

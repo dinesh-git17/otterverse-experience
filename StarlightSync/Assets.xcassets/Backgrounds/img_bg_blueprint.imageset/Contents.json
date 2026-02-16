@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "img_bg_blueprint@2x.heic",
+      "filename" : "img_bg_blueprint@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "img_bg_blueprint@3x.heic",
+      "filename" : "img_bg_blueprint@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
@@ -18,8 +18,5 @@
   "info" : {
     "author" : "xcode",
     "version" : 1
-  },
-  "properties" : {
-    "compression-type" : "lossless"
   }
 }
