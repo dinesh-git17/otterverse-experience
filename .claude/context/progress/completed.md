@@ -361,3 +361,40 @@ Append-only. New entries added at the end. Never reorder, edit, or delete existi
 - **Deliverables:** CipherView with intro card, three-wheel Cryptex puzzle, brushed metal frame, Auto-Assist glow, error feedback, victory transition. CipherWheelView with drum scroll, haptic ticks, thud confirmation. CipherValidation pure function for PH-15.
 - **Phase gate:** All Definition of Done criteria satisfied
 - **Unblocked:** PH-10, PH-12 (parallelizable), PH-14, PH-15, PH-16
+
+### 2026-02-16 — CH4_01: Implement Chapter 4 — The Firewall
+
+- **Phase:** PH-10
+- **Scope:** Full Chapter 4 implementation replacing walking skeleton placeholder
+- **Stories completed:** 8/8
+  - S1: FirewallScene with OLED black background, bubble shield, CACurrentMediaTime() timing
+  - S2: Beat-synced noise particle spawning from 3 directions (left/right/top) with directional sprites
+  - S3: Zone-based tap detection (top/left/right zones, dead bottom) with plasma arc shield feedback
+  - S4: Miss detection with tip-collision at shield edge, explosion effect (flash white + burst + fade)
+  - S5: Auto-Assist hit window widening (±150ms → ±300ms) after 5 misses, silent activation
+  - S6: Welcome overlay, BGM restart for beat alignment, win condition, victory overlay with stats
+  - S7: FirewallView SpriteView wrapper with optional scene pattern, 120fps, Reduce Motion
+  - S8: pbxproj registration (FileRef 17, BuildFile 15), willMove(from:) cleanup, governance pass
+- **Architecture decisions:**
+  - 3-direction threats (left/right/top) with per-direction sprites instead of single generic particle
+  - Plasma arc shield (SKShapeNode) as directional tap feedback instead of direct-tap-on-sprite
+  - Tip-collision: threats stop at shield edge (accounting for sprite half-width), not center
+  - Explosion effect: flash white + scale 2.0x + fade out for satisfying destruction visual
+  - Haptic transient on miss (intensity 0.8, sharpness 0.6) via HapticManager
+  - Floating otter: sinusoidal bob ±8pt over 2.4s with easeInEaseOut
+  - Zone tap layout: bottom 22% dead, above 58% top, middle band split left/right
+- **Assets added:** 3 directional threat sprites (sprite_noise_left, sprite_noise_right, sprite_noise_top)
+- **Assets replaced:** img_bubble_shield with transparent otter-in-bubble pixel art
+- **Files created:** 1 (FirewallScene.swift), 3 imagesets (noise left/right/top)
+- **Files modified:** 4 (FirewallView.swift, GameConstants.swift, project.pbxproj, img_bubble_shield.png)
+- **Verification:** `xcodebuild build` exits 0, on-device tested
+- **Unblocked:** PH-11 (Chapter 5), PH-14 (second SpriteKit cleanup validated), PH-16 (Ch4 QA)
+
+### 2026-02-16 — PH-10: Chapter 4 — The Firewall — PHASE COMPLETE
+
+- **Phase:** PH-10
+- **Scope:** Full phase gate passed
+- **Epics delivered:** CH4_01 (Chapter 4 Firewall)
+- **Deliverables:** FirewallScene with 3-direction rhythm defense, plasma arc shields, tip-collision, explosion effects, haptic feedback, floating otter, Auto-Assist. FirewallView SpriteView wrapper. Custom directional threat sprites.
+- **Phase gate:** All Definition of Done criteria satisfied
+- **Unblocked:** PH-11, PH-12 (parallelizable), PH-14, PH-16

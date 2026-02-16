@@ -20,7 +20,7 @@
 | PH-07 | **COMPLETE** |
 | PH-08 | **COMPLETE** |
 | PH-09 | **COMPLETE** |
-| PH-10 | Pending |
+| PH-10 | **COMPLETE** |
 | PH-11 | Pending |
 | PH-12 | Pending |
 | PH-13 | Pending |

@@ -14,7 +14,8 @@ schema_version: 1
 | PacketRunView | StarlightSync/Chapters/Chapter2_PacketRun/PacketRunView.swift | implemented | PH-08 | no | SpriteView wrapper, optional scene pattern, 120fps, fade-from-black |
 | PacketRunScene | StarlightSync/Chapters/Chapter2_PacketRun/PacketRunScene.swift | implemented | PH-08 | no | SKScene: vertical runner, two-layer parallax, frame collision, overlays, Auto-Assist |
 | CipherView | StarlightSync/Chapters/Chapter3_Cipher/CipherView.swift | placeholder | PH-02 | no | Walking skeleton, replaced in PH-09 |
-| FirewallView | StarlightSync/Chapters/Chapter4_Firewall/FirewallView.swift | placeholder | PH-02 | no | Walking skeleton, replaced in PH-10 (plain SwiftUI, no SpriteKit) |
+| FirewallView | StarlightSync/Chapters/Chapter4_Firewall/FirewallView.swift | implemented | PH-10 | no | SpriteView wrapper, optional scene pattern, 120fps ProMotion |
+| FirewallScene | StarlightSync/Chapters/Chapter4_Firewall/FirewallScene.swift | implemented | PH-10 | no | SKScene: 3-dir rhythm defense, plasma arc shields, beat sync, Auto-Assist |
 | BlueprintView | StarlightSync/Chapters/Chapter5_Blueprint/BlueprintView.swift | placeholder | PH-02 | no | Walking skeleton, replaced in PH-11 |
 | EventHorizonView | StarlightSync/Chapters/Chapter6_EventHorizon/EventHorizonView.swift | placeholder | PH-02 | no | Walking skeleton, replaced in PH-13 |
 | AudioManager | StarlightSync/Managers/AudioManager.swift | implemented | PH-03 | no | @Observable @MainActor singleton, dual-player cross-fade, SFX pool with pre-seeding, interruption handling |
@@ -24,7 +25,7 @@ schema_version: 1
 | GameConstants | StarlightSync/Models/GameConstants.swift | implemented | PH-06 | no | Tuning values, thresholds, beat maps, type-safe asset enums |
 | CRTTransitionView | StarlightSync/Components/CRTTransitionView.swift | implemented | PH-07 | no | Vertical sweep + scanline Canvas + Reduce Motion cross-fade |
 | CipherWheelView | StarlightSync/Chapters/Chapter3_Cipher/CipherWheelView.swift | not_started | PH-09 | no | Scroll wheel interaction |
-| FirewallScene | StarlightSync/Chapters/Chapter4_Firewall/FirewallScene.swift | not_started | PH-10 | no | SKScene subclass |
+
 | HeartNodeLayout | StarlightSync/Chapters/Chapter5_Blueprint/HeartNodeLayout.swift | not_started | PH-11 | no | Node coordinates |
 | FrictionSlider | StarlightSync/Chapters/Chapter6_EventHorizon/FrictionSlider.swift | not_started | PH-13 | no | Progressive resistance |
 | ConfettiView | StarlightSync/Components/ConfettiView.swift | not_started | PH-13 | no | Particle system |
