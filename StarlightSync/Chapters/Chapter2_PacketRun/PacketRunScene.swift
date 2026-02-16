@@ -42,6 +42,10 @@ final class PacketRunScene: SKScene {
     private let obstacleWidthFraction: CGFloat = 0.18
     private let heartWidthFraction: CGFloat = 0.10
 
+    private let bankingSensitivity: CGFloat = 0.005
+    private let maxBankingAngle: CGFloat = 0.25
+    private let bankingDecay: CGFloat = 0.85
+
     /// Highway road surface bounds as fractions of scene width.
     /// Derived from the neon-edge positions in img_bg_runner_highway.
     private let highwayLeftEdge: CGFloat = 0.18
@@ -96,6 +100,8 @@ final class PacketRunScene: SKScene {
     private var deathCount: Int = 0
     private var sessionHighScore: Int = 0
     private var lastTouchX: CGFloat = 0
+    private var horizontalVelocity: CGFloat = 0
+    private var currentSpeedMultiplier: CGFloat = 1.0
 
     // MARK: - Layer Containers
 
@@ -105,6 +111,7 @@ final class PacketRunScene: SKScene {
     // MARK: - Node References
 
     private var playerNode: SKSpriteNode?
+    private var shadowNode: SKShapeNode?
     private var heartLabel: SKLabelNode?
 
     // MARK: - Texture Atlas
@@ -156,11 +163,31 @@ final class PacketRunScene: SKScene {
         setupHUD()
         prewarmSFX()
 
+        // Dark Dive Entry
+        // 1. Scene fades in from Black
         backgroundLayer.alpha = 0
         gameLayer.alpha = 0
+
         backgroundLayer.run(SKAction.fadeAlpha(to: 1.0, duration: sceneFadeInDuration))
         gameLayer.run(SKAction.fadeAlpha(to: 1.0, duration: sceneFadeInDuration)) { [weak self] in
             self?.showWelcomeOverlay()
+        }
+
+        // 2. Hero Entry (Fly in from bottom)
+        if let player = playerNode {
+            let targetY = player.position.y
+            player.position.y = -player.size.height // Start off-screen bottom
+
+            let flyIn = SKAction.moveTo(y: targetY, duration: 0.8)
+            flyIn.timingMode = .easeOut
+            player.run(flyIn)
+
+            // Shadow follows
+            if let shadow = shadowNode {
+                shadow.alpha = 0
+                let shadowFade = SKAction.fadeAlpha(to: 0.4, duration: 0.8)
+                shadow.run(shadowFade)
+            }
         }
     }
 
@@ -266,26 +293,67 @@ final class PacketRunScene: SKScene {
 
         gameLayer.addChild(player)
         playerNode = player
+
+        // Shadow
+        let shadow = SKShapeNode(ellipseOf: CGSize(width: player.size.width * 0.6, height: player.size.width * 0.2))
+        shadow.fillColor = .black
+        shadow.strokeColor = .clear
+        shadow.alpha = 0.4
+        // Position shadow slightly below player
+        shadow.position = CGPoint(x: player.position.x, y: player.position.y - player.size.height * 0.4)
+        shadow.zPosition = playerZPosition - 1
+        gameLayer.addChild(shadow)
+        shadowNode = shadow
+
+        // Levitation Animation (Idle Hover)
+        let hoverUp = SKAction.moveBy(x: 0, y: 8, duration: 1.2)
+        hoverUp.timingMode = .easeInEaseOut
+        let hoverDown = hoverUp.reversed()
+        let hoverSeq = SKAction.repeatForever(SKAction.sequence([hoverUp, hoverDown]))
+        player.run(hoverSeq)
+
+        // Shadow breathes with hover (scales inversely slightly to sell height)
+        let shadowShrink = SKAction.scale(to: 0.9, duration: 1.2)
+        shadowShrink.timingMode = .easeInEaseOut
+        let shadowGrow = shadowShrink.reversed()
+        let shadowSeq = SKAction.repeatForever(SKAction.sequence([shadowShrink, shadowGrow]))
+        shadow.run(shadowSeq)
     }
 
     // MARK: - HUD Setup
 
     private func setupHUD() {
-        let neonPink = SKColor(red: 1.0, green: 0.2, blue: 0.6, alpha: 1.0)
+        let neonCyan = SKColor(red: 0.0, green: 0.95, blue: 0.85, alpha: 1.0)
+        let containerWidth: CGFloat = 100
+        let containerHeight: CGFloat = 40
 
-        let hearts = SKLabelNode(fontNamed: hudFontName)
-        hearts.fontSize = hudFontSize
-        hearts.fontColor = neonPink
-        hearts.horizontalAlignmentMode = .right
-        hearts.verticalAlignmentMode = .top
-        hearts.position = CGPoint(
-            x: size.width - hudSideMargin,
+        let container = SKShapeNode(rectOf: CGSize(width: containerWidth, height: containerHeight), cornerRadius: 10)
+        container.fillColor = SKColor(white: 0, alpha: 0.5) // Glass dark
+        container.strokeColor = neonCyan
+        container.lineWidth = 1
+        container.zPosition = hudZPosition
+        container.position = CGPoint(
+            x: size.width - hudSideMargin - containerWidth / 2,
             y: size.height - hudTopMargin
         )
-        hearts.zPosition = hudZPosition
-        hearts.alpha = 0
-        addChild(hearts)
+        container.alpha = 0 // Fade in with scene
+        addChild(container)
+
+        // Label inside container
+        let hearts = SKLabelNode(fontNamed: hudFontName)
+        hearts.fontSize = 18
+        hearts.fontColor = neonCyan
+        hearts.horizontalAlignmentMode = .center
+        hearts.verticalAlignmentMode = .center
+        hearts.position = .zero // Geometric center
+        container.addChild(hearts)
+
         heartLabel = hearts
+
+        // Store container ref for fading? Or just set alpha on container directly.
+        // The scene fade-in sets gameLayer/backgroundLayer alpha.
+        // We need to animate this container separately in setupContent.
+        container.run(SKAction.fadeAlpha(to: 1.0, duration: sceneFadeInDuration))
     }
 
     private func updateHUD() {
@@ -377,9 +445,14 @@ final class PacketRunScene: SKScene {
     private func dismissWelcomeAndStart() {
         guard let overlay = childNode(withName: welcomeOverlayName) else { return }
 
-        let fadeOut = SKAction.fadeAlpha(to: 0, duration: 0.3)
+        let flyThrough = SKAction.group([
+            SKAction.scale(to: 2.5, duration: 0.4),
+            SKAction.fadeOut(withDuration: 0.4)
+        ])
+        flyThrough.timingMode = .easeIn
+
         let remove = SKAction.removeFromParent()
-        overlay.run(SKAction.sequence([fadeOut, remove]))
+        overlay.run(SKAction.sequence([flyThrough, remove]))
 
         heartLabel?.alpha = 1
         updateHUD()
@@ -436,6 +509,7 @@ final class PacketRunScene: SKScene {
         )
         obstacle.zPosition = entityZPosition
         obstacle.name = obstacleNodeName
+        obstacle.speed = currentSpeedMultiplier // Inherit current game speed
 
         gameLayer.addChild(obstacle)
 
@@ -468,6 +542,7 @@ final class PacketRunScene: SKScene {
         )
         heart.zPosition = entityZPosition
         heart.name = heartNodeName
+        heart.speed = currentSpeedMultiplier // Inherit current game speed
 
         gameLayer.addChild(heart)
 
@@ -495,12 +570,72 @@ final class PacketRunScene: SKScene {
         }
         lastUpdateTime = currentTime
 
+        applyBanking()
+        updateShadow()
+        updateSpeedLines()
+
         if heartsCollected >= GameConstants.Physics.runnerHeartTarget {
             handleWin()
             return
         }
 
         checkCollisions()
+    }
+
+    private func updateShadow() {
+        guard let player = playerNode, let shadow = shadowNode else { return }
+        shadow.position.x = player.position.x
+        // Y position remains fixed relative to lane
+
+        // Scale shadow slightly with banking for 3D feel?
+        // Simple X scale reduction when banked
+        let bankFactor = 1.0 - abs(player.zRotation) * 0.5
+        shadow.xScale = bankFactor
+    }
+
+    private func updateSpeedLines() {
+        // 30% chance per frame to spawn a speed line
+        if Double.random(in: 0 ... 1) < 0.3 {
+            spawnSpeedLine()
+        }
+    }
+
+    private func spawnSpeedLine() {
+        let line = SKSpriteNode(color: .white, size: CGSize(width: 2, height: CGFloat.random(in: 30 ... 80)))
+        line.alpha = CGFloat.random(in: 0.05 ... 0.15)
+
+        // Spawn across the full width
+        let randomX = CGFloat.random(in: 0 ... size.width)
+        line.position = CGPoint(x: randomX, y: size.height + 50)
+        line.zPosition = entityZPosition - 0.5 // Behind obstacles
+
+        gameLayer.addChild(line)
+
+        let duration = TimeInterval.random(in: 0.3 ... 0.6)
+        let move = SKAction.moveBy(x: 0, y: -(size.height + 100), duration: duration)
+        let remove = SKAction.removeFromParent()
+
+        line.run(SKAction.sequence([move, remove]))
+    }
+
+    private func applyBanking() {
+        guard let player = playerNode else { return }
+
+        // Calculate target angle based on velocity (negative because +X move = clockwise rotation)
+        let targetAngle = -horizontalVelocity * bankingSensitivity
+        let clampedAngle = max(-maxBankingAngle, min(maxBankingAngle, targetAngle))
+
+        // Smoothly interpolate current rotation to target
+        let currentAngle = player.zRotation
+        player.zRotation = currentAngle + (clampedAngle - currentAngle) * 0.2
+
+        // Decay velocity to simulate friction/return-to-center
+        horizontalVelocity *= bankingDecay
+
+        // Snap to 0 if very small
+        if abs(horizontalVelocity) < 0.1 {
+            horizontalVelocity = 0
+        }
     }
 
     // MARK: - Collision Inset Fractions
@@ -601,11 +736,18 @@ final class PacketRunScene: SKScene {
         let rightBound = size.width * highwayRightEdge - halfWidth
         let newX = min(max(leftBound, player.position.x + deltaX), rightBound)
         player.position.x = newX
+
+        // Update velocity for banking (decay handled in update)
+        horizontalVelocity = deltaX
     }
 
-    override func touchesEnded(_: Set<UITouch>, with _: UIEvent?) {}
+    override func touchesEnded(_: Set<UITouch>, with _: UIEvent?) {
+        horizontalVelocity = 0
+    }
 
-    override func touchesCancelled(_: Set<UITouch>, with _: UIEvent?) {}
+    override func touchesCancelled(_: Set<UITouch>, with _: UIEvent?) {
+        horizontalVelocity = 0
+    }
 
     // MARK: - Death & Game Over
 
@@ -619,15 +761,38 @@ final class PacketRunScene: SKScene {
 
         stopSpawning()
 
-        let flash = SKAction.sequence([
-            SKAction.fadeAlpha(to: 0.2, duration: deathFlashDuration),
-            SKAction.fadeAlpha(to: 1.0, duration: deathFlashDuration),
-            SKAction.fadeAlpha(to: 0.2, duration: deathFlashDuration),
-            SKAction.fadeAlpha(to: 1.0, duration: deathFlashDuration)
+        // 1. Camera Shake (Signal Instability)
+        let shakeAction = SKAction.sequence([
+            SKAction.run { [weak self] in
+                self?.gameLayer.position.x = CGFloat.random(in: -15 ... 15)
+            },
+            SKAction.wait(forDuration: 0.03),
+            SKAction.run { [weak self] in
+                self?.gameLayer.position.x = 0
+            }
         ])
-        let showOverlay = SKAction.run { [weak self] in self?.showGameOverOverlay() }
+        gameLayer.run(SKAction.repeat(shakeAction, count: 10))
 
-        player.run(SKAction.sequence([flash, showOverlay]))
+        // 2. Player Glitch (Distortion & Signal Loss)
+        // Store original scale to reset later if needed
+        let originalScaleX = player.xScale
+        let originalScaleY = player.yScale
+
+        let glitchAction = SKAction.sequence([
+            SKAction.group([
+                SKAction.scaleX(to: originalScaleX * 1.5, y: originalScaleY * 0.2, duration: 0.05),
+                SKAction.colorize(with: .red, colorBlendFactor: 1.0, duration: 0.05)
+            ]),
+            SKAction.group([
+                SKAction.scaleX(to: originalScaleX * 0.8, y: originalScaleY * 1.5, duration: 0.05),
+                SKAction.colorize(with: .white, colorBlendFactor: 0.0, duration: 0.05)
+            ]),
+            SKAction.scaleX(to: originalScaleX, y: originalScaleY, duration: 0.05),
+            SKAction.fadeOut(withDuration: 0.1),
+            SKAction.run { [weak self] in self?.showGameOverOverlay() }
+        ])
+
+        player.run(glitchAction)
     }
 
     // swiftlint:disable:next function_body_length
@@ -723,6 +888,9 @@ final class PacketRunScene: SKScene {
     private func resetForNewAttempt() {
         heartsCollected = 0
         lastUpdateTime = 0
+        horizontalVelocity = 0
+        currentSpeedMultiplier = 1.0
+        updateGameSpeed()
 
         gameLayer.enumerateChildNodes(withName: obstacleNodeName) { node, _ in
             node.removeFromParent()
@@ -732,6 +900,15 @@ final class PacketRunScene: SKScene {
         }
 
         if let player = playerNode {
+            player.removeAllActions()
+            player.alpha = 1.0
+            player.setScale(1.0)
+            player.zRotation = 0.0
+            player.colorBlendFactor = 0.0
+
+            // Restart hover
+            setupPlayerHover()
+
             let highwayCenterX = size.width * (highwayLeftEdge + highwayRightEdge) / 2
             player.position = CGPoint(
                 x: highwayCenterX,
@@ -744,13 +921,88 @@ final class PacketRunScene: SKScene {
         gameState = .playing
     }
 
+    private func setupPlayerHover() {
+        guard let player = playerNode, let shadow = shadowNode else { return }
+
+        let hoverUp = SKAction.moveBy(x: 0, y: 8, duration: 1.2)
+        hoverUp.timingMode = .easeInEaseOut
+        let hoverDown = hoverUp.reversed()
+        let hoverSeq = SKAction.repeatForever(SKAction.sequence([hoverUp, hoverDown]))
+        player.run(hoverSeq)
+
+        let shadowShrink = SKAction.scale(to: 0.9, duration: 1.2)
+        shadowShrink.timingMode = .easeInEaseOut
+        let shadowGrow = shadowShrink.reversed()
+        let shadowSeq = SKAction.repeatForever(SKAction.sequence([shadowShrink, shadowGrow]))
+        shadow.run(shadowSeq)
+    }
+
     // MARK: - Heart Collection
 
     private func handleHeartCollection(_ node: SKNode?) {
-        node?.removeFromParent()
+        guard let heart = node else { return }
+
+        // Prevent double-collection while animating out
+        heart.name = nil
+        heart.physicsBody = nil
+
         heartsCollected += 1
         run(SKAction.playSoundFileNamed(sfxChimePath, waitForCompletion: false))
+
+        // Haptic Pop (Crisp tactile reward)
+        HapticManager.shared.playTransientEvent(intensity: 0.7, sharpness: 0.8)
+
         updateHUD()
+        checkSpeedProgression()
+
+        // Juice: Pop up, scale up, fade out
+        let juiceAction = SKAction.group([
+            SKAction.scale(by: 1.5, duration: 0.15),
+            SKAction.moveBy(x: 0, y: 30, duration: 0.15),
+            SKAction.fadeOut(withDuration: 0.15)
+        ])
+
+        heart.run(SKAction.sequence([
+            juiceAction,
+            SKAction.removeFromParent()
+        ]))
+    }
+
+    private func checkSpeedProgression() {
+        let oldSpeed = currentSpeedMultiplier
+
+        // More aggressive difficulty curve
+        switch heartsCollected {
+        case 0 ..< 5:
+            currentSpeedMultiplier = 1.0
+        case 5 ..< 10:
+            currentSpeedMultiplier = 1.3
+        case 10 ..< 15:
+            currentSpeedMultiplier = 1.6
+        default:
+            currentSpeedMultiplier = 2.0 // High speed "bullet hell" finale
+        }
+
+        if oldSpeed != currentSpeedMultiplier {
+            updateGameSpeed()
+        }
+    }
+
+    private func updateGameSpeed() {
+        // Speed up background parallax
+        backgroundLayer.speed = currentSpeedMultiplier
+
+        // Speed up spawn timers (spawn faster)
+        gameLayer.childNode(withName: obstacleSpawnTimerName)?.speed = currentSpeedMultiplier
+        gameLayer.childNode(withName: heartSpawnTimerName)?.speed = currentSpeedMultiplier
+
+        // Speed up existing entities (move faster)
+        gameLayer.enumerateChildNodes(withName: obstacleNodeName) { node, _ in
+            node.speed = self.currentSpeedMultiplier
+        }
+        gameLayer.enumerateChildNodes(withName: heartNodeName) { node, _ in
+            node.speed = self.currentSpeedMultiplier
+        }
     }
 
     // MARK: - Win
@@ -766,7 +1018,15 @@ final class PacketRunScene: SKScene {
             sessionHighScore = heartsCollected
         }
 
-        let pause = SKAction.wait(forDuration: victoryPauseDuration)
+        // Animate Player Exit (Fly Up/Forward)
+        if let player = playerNode {
+            let exitAction = SKAction.moveBy(x: 0, y: size.height, duration: 0.6)
+            exitAction.timingMode = .easeIn
+            player.run(exitAction)
+            shadowNode?.run(exitAction)
+        }
+
+        let pause = SKAction.wait(forDuration: 1.0)
         let showWin = SKAction.run { [weak self] in self?.showWinOverlay() }
         run(SKAction.sequence([pause, showWin]))
     }

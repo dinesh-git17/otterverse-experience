@@ -8,7 +8,7 @@ struct HandshakeView: View {
     @State private var pressStartDate: Date?
     @State private var frozenProgress: CGFloat = 0
     @State private var isCompleted = false
-    @State private var showCRTTransition = false
+    @State private var isZooming = false // "Dark Dive" transition state
     @State private var pulseActive = false
     @State private var instructionRevealed = false
     @State private var instructionGlowActive = false
@@ -41,18 +41,23 @@ struct HandshakeView: View {
     private static let instructionGlowMid: CGFloat = 12
     private static let instructionGlowOuter: CGFloat = 28
 
+    /// Transition Tuning
+    private static let zoomDuration: TimeInterval = 0.8
+
     var body: some View {
         GeometryReader { geo in
             let screenWidth = geo.size.width
             ZStack {
                 TimelineView(
-                    .animation(minimumInterval: nil, paused: !isPressing)
+                    .animation(minimumInterval: nil, paused: !isPressing && !isZooming)
                 ) { context in
                     let progress = currentProgress(at: context.date)
                     glyphWithRing(
                         progress: min(progress, 1.0),
                         screenWidth: screenWidth
                     )
+                    .scaleEffect(isZooming ? 40.0 : 1.0) // Massive expansion
+                    .opacity(isZooming ? 0 : 1)
                     .onChange(of: progress >= 1.0) { _, reachedEnd in
                         if reachedEnd { handleGestureComplete() }
                     }
@@ -68,17 +73,10 @@ struct HandshakeView: View {
                         )
                         .padding(.bottom, Self.instructionBottomPadding)
                 }
-
-                if showCRTTransition {
-                    CRTTransitionView(
-                        isActive: $showCRTTransition,
-                        onComplete: handleTransitionComplete
-                    )
-                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .background { backgroundLayer }
+        .background { backgroundLayer.opacity(isZooming ? 0 : 1) } // Fade background to black
         .ignoresSafeArea()
         .contentShape(Rectangle())
         .gesture(
@@ -250,14 +248,28 @@ private extension HandshakeView {
         isPressing = false
         pressStartDate = nil
         frozenProgress = 1.0
+
         HapticManager.shared.stopCurrentPattern()
         HapticManager.shared.play(GameConstants.HapticAsset.thud.rawValue)
         AudioManager.shared.playSFX(named: GameConstants.AudioAsset.sfxThud.rawValue)
-        showCRTTransition = true
+
+        // Start Audio Bridge
+        AudioManager.shared.crossFadeToBGM(named: GameConstants.AudioAsset.bgmMain.rawValue)
+
+        // Start Visual Bridge (Dark Dive)
+        withAnimation(.easeIn(duration: Self.zoomDuration)) {
+            isZooming = true
+        }
+
+        // Schedule Chapter Advance
+        Task {
+            try? await Task.sleep(for: .seconds(Self.zoomDuration))
+            guard !Task.isCancelled else { return }
+            handleTransitionComplete()
+        }
     }
 
     func handleTransitionComplete() {
-        AudioManager.shared.crossFadeToBGM(named: GameConstants.AudioAsset.bgmMain.rawValue)
         coordinator.completeCurrentChapter()
     }
 }
