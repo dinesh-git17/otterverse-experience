@@ -23,6 +23,7 @@
 		B7D1E38A2D5F6A010000010F /* AssetPreloadCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000010 /* AssetPreloadCoordinator.swift */; };
 		B7D1E38A2D5F6A0100000110 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000011 /* GameConstants.swift */; };
 		B7D1E38A2D5F6A0100000111 /* CRTTransitionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000012 /* CRTTransitionView.swift */; };
+		B7D1E38A2D5F6A0100000112 /* PacketRunScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000013 /* PacketRunScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,8 @@
 		B7D1E38A2D5F6A0100000010 /* AssetPreloadCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetPreloadCoordinator.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000011 /* GameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameConstants.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000012 /* CRTTransitionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRTTransitionView.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A0100000013 /* PacketRunScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketRunScene.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A0100000014 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +80,7 @@
 				B7D1E38A2D5F6A0100000003 /* Assets.xcassets */,
 				B7D1E38A2D5F6A0100000004 /* Audio */,
 				B7D1E38A2D5F6A0100000005 /* Haptics */,
+				B7D1E38A2D5F6A0100000014 /* Info.plist */,
 			);
 			path = StarlightSync;
 			sourceTree = "<group>";
@@ -146,6 +150,7 @@
 		B7D1E38A2D5F6A0100000209 /* Chapter2_PacketRun */ = {
 			isa = PBXGroup;
 			children = (
+				B7D1E38A2D5F6A0100000013 /* PacketRunScene.swift */,
 				B7D1E38A2D5F6A0100000009 /* PacketRunView.swift */,
 			);
 			path = Chapter2_PacketRun;
@@ -219,7 +224,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 2600;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					B7D1E38A2D5F6A0100000501 = {
 						CreatedOnToolsVersion = 26.0;
@@ -275,6 +280,7 @@
 				B7D1E38A2D5F6A010000010F /* AssetPreloadCoordinator.swift in Sources */,
 				B7D1E38A2D5F6A0100000110 /* GameConstants.swift in Sources */,
 				B7D1E38A2D5F6A0100000111 /* CRTTransitionView.swift in Sources */,
+				B7D1E38A2D5F6A0100000112 /* PacketRunScene.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,6 +322,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = WWDLQL8W8W;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -338,6 +345,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -379,6 +387,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = WWDLQL8W8W;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -394,6 +403,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -408,8 +418,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WWDLQL8W8W;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StarlightSync/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -431,8 +441,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = WWDLQL8W8W;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StarlightSync/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

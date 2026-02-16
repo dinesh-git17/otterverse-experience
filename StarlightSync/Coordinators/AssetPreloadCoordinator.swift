@@ -8,11 +8,13 @@ final class AssetPreloadCoordinator {
     // MARK: - Background Asset Identifiers
 
     private let backgroundIdentifiers = [
-        "Backgrounds/img_bg_intro",
-        "Backgrounds/img_bg_runner",
-        "Backgrounds/img_bg_cipher",
-        "Backgrounds/img_bg_blueprint",
-        "Backgrounds/img_finale_art"
+        GameConstants.BackgroundAsset.intro.rawValue,
+        GameConstants.BackgroundAsset.runner.rawValue,
+        GameConstants.BackgroundAsset.runnerStars.rawValue,
+        GameConstants.BackgroundAsset.runnerHighway.rawValue,
+        GameConstants.BackgroundAsset.cipher.rawValue,
+        GameConstants.BackgroundAsset.blueprint.rawValue,
+        GameConstants.BackgroundAsset.finale.rawValue
     ]
 
     // MARK: - Sprite Atlas Identifier
@@ -132,6 +134,12 @@ final class AssetPreloadCoordinator {
         #if DEBUG
             Self.logger.info("Sprite atlas preloaded: \(textureNames.count) textures")
         #endif
+    }
+
+    // MARK: - Public Accessors
+
+    func backgroundImage(for asset: GameConstants.BackgroundAsset) -> UIImage? {
+        decodedBackgrounds[asset.rawValue]
     }
 
     // MARK: - Font Verification

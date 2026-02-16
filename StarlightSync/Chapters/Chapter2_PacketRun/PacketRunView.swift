@@ -1,27 +1,32 @@
+import SpriteKit
 import SwiftUI
 
 struct PacketRunView: View {
     @Environment(FlowCoordinator.self) private var coordinator
 
+    @State private var scene: PacketRunScene?
+
     var body: some View {
-        ZStack {
-            Color.black
+        Group {
+            if let scene {
+                SpriteView(
+                    scene: scene,
+                    preferredFramesPerSecond: GameConstants.Physics.targetFrameRate,
+                    options: [.ignoresSiblingOrder]
+                )
                 .ignoresSafeArea()
-
-            VStack(spacing: 24) {
-                Text("Chapter 2")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
-
-                Text("The Packet Run")
-                    .font(.largeTitle.weight(.bold))
-                    .foregroundStyle(.white)
-
-                Button("Complete Chapter") {
-                    coordinator.completeCurrentChapter()
-                }
-                .buttonStyle(.borderedProminent)
+            } else {
+                Color.black.ignoresSafeArea()
             }
+        }
+        .onAppear {
+            let newScene = PacketRunScene()
+            newScene.scaleMode = .resizeFill
+            newScene.coordinator = coordinator
+            scene = newScene
+        }
+        .onDisappear {
+            scene = nil
         }
     }
 }

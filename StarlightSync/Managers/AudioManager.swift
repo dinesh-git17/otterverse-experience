@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import AVFoundation
 import os
 
@@ -7,7 +8,7 @@ final class AudioManager {
     // MARK: - Constants
 
     private let crossFadeDuration: TimeInterval = 0.5
-    private let bgmDefaultVolume: Float = 1.0
+    private let bgmDefaultVolume: Float = 0.5
     private let sfxDefaultVolume: Float = 1.0
     private let bgmLoopCount = -1
     private let sfxLoopCount = 0
@@ -187,10 +188,10 @@ final class AudioManager {
 
     // MARK: - Preload API (S5)
 
+    private let sfxPoolSeedCount = 2
+
     func preloadAssets(_ manifest: [(identifier: String, fileExtension: String)]) {
         for descriptor in manifest {
-            guard playerCache[descriptor.identifier] == nil else { continue }
-
             guard let url = assetLoader(descriptor.identifier, descriptor.fileExtension) else {
                 #if DEBUG
                     Self.logger.warning("Preload: URL not found for \(descriptor.identifier)")
@@ -198,14 +199,28 @@ final class AudioManager {
                 continue
             }
 
-            do {
-                let player = try AVAudioPlayer(contentsOf: url)
-                player.prepareToPlay()
-                playerCache[descriptor.identifier] = player
-            } catch {
-                #if DEBUG
-                    Self.logger.warning("Preload failed for \(descriptor.identifier): \(error.localizedDescription)")
-                #endif
+            if playerCache[descriptor.identifier] == nil {
+                do {
+                    let player = try AVAudioPlayer(contentsOf: url)
+                    player.prepareToPlay()
+                    playerCache[descriptor.identifier] = player
+                } catch {
+                    #if DEBUG
+                        let ident = descriptor.identifier
+                        Self.logger.warning("Preload failed for \(ident): \(error.localizedDescription)")
+                    #endif
+                }
+            }
+
+            if descriptor.identifier.hasPrefix("sfx_") {
+                var pool = sfxReusePool[descriptor.identifier] ?? []
+                while pool.count < sfxPoolSeedCount {
+                    guard let poolPlayer = try? AVAudioPlayer(contentsOf: url) else { break }
+                    poolPlayer.numberOfLoops = sfxLoopCount
+                    poolPlayer.prepareToPlay()
+                    pool.append(poolPlayer)
+                }
+                sfxReusePool[descriptor.identifier] = pool
             }
         }
     }

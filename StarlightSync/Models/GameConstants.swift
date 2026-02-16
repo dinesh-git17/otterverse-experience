@@ -102,6 +102,8 @@ enum GameConstants {
     enum BackgroundAsset: String {
         case intro = "Backgrounds/img_bg_intro"
         case runner = "Backgrounds/img_bg_runner"
+        case runnerStars = "Backgrounds/img_bg_runner_stars"
+        case runnerHighway = "Backgrounds/img_bg_runner_highway"
         case cipher = "Backgrounds/img_bg_cipher"
         case blueprint = "Backgrounds/img_bg_blueprint"
         case finale = "Backgrounds/img_finale_art"
