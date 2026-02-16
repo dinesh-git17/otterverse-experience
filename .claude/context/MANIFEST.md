@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-02-16T03:30:00Z
+last_updated: 2026-02-16T12:00:00Z
 updated_by: claude-opus-4-6
 schema_version: 1
 ---
@@ -8,8 +8,8 @@ schema_version: 1
 
 ## Current Phase
 
-**PH-10** — Chapter 4: The Firewall
-Next: PH-10 (Chapter 4 — Firewall), PH-12 (WebhookService — parallelizable)
+**PH-11** — Chapter 5: The Blueprint
+Next: PH-11 (Chapter 5 — Blueprint), PH-12 (WebhookService — parallelizable)
 Status: Ready to start
 
 ## Blocking Issues
@@ -18,6 +18,20 @@ None.
 
 ## Recently Completed
 
+- **PH-10 COMPLETE** — Chapter 4: The Firewall (CH4_01, 8/8 stories)
+  - FirewallScene: SKScene with beat-synced rhythm defense, 3-direction threats (left/right/top)
+  - CACurrentMediaTime() as sole timing source, beat map consumption via dual index pointers
+  - Plasma arc shield: SKShapeNode arc flash on directional tap (left/right/top zones)
+  - Tip-collision detection: threats explode on contact with otter bubble edge
+  - Explosion effect: flash white + burst scale + fade out, haptic transient on miss
+  - Floating otter animation: sinusoidal bob with easeInEaseOut
+  - Auto-Assist: silent hit window widening (±150ms → ±300ms) after 5 misses
+  - Custom directional sprites: sprite_noise_left, sprite_noise_right, sprite_noise_top
+  - Replaced img_bubble_shield with transparent otter-in-bubble pixel art
+  - Welcome/victory overlays, HUD progress label, SFX via SKAction.playSoundFileNamed
+  - FirewallView: SpriteView wrapper with optional scene pattern, 120fps ProMotion
+  - pbxproj: FirewallScene (FileRef 17, BuildFile 15)
+  - Build succeeds, audit 7/7
 - **PH-09 COMPLETE** — Chapter 3: The Cipher (CH3_01, 7/7 stories)
   - CipherWheelView: vertical drum scroll with DragGesture, snap-to-position, cyclic wrapping
   - Per-tick haptic click (inline transient) + sfx_click audio feedback
@@ -111,7 +125,8 @@ No ADRs recorded.
 | PacketRunScene | StarlightSync/Chapters/Chapter2_PacketRun/PacketRunScene.swift | implemented | PH-08 | no | SKScene: vertical runner, two-layer parallax, frame collision, overlays |
 | CipherView | StarlightSync/Chapters/Chapter3_Cipher/CipherView.swift | implemented | PH-09 | no | Cryptex puzzle with intro card, 3-wheel validation, Auto-Assist glow |
 | CipherWheelView | StarlightSync/Chapters/Chapter3_Cipher/CipherWheelView.swift | implemented | PH-09 | no | Vertical drum scroll, snap-to-position, haptic tick, thud on correct |
-| FirewallView | StarlightSync/Chapters/Chapter4_Firewall/FirewallView.swift | placeholder | PH-02 | no | Walking skeleton placeholder (no SpriteKit) |
+| FirewallView | StarlightSync/Chapters/Chapter4_Firewall/FirewallView.swift | implemented | PH-10 | no | SpriteView wrapper with optional scene pattern, 120fps |
+| FirewallScene | StarlightSync/Chapters/Chapter4_Firewall/FirewallScene.swift | implemented | PH-10 | no | SKScene: rhythm defense, 3-dir threats, plasma arc, beat sync |
 | BlueprintView | StarlightSync/Chapters/Chapter5_Blueprint/BlueprintView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
 | EventHorizonView | StarlightSync/Chapters/Chapter6_EventHorizon/EventHorizonView.swift | placeholder | PH-02 | no | Walking skeleton placeholder |
 | WebhookService | StarlightSync/Services/WebhookService.swift | not_started | PH-12 | no | — |
@@ -148,3 +163,6 @@ Unblocked: PH-09 (Chapter 3), PH-10 (SpriteKit lifecycle pattern validated), PH-
 CH3_01 complete: Chapter 3 Cipher delivered (7/7 stories).
 PH-09 CH3_01: COMPLETE.
 Unblocked: PH-10 (Chapter 4), PH-14 (Chapter 3 in transition polish), PH-15 (CipherValidation pure function for unit tests), PH-16 (Chapter 3 on-device QA).
+CH4_01 complete: Chapter 4 Firewall delivered (8/8 stories).
+PH-10 CH4_01: COMPLETE.
+Unblocked: PH-11 (Chapter 5), PH-14 (second SpriteKit scene validates cleanup pattern), PH-16 (Chapter 4 on-device QA).

@@ -114,6 +114,9 @@ enum GameConstants {
         case obstacleGlitch = "sprite_obstacle_glitch"
         case heartPickup = "sprite_heart_pickup"
         case noiseParticle = "sprite_noise_particle"
+        case noiseLeft = "sprite_noise_left"
+        case noiseRight = "sprite_noise_right"
+        case noiseTop = "sprite_noise_top"
         case bubbleShield = "img_bubble_shield"
     }
 

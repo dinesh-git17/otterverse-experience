@@ -1,27 +1,34 @@
+import SpriteKit
 import SwiftUI
 
 struct FirewallView: View {
     @Environment(FlowCoordinator.self) private var coordinator
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    @State private var scene: FirewallScene?
 
     var body: some View {
-        ZStack {
-            Color.black
+        Group {
+            if let scene {
+                SpriteView(
+                    scene: scene,
+                    preferredFramesPerSecond: GameConstants.Physics.targetFrameRate,
+                    options: [.ignoresSiblingOrder]
+                )
                 .ignoresSafeArea()
-
-            VStack(spacing: 24) {
-                Text("Chapter 4")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
-
-                Text("The Firewall")
-                    .font(.largeTitle.weight(.bold))
-                    .foregroundStyle(.white)
-
-                Button("Complete Chapter") {
-                    coordinator.completeCurrentChapter()
-                }
-                .buttonStyle(.borderedProminent)
+            } else {
+                Color.black.ignoresSafeArea()
             }
+        }
+        .onAppear {
+            let newScene = FirewallScene()
+            newScene.scaleMode = .resizeFill
+            newScene.coordinator = coordinator
+            newScene.reduceMotion = reduceMotion
+            scene = newScene
+        }
+        .onDisappear {
+            scene = nil
         }
     }
 }
