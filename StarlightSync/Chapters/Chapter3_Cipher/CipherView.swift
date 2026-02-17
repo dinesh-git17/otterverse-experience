@@ -207,8 +207,8 @@ private extension CipherView {
                 .multilineTextAlignment(.center)
 
             Text(
-                "Every couple has their inside jokes.\n"
-                    + "Crack the code. You know this one.\n\n"
+                "Signal stabilized.\n"
+                    + "Decrypting secure channel...\n\n"
                     + "Britney Spears might jog your memory."
             )
             .font(.system(.subheadline, design: .rounded).weight(.regular))
@@ -321,7 +321,8 @@ private extension CipherView {
 
     func handleWin() {
         hasCompleted = true
-        AudioManager.shared.playSFX(named: GameConstants.AudioAsset.sfxChime.rawValue)
+        // Use Thud sound (unlock) instead of Chime
+        AudioManager.shared.playSFX(named: GameConstants.AudioAsset.sfxThud.rawValue)
 
         let anim: Animation = reduceMotion
             ? .easeOut(duration: Ch3Anim.victoryReducedDuration)

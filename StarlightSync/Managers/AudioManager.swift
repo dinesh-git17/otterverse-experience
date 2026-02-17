@@ -154,12 +154,14 @@ final class AudioManager {
 
     // MARK: - SFX Playback (S4)
 
-    func playSFX(named identifier: String, fileExtension: String = "m4a") {
+    func playSFX(named identifier: String, fileExtension: String = "m4a", volume: Float? = nil) {
         recycleFinishedSFXPlayers()
+
+        let playbackVolume = isMuted ? 0.0 : (volume ?? sfxDefaultVolume)
 
         if let player = reclaimSFXPlayer(for: identifier) {
             player.currentTime = 0
-            player.volume = isMuted ? 0.0 : sfxDefaultVolume
+            player.volume = playbackVolume
             player.play()
             activeSFXPlayers.append((identifier: identifier, player: player))
             return
@@ -175,7 +177,7 @@ final class AudioManager {
         do {
             let player = try AVAudioPlayer(contentsOf: url)
             player.numberOfLoops = sfxLoopCount
-            player.volume = isMuted ? 0.0 : sfxDefaultVolume
+            player.volume = playbackVolume
             player.prepareToPlay()
             player.play()
             activeSFXPlayers.append((identifier: identifier, player: player))

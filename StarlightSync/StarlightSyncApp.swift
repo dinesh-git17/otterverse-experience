@@ -19,20 +19,34 @@ struct ChapterRouterView: View {
     @Environment(FlowCoordinator.self) private var coordinator
 
     var body: some View {
-        switch coordinator.currentChapter {
-        case .handshake:
-            HandshakeView()
-        case .packetRun:
-            PacketRunView()
-        case .cipher:
-            CipherView()
-        case .firewall:
-            FirewallView()
-        case .blueprint:
-            BlueprintView()
-        case .eventHorizon:
-            EventHorizonView()
+        ZStack {
+            switch coordinator.currentChapter {
+            case .handshake:
+                HandshakeView()
+            case .packetRun:
+                PacketRunView()
+            case .message:
+                TypewriterView()
+            case .cipher:
+                CipherView()
+            case .partnerInCrime:
+                PartnerInCrimeView()
+            case .firewall:
+                FirewallView()
+            case .blueprint:
+                BlueprintView()
+            case .eventHorizon:
+                EventHorizonView()
+            }
         }
+        .id(coordinator.currentChapter)
+        .transition(
+            .asymmetric(
+                insertion: .opacity.combined(with: .scale(scale: 1.2)),
+                removal: .opacity.combined(with: .scale(scale: 0.8))
+            )
+        )
+        .animation(.easeInOut(duration: 0.6), value: coordinator.currentChapter)
     }
 }
 

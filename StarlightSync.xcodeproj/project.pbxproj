@@ -28,6 +28,7 @@
 		B7D1E38A2D5F6A0100000114 /* CipherConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000016 /* CipherConstants.swift */; };
 		B7D1E38A2D5F6A0100000115 /* FirewallScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000017 /* FirewallScene.swift */; };
 		B7D1E38A2D5F6A0100000116 /* HoldLatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000018 /* HoldLatchView.swift */; };
+		B7D1E38A2D5F6A0100000117 /* TypewriterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000019 /* TypewriterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		B7D1E38A2D5F6A0100000016 /* CipherConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CipherConstants.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000017 /* FirewallScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirewallScene.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000018 /* HoldLatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldLatchView.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A0100000019 /* TypewriterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypewriterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 				B7D1E38A2D5F6A0100000015 /* CipherWheelView.swift */,
 				B7D1E38A2D5F6A0100000016 /* CipherConstants.swift */,
 				B7D1E38A2D5F6A0100000018 /* HoldLatchView.swift */,
+				B7D1E38A2D5F6A0100000019 /* TypewriterView.swift */,
 			);
 			path = Chapter3_Cipher;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 				B7D1E38A2D5F6A0100000114 /* CipherConstants.swift in Sources */,
 				B7D1E38A2D5F6A0100000115 /* FirewallScene.swift in Sources */,
 				B7D1E38A2D5F6A0100000116 /* HoldLatchView.swift in Sources */,
+				B7D1E38A2D5F6A0100000117 /* TypewriterView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
