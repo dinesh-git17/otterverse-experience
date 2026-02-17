@@ -27,6 +27,7 @@
 		B7D1E38A2D5F6A0100000113 /* CipherWheelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000015 /* CipherWheelView.swift */; };
 		B7D1E38A2D5F6A0100000114 /* CipherConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000016 /* CipherConstants.swift */; };
 		B7D1E38A2D5F6A0100000115 /* FirewallScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000017 /* FirewallScene.swift */; };
+		B7D1E38A2D5F6A0100000116 /* HoldLatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D1E38A2D5F6A0100000018 /* HoldLatchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,7 @@
 		B7D1E38A2D5F6A0100000015 /* CipherWheelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CipherWheelView.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000016 /* CipherConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CipherConstants.swift; sourceTree = "<group>"; };
 		B7D1E38A2D5F6A0100000017 /* FirewallScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirewallScene.swift; sourceTree = "<group>"; };
+		B7D1E38A2D5F6A0100000018 /* HoldLatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldLatchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +170,7 @@
 				B7D1E38A2D5F6A010000000A /* CipherView.swift */,
 				B7D1E38A2D5F6A0100000015 /* CipherWheelView.swift */,
 				B7D1E38A2D5F6A0100000016 /* CipherConstants.swift */,
+				B7D1E38A2D5F6A0100000018 /* HoldLatchView.swift */,
 			);
 			path = Chapter3_Cipher;
 			sourceTree = "<group>";
@@ -293,6 +296,7 @@
 				B7D1E38A2D5F6A0100000113 /* CipherWheelView.swift in Sources */,
 				B7D1E38A2D5F6A0100000114 /* CipherConstants.swift in Sources */,
 				B7D1E38A2D5F6A0100000115 /* FirewallScene.swift in Sources */,
+				B7D1E38A2D5F6A0100000116 /* HoldLatchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

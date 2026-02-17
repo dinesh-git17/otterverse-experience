@@ -61,6 +61,7 @@ struct CipherWheelView: View {
     @State private var basePosition: CGFloat
     @State private var dragOffset: CGFloat = 0
     @State private var previousTickIndex: Int
+    @State private var isLockedIn: Bool = false
 
     init(
         segments: [String],
@@ -89,6 +90,30 @@ struct CipherWheelView: View {
             ForEach(0 ..< segmentCount, id: \.self) { index in
                 segmentCell(for: index)
             }
+
+            // Cylinder Shadow (Depth Mask)
+            VStack {
+                LinearGradient(
+                    stops: [
+                        .init(color: Ch3Color.cylinderShadow, location: 0.0),
+                        .init(color: .clear, location: 0.4) // Extended falloff from 0.3
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                Spacer()
+                LinearGradient(
+                    stops: [
+                        .init(color: .clear, location: 0.6), // Extended start from 0.7
+                        .init(color: Ch3Color.cylinderShadow, location: 1.0)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            }
+            .allowsHitTesting(false)
+
+            LoupeOverlay()
         }
         .frame(width: WheelLayout.wheelWidth, height: WheelLayout.viewportHeight)
         .clipped()
@@ -102,26 +127,33 @@ struct CipherWheelView: View {
 private extension CipherWheelView {
     func segmentCell(for index: Int) -> some View {
         let diff = wrappedDifference(to: index)
-        let opacity = max(0, 1.0 - abs(diff) * WheelVisual.adjacentOpacityFalloff)
+        // Reduced adjacent opacity falloff slightly since shadow handles depth
+        let opacity = max(0, 1.0 - abs(diff) * 0.5)
         let rotation = reduceMotion ? 0 : diff * WheelVisual.maxRotationDegrees
         let isCenter = abs(diff) < WheelVisual.centerThreshold
         let isCorrect = index == correctIndex
         let isNearCenter = abs(diff) < WheelVisual.hintProximityRange
+        let showGold = isLockedIn && isCorrect && isCenter
 
         return ZStack {
             if showHint && isCorrect && isNearCenter {
                 hintGlowBackground
             }
 
-            RoundedRectangle(cornerRadius: WheelLayout.segmentCornerRadius)
-                .fill(isCenter ? WheelColor.centerFill : WheelColor.segmentFill)
-                .frame(height: WheelLayout.segmentHeight - WheelLayout.segmentInternalPadding)
+            // Removed segment background fill to let shadow/gradient work better
+            // Kept only for center to highlight selection slightly
+            if isCenter {
+                RoundedRectangle(cornerRadius: WheelLayout.segmentCornerRadius)
+                    .fill(WheelColor.centerFill.opacity(0.3)) // Subtle highlight
+                    .frame(height: WheelLayout.segmentHeight - WheelLayout.segmentInternalPadding)
+            }
 
             Text(segments[index])
                 .font(.system(.title3, design: .monospaced).weight(.semibold))
-                .foregroundStyle(WheelColor.segmentText)
+                .foregroundStyle(showGold ? Ch3Color.latchActiveFill : WheelColor.segmentText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+                .animation(.easeOut(duration: 0.2), value: showGold)
         }
         .frame(width: WheelLayout.wheelWidth, height: WheelLayout.segmentHeight)
         .opacity(opacity)
@@ -154,6 +186,7 @@ private extension CipherWheelView {
     var wheelDragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .onChanged { value in
+                isLockedIn = false
                 dragOffset = value.translation.height
                 let currentIdx = nearestWrappedIndex(for: effectivePosition)
                 if currentIdx != previousTickIndex {
@@ -161,9 +194,17 @@ private extension CipherWheelView {
                     previousTickIndex = currentIdx
                 }
             }
-            .onEnded { _ in
-                let targetIdx = nearestWrappedIndex(for: effectivePosition)
+            .onEnded { value in
+                // Inertial Physics
+                let velocity = value.velocity.height
+                let inertia = velocity * Ch3Physics.scrollInertiaFactor
+                let projectedOffset = dragOffset + inertia
+
+                // Calculate target based on projected position
+                let projectedPosition = basePosition - projectedOffset / WheelLayout.segmentHeight
+                let targetIdx = nearestWrappedIndex(for: projectedPosition)
                 let snapTarget = closestSnapPosition(for: targetIdx)
+
                 let snapAnim: Animation = reduceMotion
                     ? .easeOut(duration: WheelAnim.reducedMotionDuration)
                     : .spring(
@@ -179,9 +220,43 @@ private extension CipherWheelView {
                 previousTickIndex = targetIdx
 
                 if targetIdx == correctIndex {
+                    isLockedIn = true
                     fireThudFeedback()
                 }
             }
+    }
+}
+
+// MARK: - Loupe Overlay
+
+private struct LoupeOverlay: View {
+    var body: some View {
+        ZStack {
+            // Subtle Glass Shine (Top Half)
+            LinearGradient(
+                stops: [
+                    .init(color: Ch3Color.loupeShine, location: 0.0),
+                    .init(color: .clear, location: 0.5)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .blendMode(.overlay)
+            .clipShape(RoundedRectangle(cornerRadius: Ch3Layout.loupeCornerRadius))
+
+            // Horizontal Rails (Machined Look)
+            VStack {
+                Rectangle()
+                    .fill(Ch3Color.loupeBorder)
+                    .frame(height: 1)
+                Spacer()
+                Rectangle()
+                    .fill(Ch3Color.loupeBorder)
+                    .frame(height: 1)
+            }
+        }
+        .frame(width: WheelLayout.wheelWidth, height: Ch3Layout.loupeHeight)
+        .allowsHitTesting(false) // Let touches pass through to the wheel
     }
 }
 

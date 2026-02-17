@@ -25,6 +25,12 @@ struct CipherView: View {
     @State private var unlockFlash = false
     @State private var showingIntro = true
 
+    // Transition State
+    @State private var introScale: CGFloat = 1.0
+    @State private var introOpacity: Double = 1.0
+    @State private var puzzleScale: CGFloat = Ch3Anim.puzzleEntryScaleStart
+    @State private var puzzleOpacity: Double = 0.0
+
     init() {
         _wheel1Selection = State(initialValue: Self.randomStart(
             excluding: Ch3Puzzle.wheel1Answer,
@@ -51,32 +57,44 @@ struct CipherView: View {
 
     var body: some View {
         ZStack {
+            // Puzzle Layer
+            VStack(spacing: Ch3Layout.cryptexToUnlockSpacing) {
+                cryptexFrame
+                unlockAction
+            }
+            .offset(x: shakeOffset)
+            .scaleEffect(showVictory ? victoryScale : puzzleScale)
+            .opacity(showVictory ? 0 : puzzleOpacity)
+
+            // Intro Layer
             if showingIntro {
                 introCard
-                    .transition(.opacity)
-            } else {
-                VStack(spacing: Ch3Layout.cryptexToUnlockSpacing) {
-                    cryptexFrame
-                    unlockAction
-                }
-                .offset(x: shakeOffset)
-                .opacity(showVictory ? 0 : 1.0)
-                .scaleEffect(victoryScale)
-                .transition(.opacity)
+                    .scaleEffect(introScale)
+                    .opacity(introOpacity)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background {
-            backgroundImage
-                .blur(radius: showingIntro
-                    ? Ch3Layout.introBackgroundBlur
-                    : Ch3Layout.puzzleBackgroundBlur)
+            ZStack {
+                backgroundImage
+                    .blur(radius: showingIntro ? Ch3Layout.introBackgroundBlur : 0)
+                    .animation(.easeOut(duration: Ch3Anim.introExitDuration), value: showingIntro)
+
+                // Vignette
+                RadialGradient(
+                    colors: [.clear, Ch3Color.vignetteColor],
+                    center: .center,
+                    startRadius: 0,
+                    endRadius: 500
+                )
+                .ignoresSafeArea()
+            }
         }
         .ignoresSafeArea()
     }
 }
 
-// MARK: - Background
+// MARK: - Cryptex Frame
 
 private extension CipherView {
     var backgroundImage: some View {
@@ -85,13 +103,9 @@ private extension CipherView {
             .scaledToFill()
             .ignoresSafeArea()
     }
-}
 
-// MARK: - Cryptex Frame
-
-private extension CipherView {
     var cryptexFrame: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: showVictory ? 40 : 0) {
             metalEdge
             CipherWheelView(
                 segments: Ch3Puzzle.wheel1Segments,
@@ -135,6 +149,7 @@ private extension CipherView {
         Ch3Color.divider
             .frame(height: Ch3Layout.dividerHeight)
             .padding(.horizontal, Ch3Layout.dividerHorizontalPadding)
+            .opacity(showVictory ? 0 : 1)
     }
 
     var frameGradient: some View {
@@ -172,27 +187,10 @@ private extension CipherView {
 
 private extension CipherView {
     var unlockAction: some View {
-        Button(action: handleUnlock) {
-            VStack(spacing: Ch3Layout.unlockSpacing) {
-                Image(systemName: hasCompleted ? "lock.open.fill" : "lock.fill")
-                    .font(.system(size: Ch3Layout.unlockIconSize, weight: .medium))
-                    .foregroundStyle(
-                        unlockFlash
-                            ? AnyShapeStyle(Ch3Color.errorFlash)
-                            : AnyShapeStyle(LinearGradient(
-                                colors: [Ch3Color.lockGold, Ch3Color.lockGoldDark],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            ))
-                    )
-
-                Text("UNLOCK")
-                    .font(.system(.caption2, design: .monospaced).weight(.bold))
-                    .foregroundStyle(Ch3Color.steelLight)
-                    .tracking(Ch3Layout.unlockTracking)
-            }
-            .frame(minWidth: Ch3Layout.unlockIconSize, minHeight: Ch3Layout.unlockMinTouchHeight)
-        }
+        HoldLatchView(
+            isLocked: incorrectAttempts > 0 && unlockFlash, // Reuse flash state for "locked" feedback
+            onUnlock: handleUnlock
+        )
         .disabled(hasCompleted)
     }
 }
@@ -213,7 +211,7 @@ private extension CipherView {
                     + "Crack the code. You know this one.\n\n"
                     + "Britney Spears might jog your memory."
             )
-            .font(.system(.subheadline, design: .rounded).weight(.light))
+            .font(.system(.subheadline, design: .rounded).weight(.regular))
             .foregroundStyle(Ch3Color.introSubtext)
             .tracking(Ch3Layout.introSubtextTracking)
             .multilineTextAlignment(.center)
@@ -223,20 +221,25 @@ private extension CipherView {
             Button(action: dismissIntro) {
                 Text("DECODE")
                     .font(.system(.callout, design: .monospaced).weight(.bold))
-                    .foregroundStyle(Ch3Color.introButtonText)
+                    .foregroundStyle(.white)
                     .tracking(Ch3Layout.introButtonTracking)
-                    .padding(.horizontal, Ch3Layout.introButtonHorizontalPadding)
+                    .padding(.horizontal, 40)
                     .padding(.vertical, Ch3Layout.introButtonVerticalPadding)
                     .background(
-                        RoundedRectangle(cornerRadius: Ch3Layout.introButtonCornerRadius)
-                            .fill(
-                                LinearGradient(
-                                    colors: [Ch3Color.steelLight, Ch3Color.steelMid],
-                                    startPoint: .top,
-                                    endPoint: .bottom
+                        ZStack {
+                            RoundedRectangle(cornerRadius: Ch3Layout.introButtonCornerRadius)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [Ch3Color.buttonGradientStart, Ch3Color.buttonGradientEnd],
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
                                 )
-                            )
+                            RoundedRectangle(cornerRadius: Ch3Layout.introButtonCornerRadius)
+                                .strokeBorder(Ch3Color.buttonBorder, lineWidth: 1)
+                        }
                     )
+                    .shadow(color: Ch3Color.buttonGlow, radius: 15)
             }
             .padding(.top, Ch3Layout.introButtonTopPadding)
         }
@@ -244,27 +247,58 @@ private extension CipherView {
         .frame(maxWidth: Ch3Layout.introCardMaxWidth)
         .background(
             RoundedRectangle(cornerRadius: Ch3Layout.introCardCornerRadius)
-                .fill(Ch3Color.introCardFill.opacity(Ch3Layout.introCardBackgroundOpacity))
-                .blur(radius: Ch3Layout.introCardBlurRadius)
+                .fill(Ch3Color.cardGlassFill)
+                .background(
+                    RoundedRectangle(cornerRadius: Ch3Layout.introCardCornerRadius)
+                        .blur(radius: 20) // Deep ambient shadow behind glass
+                )
         )
         .overlay(
             RoundedRectangle(cornerRadius: Ch3Layout.introCardCornerRadius)
-                .strokeBorder(
-                    Ch3Color.steelLight.opacity(Ch3Layout.introCardBorderOpacity),
+                .stroke(
+                    LinearGradient(
+                        colors: [Ch3Color.cardBorderTop, Ch3Color.cardBorderBottom],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
                     lineWidth: Ch3Layout.introCardBorderWidth
                 )
         )
+        .shadow(color: Ch3Color.cardShadow, radius: Ch3Layout.introShadowRadius, y: Ch3Layout.introShadowY)
     }
 
     func dismissIntro() {
-        let anim: Animation = reduceMotion
-            ? .easeOut(duration: Ch3Anim.introReducedFadeDuration)
-            : .spring(
-                response: Ch3Anim.introFadeResponse,
-                dampingFraction: Ch3Anim.introFadeDamping
-            )
-        withAnimation(anim) {
-            showingIntro = false
+        if reduceMotion {
+            // Simple cross-fade for Reduced Motion
+            withAnimation(.easeOut(duration: 0.5)) {
+                introOpacity = 0
+                puzzleOpacity = 1
+                showingIntro = false
+            }
+        } else {
+            // Orchestrated Cinematic Transition
+
+            // 1. Intro Exits (Scales UP towards camera + Fades Out)
+            withAnimation(.easeIn(duration: Ch3Anim.introExitDuration)) {
+                introScale = Ch3Anim.introScaleTarget
+                introOpacity = 0
+            }
+
+            // 2. Puzzle Enters (Scales UP from distance + Fades In)
+            // Uses snappy spring for immediate responsiveness
+            withAnimation(.spring(
+                response: Ch3Anim.puzzleEntryResponse,
+                dampingFraction: Ch3Anim.puzzleEntryDamping
+            ).delay(Ch3Anim.puzzleEntryDelay)) {
+                puzzleScale = 1.0
+                puzzleOpacity = 1.0
+            }
+
+            // 3. Cleanup
+            Task { @MainActor in
+                try? await Task.sleep(for: .seconds(Ch3Anim.introExitDuration))
+                showingIntro = false
+            }
         }
     }
 }
