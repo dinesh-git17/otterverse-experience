@@ -8,10 +8,12 @@ final class FlowCoordinator {
     enum Chapter: Int, CaseIterable {
         case handshake = 0
         case packetRun = 1
-        case cipher = 2
-        case firewall = 3
-        case blueprint = 4
-        case eventHorizon = 5
+        case message = 2
+        case cipher = 3
+        case partnerInCrime = 4
+        case firewall = 5
+        case blueprint = 6
+        case eventHorizon = 7
     }
 
     // MARK: - Constants

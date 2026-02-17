@@ -1028,7 +1028,18 @@ final class PacketRunScene: SKScene {
 
         let pause = SKAction.wait(forDuration: 1.0)
         let showWin = SKAction.run { [weak self] in self?.showWinOverlay() }
-        run(SKAction.sequence([pause, showWin]))
+
+        // Auto-advance sequence: Show overlay -> Wait -> Complete
+        let autoAdvance = SKAction.sequence([
+            pause,
+            showWin,
+            SKAction.wait(forDuration: 3.0),
+            SKAction.run { [weak self] in
+                self?.coordinator?.completeCurrentChapter()
+            }
+        ])
+
+        run(autoAdvance)
     }
 
     // swiftlint:disable:next function_body_length
@@ -1054,8 +1065,18 @@ final class PacketRunScene: SKScene {
         title.fontColor = neonCyan
         title.horizontalAlignmentMode = .center
         title.verticalAlignmentMode = .center
-        title.position = CGPoint(x: centerX, y: centerY + 100)
+        title.position = CGPoint(x: centerX, y: centerY + 40)
         overlay.addChild(title)
+
+        // Glitch effect for title
+        let glitch = SKAction.sequence([
+            SKAction.wait(forDuration: Double.random(in: 0.1 ... 0.3)),
+            SKAction.run { title.alpha = 0.5; title.position.x += 2 },
+            SKAction.wait(forDuration: 0.05),
+            SKAction.run { title.alpha = 1.0; title.position.x -= 2 },
+            SKAction.wait(forDuration: Double.random(in: 0.1 ... 0.5))
+        ])
+        title.run(SKAction.repeatForever(glitch))
 
         let subtitle = SKLabelNode(fontNamed: hudFontName)
         subtitle.text = "All packets delivered."
@@ -1063,7 +1084,7 @@ final class PacketRunScene: SKScene {
         subtitle.fontColor = .white
         subtitle.horizontalAlignmentMode = .center
         subtitle.verticalAlignmentMode = .center
-        subtitle.position = CGPoint(x: centerX, y: centerY + 40)
+        subtitle.position = CGPoint(x: centerX, y: centerY)
         overlay.addChild(subtitle)
 
         let scoreLabel = SKLabelNode(fontNamed: hudFontName)
@@ -1072,24 +1093,24 @@ final class PacketRunScene: SKScene {
         scoreLabel.fontColor = neonPink
         scoreLabel.horizontalAlignmentMode = .center
         scoreLabel.verticalAlignmentMode = .center
-        scoreLabel.position = CGPoint(x: centerX, y: centerY - 10)
+        scoreLabel.position = CGPoint(x: centerX, y: centerY - 40)
         overlay.addChild(scoreLabel)
 
-        let continueButton = SKLabelNode(fontNamed: hudFontName)
-        continueButton.name = continueButtonName
-        continueButton.text = "[ CONTINUE ]"
-        continueButton.fontSize = 28
-        continueButton.fontColor = neonCyan
-        continueButton.horizontalAlignmentMode = .center
-        continueButton.verticalAlignmentMode = .center
-        continueButton.position = CGPoint(x: centerX, y: centerY - 90)
-        overlay.addChild(continueButton)
+        let autoAdvLabel = SKLabelNode(fontNamed: hudFontName)
+        autoAdvLabel.text = "Establishing uplink..."
+        autoAdvLabel.fontSize = 14
+        autoAdvLabel.fontColor = SKColor(white: 1, alpha: 0.6)
+        autoAdvLabel.horizontalAlignmentMode = .center
+        autoAdvLabel.verticalAlignmentMode = .center
+        autoAdvLabel.position = CGPoint(x: centerX, y: centerY - 80)
+        overlay.addChild(autoAdvLabel)
 
-        let pulse = SKAction.sequence([
-            SKAction.fadeAlpha(to: 0.5, duration: 0.8),
-            SKAction.fadeAlpha(to: 1.0, duration: 0.8)
+        // Blink "Establishing uplink..."
+        let blink = SKAction.sequence([
+            SKAction.fadeAlpha(to: 0.3, duration: 0.5),
+            SKAction.fadeAlpha(to: 0.8, duration: 0.5)
         ])
-        continueButton.run(SKAction.repeatForever(pulse))
+        autoAdvLabel.run(SKAction.repeatForever(blink))
 
         addChild(overlay)
         overlay.run(SKAction.fadeAlpha(to: 1.0, duration: 0.4))
